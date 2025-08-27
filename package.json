@@ -1,0 +1,41 @@
+{
+  "name": "botc-digital",
+  "version": "0.1.0",
+  "description": "A platform-agnostic, AI-assisted implementation of Blood on the Clocktower",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd packages/server && npm run dev",
+    "dev:client": "cd packages/client && npm run dev",
+    "build": "npm run build:shared && npm run build:server && npm run build:client",
+    "build:shared": "cd packages/shared && npm run build",
+    "build:server": "cd packages/server && npm run build",
+    "build:client": "cd packages/client && npm run build",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "cd packages/server && npm test",
+    "test:client": "cd packages/client && npm test",
+    "lint": "eslint packages --ext .ts,.tsx,.js,.jsx",
+    "setup": "npm install && npm run setup:packages && npm run build:shared",
+    "setup:packages": "cd packages/shared && npm install && cd ../server && npm install && cd ../client && npm install"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.45.0",
+    "typescript": "^5.1.6"
+  },
+  "keywords": [
+    "blood-on-the-clocktower",
+    "game",
+    "websocket",
+    "realtime",
+    "ai",
+    "llm"
+  ],
+  "author": "Adam Burdett",
+  "license": "MIT"
+}

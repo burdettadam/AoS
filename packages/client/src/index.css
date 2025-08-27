@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-clocktower-darker text-gray-100 font-body;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-clocktower-accent text-clocktower-dark px-4 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-700 text-gray-100 px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors;
+  }
+  
+  .card {
+    @apply bg-clocktower-light rounded-xl shadow-lg border border-gray-700;
+  }
+  
+  .game-seat {
+    @apply relative w-16 h-16 rounded-full border-2 border-gray-600 bg-clocktower-light flex items-center justify-center text-sm font-semibold transition-all;
+  }
+  
+  .game-seat.alive {
+    @apply border-green-500 shadow-green-500/50;
+  }
+  
+  .game-seat.dead {
+    @apply border-red-500 bg-red-900/20 shadow-red-500/50;
+  }
+  
+  .game-seat.evil {
+    @apply border-botc-red shadow-red-600/50;
+  }
+  
+  .game-seat.good {
+    @apply border-botc-blue shadow-blue-600/50;
+  }
+}
