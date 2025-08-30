@@ -7,7 +7,8 @@
     "build": "tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node dist/index.js",
-    "test": "jest",
+  "test": "jest",
+  "import:wiki": "ts-node src/game/importer.ts",
     "clean": "rm -rf dist"
   },
   "dependencies": {

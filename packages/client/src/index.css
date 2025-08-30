@@ -12,15 +12,15 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-clocktower-accent text-clocktower-dark px-4 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition-colors;
+    @apply bg-clocktower-accent text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition-colors;
   }
   
   .btn-secondary {
-    @apply bg-gray-700 text-gray-100 px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors;
+    @apply bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors;
   }
   
   .card {
-    @apply bg-clocktower-light rounded-xl shadow-lg border border-gray-700;
+    @apply bg-clocktower-light rounded-xl shadow-lg border border-gray-700 text-gray-100;
   }
   
   .game-seat {

@@ -1,6 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// __dirname is not available in ESM; reconstruct it
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [
@@ -30,6 +36,12 @@ export default defineConfig({
       }
     })
   ],
+  resolve: {
+    alias: {
+      // Ensure the client can import the shared workspace package without a prebuild
+      '@botc/shared': path.resolve(__dirname, '../shared/src')
+    }
+  },
   server: {
     port: 3000,
     proxy: {

@@ -3,6 +3,60 @@ import { logger } from '../utils/logger';
 
 export class RulesEngine {
   
+  async assignRolesFromSetup(game: GameState, script: Script): Promise<boolean> {
+    try {
+      if (!game.setupState || !game.setupState.characterPool) {
+        logger.error('No character pool available from setup');
+        return false;
+      }
+
+      const playerCount = game.seats.length;
+      const characterPool = [...game.setupState.characterPool];
+      
+      if (characterPool.length !== playerCount) {
+        logger.error(`Character pool size ${characterPool.length} does not match player count ${playerCount}`);
+        return false;
+      }
+
+      // Shuffle the character pool for random assignment
+      this.shuffleArray(characterPool);
+
+      // Create role map for lookups
+      const roleMap = new Map(script.roles.map(r => [r.id, r] as const));
+
+      // Assign roles to seats
+      for (let i = 0; i < game.seats.length; i++) {
+        const seat = game.seats[i];
+        const roleId = characterPool[i];
+        const role = roleMap.get(roleId);
+        
+        if (!role) {
+          logger.error(`Role ${roleId} not found in script`);
+          return false;
+        }
+
+        seat.role = roleId;
+        seat.alignment = role.alignment;
+      }
+
+      // Update grimoire positions
+      if (game.grimoireState) {
+        game.grimoireState.characterPositions = {};
+        for (const seat of game.seats) {
+          if (seat.role) {
+            game.grimoireState.characterPositions[seat.id] = seat.role;
+          }
+        }
+      }
+
+      logger.info(`Assigned roles from setup for game ${game.id}: ${characterPool.join(', ')}`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to assign roles from setup for game ${game.id}:`, error);
+      return false;
+    }
+  }
+
   async assignRoles(game: GameState, script: Script): Promise<boolean> {
     try {
       const playerCount = game.seats.length;
@@ -64,7 +118,9 @@ export class RulesEngine {
       [RoleType.TOWNSFOLK]: 0,
       [RoleType.OUTSIDER]: 0,
       [RoleType.MINION]: 0,
-      [RoleType.DEMON]: 1
+      [RoleType.DEMON]: 1,
+      [RoleType.TRAVELLER]: 0,
+      [RoleType.FABLED]: 0
     };
 
     // Calculate based on player count (official BotC distribution)
@@ -99,7 +155,9 @@ export class RulesEngine {
       [RoleType.TOWNSFOLK]: [],
       [RoleType.OUTSIDER]: [],
       [RoleType.MINION]: [],
-      [RoleType.DEMON]: []
+      [RoleType.DEMON]: [],
+      [RoleType.TRAVELLER]: [],
+      [RoleType.FABLED]: []
     };
 
     for (const role of script.roles) {

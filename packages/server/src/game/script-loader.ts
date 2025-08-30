@@ -1,24 +1,101 @@
 import { Script, RoleDefinition, RoleType, Alignment } from '@botc/shared';
+import { ScriptLoader as SharedScriptLoader, LoadedScript } from '@botc/shared';
+import { NodeScriptDataSource } from '../data/nodeScriptDataSource';
 import { logger } from '../utils/logger';
 
 export class ScriptLoader {
   private scripts: Map<string, Script> = new Map();
+  private sharedLoader: SharedScriptLoader;
 
   constructor() {
+    this.sharedLoader = new SharedScriptLoader(new NodeScriptDataSource());
     this.loadDefaultScripts();
   }
 
   async loadScript(scriptId: string): Promise<Script | null> {
-    const script = this.scripts.get(scriptId);
-    if (!script) {
-      logger.error(`Script not found: ${scriptId}`);
-      return null;
+    // Check cache first
+    if (this.scripts.has(scriptId)) {
+      return this.scripts.get(scriptId)!;
     }
-    return script;
+
+    try {
+      // Try to load from JSON files first
+      const loadedScript = await this.sharedLoader.loadScript(scriptId);
+      const script = this.convertLoadedScriptToScript(loadedScript);
+      this.scripts.set(scriptId, script);
+      return script;
+    } catch (error) {
+      logger.warn(`Failed to load script from JSON: ${scriptId}, falling back to hardcoded`, error);
+      
+      // Fallback to hardcoded scripts
+      return this.scripts.get(scriptId) || null;
+    }
   }
 
   listScripts(): Array<{ id: string; name: string; version: string }> {
     return Array.from(this.scripts.values()).map(s => ({ id: s.id, name: s.name, version: s.version }));
+  }
+
+  private convertLoadedScriptToScript(loadedScript: LoadedScript): Script {
+    const roles: RoleDefinition[] = loadedScript.characters.map(char => ({
+      id: char.id,
+      name: char.name,
+      alignment: this.mapTeamToAlignment(char.team),
+      type: this.mapTeamToRoleType(char.team),
+      ability: char.ability ? {
+        id: `${char.id}-ability`,
+        when: 'passive' as const,
+        target: 'self',
+        effect: [{ type: 'custom', description: char.ability }]
+      } : undefined,
+      visibility: {
+        reveals: {
+          public: 'none' as const,
+          privateTo: char.team === 'minion' || char.team === 'demon' ? ['evil'] : []
+        }
+      },
+      precedence: char.firstNight || char.otherNights || 999,
+      reminderTokens: char.reminders
+    }));
+
+    return {
+      id: loadedScript.id,
+      name: loadedScript.name,
+      version: loadedScript.meta?.version || '1.0.0',
+      roles,
+      setup: {
+        playerCount: {
+          min: loadedScript.meta?.playerCount?.min || 5,
+          max: loadedScript.meta?.playerCount?.max || 15
+        },
+        distribution: this.calculateDistribution(roles)
+      }
+    };
+  }
+
+  private mapTeamToAlignment(team: string): Alignment {
+    return team === 'minion' || team === 'demon' ? Alignment.EVIL : Alignment.GOOD;
+  }
+
+  private mapTeamToRoleType(team: string): RoleType {
+    switch (team) {
+      case 'townsfolk': return RoleType.TOWNSFOLK;
+      case 'outsider': return RoleType.OUTSIDER;
+      case 'minion': return RoleType.MINION;
+      case 'demon': return RoleType.DEMON;
+      case 'traveller': return RoleType.TRAVELLER;
+      case 'fabled': return RoleType.FABLED;
+      default: return RoleType.TOWNSFOLK;
+    }
+  }
+
+  private calculateDistribution(roles: RoleDefinition[]): Record<string, number> {
+    const distribution: Record<string, number> = {};
+    roles.forEach(role => {
+      const key = role.type.toString();
+      distribution[key] = (distribution[key] || 0) + 1;
+    });
+    return distribution;
   }
 
   private loadDefaultScripts(): void {
@@ -280,19 +357,7 @@ export class ScriptLoader {
         precedence: 28
       },
       // Outsiders
-      {
-        id: 'recluse',
-        name: 'Recluse',
-        alignment: Alignment.GOOD,
-        type: RoleType.OUTSIDER,
-        visibility: {
-          reveals: {
-            public: 'none',
-            privateTo: []
-          }
-        },
-        precedence: 100
-      },
+  // Recluse (single definition)
       {
         id: 'drunk',
         name: 'Drunk',
@@ -405,8 +470,8 @@ export class ScriptLoader {
       {
         id: 'butler',
         name: 'Butler',
-        alignment: Alignment.EVIL,
-        type: RoleType.MINION,
+        alignment: Alignment.GOOD,
+        type: RoleType.OUTSIDER,
         ability: {
           id: 'butler-vote',
           when: 'day',
@@ -416,10 +481,30 @@ export class ScriptLoader {
         visibility: {
           reveals: {
             public: 'none',
+            privateTo: []
+          }
+        },
+        precedence: 104
+      },
+      {
+        id: 'baron',
+        name: 'Baron',
+        alignment: Alignment.EVIL,
+        type: RoleType.MINION,
+        ability: {
+          id: 'baron-setup',
+          when: 'passive',
+          target: 'setup',
+          effect: [{ type: 'modify_setup', add_outsiders: 2, remove_townsfolk: 2 }]
+        },
+        visibility: {
+          reveals: {
+            public: 'none',
             privateTo: ['evil']
           }
         },
-        precedence: 43
+        precedence: 44,
+        reminderTokens: ['Setup modification']
       },
       // Demon
       {

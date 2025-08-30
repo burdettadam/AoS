@@ -8,7 +8,9 @@ import { maskGameStateForSeat, maskGameStatePublic } from '@botc/shared';
 import { GameEngine } from './game/engine';
 import { WebSocketHandler } from './websocket/handler';
 import { MatchmakingService } from './services/matchmaking';
+import { scriptCache } from './services/scriptCache';
 import { logger } from './utils/logger';
+import setupRoutes from './routes/setupRoutes';
 
 const fastify = Fastify({
   logger: {
@@ -18,6 +20,11 @@ const fastify = Fastify({
 
 async function start() {
   try {
+    // Initialize script cache first for fast script loading
+    await scriptCache.initialize();
+    const { scriptCount, totalCharacters } = scriptCache.getStats();
+    logger.info(`🎭 Script cache ready: ${scriptCount} scripts, ${totalCharacters} characters`);
+
     // Register plugins
     await fastify.register(cors, {
       origin: process.env.CORS_ORIGIN || 'http://localhost:3000'
@@ -70,11 +77,51 @@ async function start() {
         id: script.id,
         name: script.name,
         version: script.version,
+    playerCount: script.setup?.playerCount,
         roles: script.roles.map((r: any) => ({ id: r.id, name: r.name, type: r.type, alignment: r.alignment }))
       };
     });
 
-    fastify.post('/api/games', async (request, reply) => {
+    // Fast cached script routes for lobby
+    fastify.get('/api/scripts/cached/list', async (request, reply) => {
+      try {
+        const scripts = scriptCache.getScriptsList();
+        return { scripts };
+      } catch (error) {
+        reply.code(500);
+        return { error: 'Failed to load scripts' };
+      }
+    });
+
+    fastify.get('/api/scripts/cached/:scriptId', async (request, reply) => {
+      try {
+        const { scriptId } = request.params as { scriptId: string };
+        const script = scriptCache.getScript(scriptId);
+        if (!script) {
+          reply.code(404);
+          return { error: 'Script not found' };
+        }
+        return script;
+      } catch (error) {
+        reply.code(500);
+        return { error: 'Failed to load script' };
+      }
+    });
+
+    fastify.get('/api/scripts/cached/:scriptId/characters', async (request, reply) => {
+      try {
+        const { scriptId } = request.params as { scriptId: string };
+        const script = scriptCache.getScript(scriptId);
+        if (!script) {
+          reply.code(404);
+          return { error: 'Script not found' };
+        }
+        return { characters: script.characters };
+      } catch (error) {
+        reply.code(500);
+        return { error: 'Failed to load characters' };
+      }
+    });    fastify.post('/api/games', async (request, reply) => {
       const gameId = await matchmaking.createGame();
       return { gameId };
     });
@@ -123,6 +170,43 @@ async function start() {
         return { error: 'Failed to start game' };
       }
       return { ok: true };
+    });
+
+    // Manual phase controls (Storyteller only)
+    fastify.post('/api/games/:gameId/phase/advance', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId } = (request.body as any) || {};
+      const res = await gameEngine.advancePhase(gameId as any, storytellerSeatId);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) {
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'phase_changed', payload: { phase: game.phase } });
+      }
+      return { ok: true, phase: game.phase, day: game.day };
+    });
+
+    fastify.post('/api/games/:gameId/phase/set', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId, phase } = (request.body as any) || {};
+      const res = await gameEngine.setPhase(gameId as any, storytellerSeatId, phase);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) {
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'phase_changed', payload: { phase: game.phase } });
+      }
+      return { ok: true, phase: game.phase, day: game.day };
+    });
+
+    fastify.post('/api/games/:gameId/end', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId } = (request.body as any) || {};
+      const res = await gameEngine.endGame(gameId as any, storytellerSeatId);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) {
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'phase_changed', payload: { phase: game.phase } });
+      }
+      return { ok: true, phase: game?.phase };
     });
 
     // Add an NPC player
@@ -179,6 +263,50 @@ async function start() {
     // WebSocket connection
     fastify.register(async function (fastify) {
       fastify.get('/ws', { websocket: true }, wsHandler.handleConnection.bind(wsHandler));
+    });
+
+    // Setup routes
+    fastify.register(setupRoutes, { prefix: '/api/games', gameEngine });
+
+    // Day mechanics: nomination & voting
+    fastify.post('/api/games/:gameId/nominate', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { nominator, nominee } = (request.body as any) || {};
+      const res = gameEngine.nominate(gameId as any, nominator as any, nominee as any);
+      if (!('ok' in res) || !res.ok) { reply.code(400); return { error: (res as any).error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'nomination_made', payload: { nominee } });
+      return { ok: true, nominationId: res.nominationId };
+    });
+
+    fastify.post('/api/games/:gameId/vote/start', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId } = (request.body as any) || {};
+      const res = gameEngine.startVote(gameId as any, storytellerSeatId as any);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'vote_cast', payload: { started: true } });
+      return { ok: true };
+    });
+
+    fastify.post('/api/games/:gameId/vote/cast', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { voter, vote } = (request.body as any) || {};
+      const res = gameEngine.castVote(gameId as any, voter as any, !!vote);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'vote_cast', payload: { voter, vote: !!vote } });
+      return { ok: true };
+    });
+
+    fastify.post('/api/games/:gameId/vote/finish', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId } = (request.body as any) || {};
+      const res = gameEngine.finishVote(gameId as any, storytellerSeatId as any);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'execution_occurred', payload: { executed: res.executed } });
+      return { ok: true, executed: res.executed, nominee: res.nominee };
     });
 
     // Script proposal endpoints (simple)
