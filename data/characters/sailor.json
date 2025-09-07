@@ -1,0 +1,51 @@
+{
+  "id": "sailor",
+  "name": "Sailor",
+  "team": "townsfolk",
+  "ability": "Each night, choose an alive player: either you or they are drunk until dusk. You can't die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "protection",
+    "drunk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Sailor points to a living player. Either the Sailor or the chosen player is drunk until dusk."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "sailor-choose-drunk",
+        "type": "character",
+        "action": "choosePlayerDrunkSelfOrTarget",
+        "description": "Each night, choose a living player: either you or they are drunk until dusk. You can't die.",
+        "targets": [
+          "sailor"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

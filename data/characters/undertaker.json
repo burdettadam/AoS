@@ -1,0 +1,116 @@
+{
+  "id": "undertaker",
+  "name": "Undertaker",
+  "team": "townsfolk",
+  "ability": "Each night*, you learn which character died by execution today.",
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "information",
+    "dead"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Undertaker",
+  "imageUrl": null,
+  "howToRun": "If a player dies by execution, put the Undertaker's DIED TODAY reminder token by the dead player's character token.\nEach night except the first, if any player died by execution today, wake the Undertaker. Show the character token marked DIED TODAY to the Undertaker. Put the Undertaker to sleep. Remove the Undertaker's reminder token when convenient.\nIn Trouble Brewing, there can only be one execution per day, and every execution causes a player to die. In other editions, there may be more than one execution per day (in which case the Storyteller chooses which character to show the Undertaker) or the execution does not cause a death (in which case the Undertaker learns nothing).",
+  "firstNightDescription": "",
+  "tipsAndTricks": "The more players that are executed, the more information you get. It's to your benefit to facilitate as many executions as you can. The good team's main method for killing evil players is execution as they are far less likely to die at night, so every execution is a chance to hit the Demon. If you don't, you'll at least arrive on the final day knowing a lot more about your fellow players and their roles.\nYou do not learn the identity of Travellers; they are exiled, not executed. The only exception to this is the Scapegoat, since they are explicitly executed by their character ability. However, you do not learn their alignment, only their character.\nExecuting someone when you don't know their identity can lend credence to your claim as the Undertaker. Alternatively, executing someone who has come out and is claiming a particular character allows you to confirm their story, as you will learn what character they are. Both are great ways to build trust with your fellow good team members.\nGood candidates for early executions are characters like the Washerwoman and the Librarian, as confirming their identity allows you to also confirm other good players. Executing the Investigator or Chef doesn't confirm any other players, but still does mean you can trust their powerful information and perhaps quickly execute the troublesome Poisoner.\nExecuting a character like the Fortune Teller may mean they don't get any more information, but you can confirm them and everything they've said up until that point. If they die during the night, they can no longer be confirmed.\nComing out early opens you up to risks of death or poisoning. Waiting to reveal your information until a critical moment can maximise the amount of information you receive. Make sure to come out before the end of the game!\nComing out as soon as possible is a good choice if you've learned something critical, such as the identity of the Demon. If you are shown that the executed player was the Imp, it is very likely that a Scarlet Woman just took over as the Demon!\nIf an executed player is the Drunk, you will see the Drunk character token, not the Townsfolk they thought they were.\nIf you see that a player is a good character, you can trust them, and claim what you are to them. Then, when you eventually reveal yourself as the Undertaker, the executed players will be able to back you up.\nIf you see an evil character token, it is typically unwise to be truthful with the player who was just executed. You may still want to claim to be the Undertaker and pretend to back up their bluff, so that the Imp and Poisoner might avoid you in future nights.\nA player who dies because of the Virgin is considered executed and will react to your ability, so you will learn who they are that night.\nBeware the Spy and the Recluse! They will likely register to you as good and evil characters respectively, as their abilities continue to function even when they are dead.",
+  "bluffing": "When bluffing as the Undertaker, there are a few things you should keep in mind:\nEach night, apart from the first night, the Storyteller would have woken you up and shown you the character token of the player who was executed yesterday.\nA good Undertaker may very well wait a few days before revealing that they are the Undertaker. Feel free to stay quiet for a while, or even claim to be a different character at first, to seem like an Undertaker bluffing as something else.\nYou can make yourself look good by confirming that good players are who they say they are. For this strategy to be successful you will need to find out who they are beforehand. If you are the Spy, or have access to a Spy, then you can be more convincing in this due to your complete knowledge of everybody's characters.\nYou can make key players look evil by claiming that they are Minions, or even the Demon, if they are executed. This is risky, as the player in question will know that you are probably evil, but potentially game winning, as the rest of the group won't know that you are lying. Since most of the time more good players will be getting executed than evil players, use this technique sparingly. If you find that you aren't believed, you can always claim to be the Drunk or poisoned.\nIf another Evil player dies by execution, you can safely claim that they are either a good or evil character. If you claim that they are a good character, both of you confirm each other's stories, so you both look more trustworthy. If you claim that they are an evil character, they should (hopefully) act a little more evil, and publicly subtly imply that they are, in fact, evil, making you appear to be the real Undertaker.\nA good way to undermine an executed Townsfolk character is to claim you saw the Drunk token for them instead. If the group believes you (and especially if the executed player believes you), then the group will assume that any information they received was unreliable. If you don't know which character a player is, claiming that they are the Drunk is a good way to hide this fact.",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": [
+      "trouble-brewing"
+    ],
+    "otherNightReminder": "If a player was executed today: Show the 'This character was executed today' card, then the Undertaker token plus the character token of the executed player."
+  },
+  "goal": {
+    "actionType": "learnCharacter",
+    "description": "Learns the character of the player executed today to confirm or refute claims",
+    "selection": {
+      "type": "EXECUTED_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": true
+      }
+    },
+    "effects": [
+      {
+        "type": "LEARN_CHARACTER",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "information": {
+          "type": "EXECUTED_CHARACTER",
+          "scope": "TODAY"
+        }
+      }
+    ],
+    "frequency": "nightly"
+  },
+  "actions": {
+    "night": [
+      {
+        "id": "undertaker-learn-executed",
+        "actionType": "learnCharacter",
+        "label": "Learn executed character",
+        "description": "If someone was executed today, show the executed player's character token to the Undertaker",
+        "selection": {
+          "type": "EXECUTED_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "LEARN_CHARACTER",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "information": {
+              "type": "EXECUTED_CHARACTER",
+              "scope": "TODAY"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "EXECUTION_OCCURRED"
+        },
+        "order": 1
+      }
+    ],
+    "execution": [
+      {
+        "id": "undertaker-mark-executed",
+        "actionType": "markExecutedForTonight",
+        "label": "Mark executed player",
+        "description": "Mark the executed player's token to be shown to the Undertaker tonight",
+        "selection": {
+          "type": "EXECUTED_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "MARK_FOR_INFO",
+            "target": "EXECUTED_PLAYER",
+            "duration": "NIGHT",
+            "information": {
+              "type": "EXECUTED_CHARACTER"
+            }
+          }
+        ],
+        "order": 0
+      }
+    ],
+    "firstNight": [],
+    "day": [],
+    "nominations": [],
+    "voting": []
+  }
+}

@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import type { GameState, LoadedScript } from '@botc/shared';
-import { GamePhase } from '@botc/shared';
+import * as Enums from '@botc/shared';
 
 const LobbyPage: React.FC = () => {
   const { gameId } = useParams();
@@ -15,68 +15,91 @@ const LobbyPage: React.FC = () => {
     seatId,
     isStoryteller,
     availableScripts,
-    scriptsLoading,
+  // scriptsLoading,
     loadScripts,
+  leaveGame,
   } = useGameStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playerId] = useState(() => {
-    // Persist a random UUID-ish for demo purposes
-    const key = 'botc-player-id';
-    const existing = localStorage.getItem(key);
-    if (existing) return existing;
-    const id = crypto.randomUUID();
-    localStorage.setItem(key, id);
-    return id;
+    const nameKey = 'botc-player-name';
+    const name = (localStorage.getItem(nameKey) || '').trim();
+    return name;
   });
-  const seatCount = currentGame?.seats?.length ?? 0;
-  const [scriptInfo, setScriptInfo] = useState<{ id: string; name: string; playerCount?: { min: number; max: number } } | null>(null);
+  const playerCount = useMemo(() => {
+    if (!currentGame?.seats) return 0;
+    return currentGame.seats.filter((seat: any) => seat.id !== currentGame.storytellerSeatId).length;
+  }, [currentGame?.seats, currentGame?.storytellerSeatId]);
   const [selectedScriptId, setSelectedScriptId] = useState<string>('');
+  const [hoverCharacter, setHoverCharacter] = useState<any | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const charactersScrollRef = useRef<HTMLDivElement | null>(null);
+  
+  // Team ring colors for character icons
+  const teamRing: Record<string, string> = {
+    townsfolk: 'ring-green-500/60',
+    outsider: 'ring-blue-400/60',
+    minion: 'ring-purple-500/60',
+    demon: 'ring-red-500/70',
+    traveller: 'ring-amber-400/60',
+    fabled: 'ring-sky-400/60',
+  };
+
+  const scrollCharacters = (dir: 'left' | 'right') => {
+    const el = charactersScrollRef.current;
+    if (!el) return;
+    const delta = Math.max(240, Math.floor(el.clientWidth * 0.8));
+    el.scrollBy({ left: dir === 'left' ? -delta : delta, behavior: 'smooth' });
+  };
+  
+  // Get available scripts from game state, fallback to empty array
+  const storytellerSelectedScripts = currentGame?.availableScriptIds || [];
+  
+  // Helper function to update available scripts on server
+  const updateAvailableScripts = async (scriptIds: string[]) => {
+    if (!gameId || !seatId) return;
+    try {
+      await fetch(`/api/games/${gameId}/scripts/available`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storytellerSeatId: seatId, scriptIds })
+      });
+    } catch (error) {
+      console.error('Failed to update available scripts:', error);
+    }
+  };
+  
+  // For storytellers: all scripts available for selection
+  // For players: only scripts the storyteller has approved
+  const visibleScripts = useMemo(() => {
+    if (isStoryteller) {
+      return availableScripts;
+    }
+    return availableScripts.filter(script => storytellerSelectedScripts.includes(script.id));
+  }, [availableScripts, isStoryteller, storytellerSelectedScripts]);
+
   const selectedScript = useMemo(() => {
     // Prefer manual selection; otherwise fall back to the game's current script
-    const manual = availableScripts.find((s: LoadedScript) => s.id === selectedScriptId);
+    const manual = visibleScripts.find((s: LoadedScript) => s.id === selectedScriptId);
     if (manual) return manual;
     if (currentGame?.scriptId) {
-      return availableScripts.find((s: LoadedScript) => s.id === currentGame.scriptId);
+      return visibleScripts.find((s: LoadedScript) => s.id === currentGame.scriptId);
     }
   return undefined;
-  }, [availableScripts, selectedScriptId, currentGame?.scriptId]);
+  }, [visibleScripts, selectedScriptId, currentGame?.scriptId]);
 
   // Resolve a local artwork path; fall back to placeholder if missing
   const artworkSrc = useMemo(() => {
-    const id = selectedScript?.id || scriptInfo?.id;
+    const id = selectedScript?.id;
     if (!id) return '/script-art/placeholder.svg';
     // Prefer .png or .jpg. We don't check existence here; the img onError will swap to placeholder.
     return `/script-art/${id}.png`;
-  }, [selectedScript?.id, scriptInfo?.id]);
+  }, [selectedScript?.id]);
 
-  // Derive a lightweight first-night order by sorting characters with firstNight defined
-  const firstNightOrder = useMemo(() => {
-    if (!selectedScript?.characters?.length) return [] as { id: string; name: string; order: number }[];
-    return selectedScript.characters
-      .map((c: any) => ({ id: c.id, name: c.name, order: typeof c.firstNight === 'number' ? c.firstNight : 999 }))
-      .filter((c: any) => c.order !== 999)
-      .sort((a: any, b: any) => a.order - b.order)
-      .slice(0, 10);
-  }, [selectedScript?.characters]);
+  // Removed: first night order preview not used in this layout
 
-  // Load current script info for player count requirements
-  useEffect(() => {
-    const load = async () => {
-      const scriptId = currentGame?.scriptId;
-      if (!scriptId) return;
-      try {
-        const res = await fetch(`/api/scripts/${scriptId}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        setScriptInfo(data);
-      } catch {}
-    };
-    load();
-  }, [currentGame?.scriptId]);
-
-  const minPlayersRequired = useMemo(() => scriptInfo?.playerCount?.min ?? 5, [scriptInfo]);
-  const hasEnoughPlayers = seatCount >= minPlayersRequired;
+  const minPlayersRequired = useMemo(() => selectedScript?.meta?.playerCount?.min ?? 5, [selectedScript]);
+  const hasEnoughPlayers = playerCount >= minPlayersRequired;
 
   // Aggressively preload scripts immediately when component mounts
   useEffect(() => {
@@ -91,8 +114,24 @@ const LobbyPage: React.FC = () => {
     }
   }, [currentGame?.scriptId, selectedScriptId]);
 
+  // Cleanup hover timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+
+
   useEffect(() => {
     if (!gameId) return;
+    // Require player name; redirect to join page if missing and gameId known
+    if (!playerId || !playerId.trim()) {
+      navigate(`/join/${gameId}`);
+      return;
+    }
     let cancelled = false;
     async function init() {
       try {
@@ -102,21 +141,28 @@ const LobbyPage: React.FC = () => {
         const game: GameState = await res.json();
         if (cancelled) return;
 
-        if (game.phase === GamePhase.LOBBY) {
-          // Join the game
-          const joinRes = await fetch(`/api/games/${gameId}/join`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ playerId })
-          });
-          if (!joinRes.ok) throw new Error('Failed to join game');
-          const joinData = await joinRes.json();
-          setSeat(joinData.seatId, joinData.isStoryteller);
-          // Connect to WS for live updates
-          connect(game.id, joinData.seatId);
+        const storedSeat = localStorage.getItem('botc-seat-id');
+  if (game.phase === Enums.GamePhase.LOBBY) {
+          // Try to reuse existing seat first by playerId or stored seatId
+          let mySeat = game.seats.find((s: any) => (storedSeat && s.id === storedSeat) || s.playerId === playerId);
+          if (!mySeat) {
+            // Join the game
+            const joinRes = await fetch(`/api/games/${gameId}/join`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ playerId })
+            });
+            if (!joinRes.ok) throw new Error('Failed to join game');
+            const joinData = await joinRes.json();
+            setSeat(joinData.seatId, joinData.isStoryteller);
+            connect(game.id, joinData.seatId);
+          } else {
+            setSeat(mySeat.id, mySeat.id === (game as any).storytellerSeatId);
+            connect(game.id, mySeat.id);
+          }
         } else {
           // Game already advanced; try to find existing seat by playerId
-          const mySeat = game.seats.find((s: any) => s.playerId === playerId);
+          const mySeat = game.seats.find((s: any) => (storedSeat && s.id === storedSeat) || s.playerId === playerId);
           if (!mySeat) {
             setError('Game already started. Ask the Storyteller to add you.');
           } else {
@@ -136,7 +182,7 @@ const LobbyPage: React.FC = () => {
 
   // Redirect to setup page if game is in setup phase and user is storyteller
   useEffect(() => {
-    if (currentGame?.phase === GamePhase.SETUP && isStoryteller) {
+  if (currentGame?.phase === Enums.GamePhase.SETUP && isStoryteller) {
       navigate(`/setup/${gameId}`);
     }
   }, [currentGame?.phase, isStoryteller, gameId, navigate]);
@@ -176,245 +222,495 @@ const LobbyPage: React.FC = () => {
     );
   }
 
+  // Zelda-inspired layout
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-medieval font-bold text-center mb-8">Game Lobby</h1>
-      <div className="card p-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm text-gray-400">Game ID</div>
-            <div className="font-mono">{gameId}</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-400">Players</div>
-            <div className="font-semibold">{seatCount}</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-400">Phase</div>
-            <div className="font-semibold capitalize">{currentGame?.phase || 'Lobby'}</div>
+    <div className="max-w-[1200px] mx-auto">
+  <h1 className="text-4xl font-medieval font-bold text-center mb-2">Game Lobby{(currentGame as any)?.gameName ? `: ${(currentGame as any).gameName}` : ''}</h1>
+      
+  {isStoryteller && currentGame?.phase === Enums.GamePhase.LOBBY && (
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <input
+            defaultValue={(currentGame as any)?.gameName || ''}
+            placeholder="Set game name (visible to all)"
+            onBlur={async (e) => {
+              const name = e.currentTarget.value.trim();
+              if (!gameId || !seatId || !name) return;
+              await fetch(`/api/games/${gameId}/name`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ storytellerSeatId: seatId, name }) });
+            }}
+            className="px-3 py-1 bg-clocktower-dark border border-gray-600 rounded focus:outline-none focus:border-clocktower-accent w-[360px]"
+          />
+          <span className="text-xs text-gray-500">Press Tab/Click away to save</span>
+        </div>
+      )}
+      <div className="grid grid-cols-12 gap-4">
+        {/* Left: seats and players */}
+        <div className="col-span-12 md:col-span-3 h-[600px] flex flex-col">
+          {/* Storyteller panel - visible to everyone */}
+          {currentGame?.storytellerSeatId ? (
+            <div className="card p-3 mb-3 border-yellow-600/50">
+              <div className="text-xs text-yellow-400 mb-2 flex items-center gap-1">
+                <span>👑</span>
+                <span>Storyteller</span>
+              </div>
+              {(() => {
+                const storytellerSeat = currentGame.seats.find((s: any) => s.id === currentGame.storytellerSeatId);
+                return (
+                  <div className="flex items-center justify-between">
+                    <div className="font-mono text-sm truncate text-yellow-100">{storytellerSeat?.playerId || 'Unknown'}</div>
+                    <span className="text-lg">👑</span>
+                  </div>
+                );
+              })()}
+            </div>
+          ) : (
+            <div className="card p-3 mb-3 border-gray-600/50">
+              <div className="text-xs text-gray-400 mb-2">Storyteller</div>
+              <div className="text-sm text-gray-500 italic">No storyteller assigned yet</div>
+            </div>
+          )}
+
+          {/* Players panel */}
+          <div className="card p-3 flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-xs text-gray-400">Players</div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {currentGame?.seats?.filter((s: any) => s.id !== currentGame.storytellerSeatId).map((s: any, i: number) => (
+                <div key={s.id} className="p-2 rounded border border-gray-700 bg-clocktower-dark">
+                  <div className="text-[10px] text-gray-400">Seat {i + 1}</div>
+                  <div className="truncate font-mono text-[11px]">
+                    {s.playerId || 'NPC'}
+                  </div>
+                  {isStoryteller && currentGame.storytellerSeatId === seatId && (
+                    <button
+                      onClick={async () => {
+                        await fetch(`/api/games/${gameId}/storyteller`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ setterSeatId: seatId, targetSeatId: s.id }) });
+                      }}
+                      className="mt-1 w-full text-[10px] btn-secondary"
+                    >Make Storyteller</button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {currentGame?.seats?.map((s: any, i: number) => (
-            <div key={s.id} className="p-4 bg-clocktower-dark rounded-lg border border-gray-700">
-              <div className="text-sm text-gray-400">Seat {i + 1}</div>
-              <div className="truncate font-mono text-xs flex items-center gap-2">
-                {s.playerId || 'NPC'}
-                {s.id === currentGame.storytellerSeatId && (
-                  <span className="text-xs text-yellow-400">Storyteller</span>
+        {/* Center: script selection area and character list */}
+        <div className="col-span-12 md:col-span-5 h-[600px] flex flex-col">
+          {/* Storyteller-only: All scripts selector */}
+          {isStoryteller && (
+            <div className="card p-3 mb-3">
+              <div className="text-sm text-gray-300 mb-2">All Scripts (Storyteller Only)</div>
+              <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                {availableScripts.map((s: LoadedScript) => (
+                  <div key={s.id} className="shrink-0 relative">
+                    <button
+                      className={`px-3 py-2 rounded border ${selectedScript?.id === s.id ? 'border-blue-400 bg-blue-900/20' : 'border-gray-700 bg-clocktower-dark hover:border-gray-500'}`}
+                      onClick={() => setSelectedScriptId(s.id)}
+                    >
+                      <div className="text-sm">{s.name}</div>
+                      {s.meta?.complexity && <div className="text-[10px] text-gray-400 capitalize">{s.meta.complexity}</div>}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (storytellerSelectedScripts.includes(s.id)) {
+                          const newScriptIds = storytellerSelectedScripts.filter(id => id !== s.id);
+                          await updateAvailableScripts(newScriptIds);
+                        } else {
+                          const newScriptIds = [...storytellerSelectedScripts, s.id];
+                          await updateAvailableScripts(newScriptIds);
+                        }
+                      }}
+                      className={`absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs flex items-center justify-center ${
+                        storytellerSelectedScripts.includes(s.id) 
+                          ? 'bg-green-600 text-white hover:bg-green-700' 
+                          : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                      }`}
+                      title={storytellerSelectedScripts.includes(s.id) ? 'Remove from player scripts' : 'Add to player scripts'}
+                    >
+                      {storytellerSelectedScripts.includes(s.id) ? '✓' : '+'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Storyteller-only: Selected scripts for players */}
+          {isStoryteller && (
+            <div className="card p-3 mb-3">
+              <div className="text-sm text-gray-300 mb-2">Scripts Available to Players</div>
+              <div className="flex gap-2 overflow-x-auto no-scrollbar min-h-[60px]">
+                {storytellerSelectedScripts.length > 0 ? (
+                  storytellerSelectedScripts.map((scriptId) => {
+                    const script = availableScripts.find(s => s.id === scriptId);
+                    if (!script) return null;
+                    return (
+                      <div key={scriptId} className="shrink-0 px-3 py-2 rounded border border-gray-700 bg-clocktower-dark flex items-center gap-2">
+                        <div>
+                          <div className="text-sm">{script.name}</div>
+                          {script.meta?.complexity && <div className="text-[10px] text-gray-400 capitalize">{script.meta.complexity}</div>}
+                        </div>
+                        <button
+                          onClick={async () => {
+                            const newScriptIds = storytellerSelectedScripts.filter(id => id !== scriptId);
+                            await updateAvailableScripts(newScriptIds);
+                          }}
+                          className="text-red-400 hover:text-red-300 text-xs ml-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-gray-400 text-sm p-3">No scripts selected for players yet. Select scripts from above to make them visible to players.</div>
                 )}
               </div>
             </div>
-          ))}
-          {(!currentGame || currentGame.seats.length === 0) && (
-            <div className="text-gray-400">No players yet. Join links will appear as players connect.</div>
           )}
-        </div>
 
-        {isStoryteller && (
-          <div className="space-y-3">
-            <div className="text-sm text-gray-300">Script Selection</div>
-            <div className="flex gap-2 items-start">
-              <select
-                id="scriptSelect"
-                className="bg-clocktower-dark border border-gray-700 rounded px-3 py-2"
-                value={selectedScriptId}
-                onChange={(e) => setSelectedScriptId(e.target.value)}
-              >
-                {scriptsLoading ? (
-                  <option value="">Loading scripts...</option>
+          {/* Players-only: Available scripts */}
+          {!isStoryteller && (
+            <div className="card p-3 mb-3">
+              <div className="text-sm text-gray-300 mb-2">Available Scripts</div>
+              <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                {visibleScripts.length > 0 ? (
+                  visibleScripts.map((s: LoadedScript) => (
+                    <button
+                      key={s.id}
+                      className={`shrink-0 px-3 py-2 rounded border ${selectedScript?.id === s.id ? 'border-blue-400 bg-blue-900/20' : 'border-gray-700 bg-clocktower-dark hover:border-gray-500'}`}
+                      onClick={() => setSelectedScriptId(s.id)}
+                    >
+                      <div className="text-sm">{s.name}</div>
+                      {s.meta?.complexity && <div className="text-[10px] text-gray-400 capitalize">{s.meta.complexity}</div>}
+                    </button>
+                  ))
                 ) : (
-                  <>
-                    <option value="">Select a script</option>
-                    {availableScripts.map((script: LoadedScript) => (
-                      <option key={script.id} value={script.id}>
-                        {script.name}
-                        {script.meta?.playerCount && (
-                          ` (${script.meta.playerCount.min}-${script.meta.playerCount.max} players)`
-                        )}
-                      </option>
-                    ))}
-                  </>
+                  <div className="text-gray-400 text-sm p-3">The storyteller hasn't made any scripts available yet.</div>
                 )}
-              </select>
-              <button
-                className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={scriptsLoading}
-                onClick={async () => {
-                  const selectValue = selectedScriptId;
-                  if (!selectValue) {
-                    alert('Please select a script first');
-                    return;
-                  }
-                  await fetch(`/api/games/${gameId}/scripts/propose`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ proposerSeatId: seatId, scriptId: selectValue })
-                  });
-                }}
+              </div>
+            </div>
+          )}
+
+
+
+          {/* Characters grid for selected script */}
+          {/* Characters panel: fixed height with horizontal sliding */}
+          <div className="card p-3 flex-1 flex flex-col">
+            <div className="text-sm text-gray-300 mb-2">Characters</div>
+            <div className="relative">
+              <div
+                ref={charactersScrollRef}
+                className="grid gap-3 overflow-x-auto no-scrollbar py-1 pr-8"
+                style={{ scrollBehavior: 'smooth', gridAutoFlow: 'column', gridTemplateRows: 'repeat(4, minmax(0, 1fr))' }}
               >
-                {scriptsLoading ? 'Loading...' : 'Propose'}
-              </button>
+                {selectedScript?.characters?.map((c: any) => {
+                  const imgSrc = `/artwork/characters/${(c.id || '').toLowerCase()}.png`;
+                  const ring = teamRing[c.team] || 'ring-gray-500/50';
+                  return (
+                    <button
+                      key={c.id}
+                      onMouseEnter={() => {
+                        if (hoverTimeoutRef.current) {
+                          clearTimeout(hoverTimeoutRef.current);
+                          hoverTimeoutRef.current = null;
+                        }
+                        setHoverCharacter(c);
+                      }}
+                      onMouseLeave={() => {
+                        hoverTimeoutRef.current = setTimeout(() => {
+                          setHoverCharacter(null);
+                          hoverTimeoutRef.current = null;
+                        }, 100);
+                      }}
+                      className="shrink-0 w-[110px] flex flex-col items-center text-center p-1 rounded hover:bg-white/5"
+                      title={c.name}
+                    >
+                      <div className={`w-20 h-20 rounded-full overflow-hidden ring-2 ${ring} bg-black/40 border border-gray-700`}> 
+                        <img
+                          src={imgSrc}
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/script-art/placeholder.svg'; }}
+                          alt={c.name}
+                          className="w-full h-full object-cover"
+                          draggable={false}
+                        />
+                      </div>
+                      <div className="mt-1 text-[10px] font-medium leading-tight truncate w-full">{c.name}</div>
+                    </button>
+                  );
+                })}
+                {!selectedScript && (
+                  <div className="text-gray-400 px-3">Select a script to preview its characters.</div>
+                )}
+              </div>
+              {selectedScript?.characters?.length ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => scrollCharacters('left')}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white px-2 py-1 rounded"
+                    aria-label="Scroll characters left"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollCharacters('right')}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white px-2 py-1 rounded"
+                    aria-label="Scroll characters right"
+                  >
+                    ›
+                  </button>
+                </>
+              ) : null}
             </div>
 
-            {/* Script summary panel */}
-            {selectedScript && (
-              <div className="mt-3 p-3 rounded border border-gray-700 bg-black/20">
-                <div className="flex items-start gap-3">
-                  <img
-                    src={artworkSrc}
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/script-art/placeholder.svg'; }}
-                    alt={`${selectedScript.name} artwork`}
-                    className="w-20 h-20 object-cover rounded border border-gray-700 bg-black"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-base font-semibold">{selectedScript.name}</div>
-                        {selectedScript.meta?.complexity && (
-                          <div className="text-xs text-gray-400 capitalize">{selectedScript.meta.complexity}</div>
-                        )}
-                      </div>
-                      {selectedScript.meta?.playerCount && (
-                        <div className="text-xs text-gray-300 shrink-0">
-                          Players: {selectedScript.meta.playerCount.min}-{selectedScript.meta.playerCount.max}
-                        </div>
-                      )}
-                    </div>
-                {selectedScript.meta?.description && (
-                  <p className="text-sm text-gray-200 mt-2 leading-snug line-clamp-3">{selectedScript.meta.description}</p>
-                )}
-                {/* Lightweight preview of characters */}
-                {selectedScript.characters?.length > 0 && (
-                  <div className="mt-2 text-xs text-gray-300">
-                    <span className="text-gray-400">Includes:</span>{' '}
-                    {selectedScript.characters.slice(0, 8).map((c: any) => c.name).join(', ')}
-                    {selectedScript.characters.length > 8 && '…'}
-                  </div>
-                )}
-                {/* First night order (from computed list) */}
-                {firstNightOrder.length > 0 && (
-                  <div className="mt-2 text-xs text-gray-300">
-                    <span className="text-gray-400">First Night:</span>{' '}
-                    {firstNightOrder.map((r, idx) => (
-                      <span key={r.id}>{idx > 0 && ', '}{r.name}</span>
-                    ))}
-                  </div>
-                )}
-                {selectedScript.meta?.tags?.length ? (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {selectedScript.meta.tags.slice(0, 6).map((tag: string) => (
-                      <span key={tag} className="px-2 py-0.5 text-[10px] rounded bg-gray-700 text-gray-200">{tag}</span>
-                    ))}
-                    {selectedScript.meta.tags.length > 6 && (
-                      <span className="px-2 py-0.5 text-[10px] rounded bg-gray-700 text-gray-300">+{selectedScript.meta.tags.length - 6} more</span>
-                    )}
-                  </div>
-                ) : null}
-                  </div>
-                </div>
+            {isStoryteller && selectedScript && storytellerSelectedScripts.includes(selectedScript.id) && (
+              <div className="mt-3 flex gap-2">
+                <button
+                  className="btn-secondary"
+                  onClick={async () => {
+                    if (!selectedScriptId) return alert('Pick a script first');
+                    await fetch(`/api/games/${gameId}/scripts/propose`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ proposerSeatId: seatId, scriptId: selectedScriptId }) });
+                  }}
+                >Propose Script</button>
               </div>
             )}
-            <div>
-              <div className="text-sm text-gray-400 mb-2">Proposals</div>
-              <div className="space-y-2">
-                {currentGame?.scriptProposals?.map((p: any) => {
-                  const script = availableScripts.find((s: LoadedScript) => s.id === p.scriptId);
-                  const scriptName = script?.name || p.scriptId;
+
+            {!isStoryteller && selectedScript && (
+              <div className="mt-3 flex gap-2">
+                <button
+                  className="btn-secondary"
+                  onClick={async () => {
+                    if (!selectedScriptId) return alert('Pick a script first');
+                    await fetch(`/api/games/${gameId}/scripts/propose`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ proposerSeatId: seatId, scriptId: selectedScriptId }) });
+                  }}
+                >Propose Script</button>
+              </div>
+            )}
+
+          </div>
+
+          {/* Bottom proposals slider visible to everyone: sorted by thumbs up */}
+          <div className="card p-2 mt-3">
+            <div className="text-sm text-gray-400 mb-1">Proposed Scripts</div>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              {currentGame?.scriptProposals?.length ? (
+                [...currentGame.scriptProposals].sort((a: any, b: any) => (b.tallies?.yes || 0) - (a.tallies?.yes || 0)).map((p: any) => {
+                  const s = availableScripts.find((x: any) => x.id === p.scriptId);
+                  const name = s?.name || p.scriptId;
                   return (
-                    <div key={p.id} className="flex items-center justify-between bg-gray-800 rounded px-3 py-2">
-                      <div>
-                        <div className="text-sm font-medium">{scriptName}</div>
-                        {script?.meta?.complexity && (
-                          <div className="text-xs text-gray-400 capitalize">{script.meta.complexity}</div>
-                        )}
+                    <div key={p.id} className="shrink-0 px-3 py-2 rounded border border-gray-700 bg-clocktower-dark hover:border-gray-500">
+                      <div className="text-xs font-medium truncate max-w-[180px]">{name}</div>
+                      <div className="text-[10px] text-gray-400 flex gap-2 mt-1">
+                        <button 
+                          className="hover:text-green-400"
+                          onClick={async () => {
+                            await fetch(`/api/games/${gameId}/scripts/vote`, { 
+                              method: 'POST', 
+                              headers: { 'Content-Type': 'application/json' }, 
+                              body: JSON.stringify({ voterSeatId: seatId, proposalId: p.id, vote: true }) 
+                            });
+                          }}
+                        >
+                          👍 {p.tallies?.yes ?? 0}
+                        </button>
+                        <button 
+                          className="hover:text-red-400"
+                          onClick={async () => {
+                            await fetch(`/api/games/${gameId}/scripts/vote`, { 
+                              method: 'POST', 
+                              headers: { 'Content-Type': 'application/json' }, 
+                              body: JSON.stringify({ voterSeatId: seatId, proposalId: p.id, vote: false }) 
+                            });
+                          }}
+                        >
+                          👎 {p.tallies?.no ?? 0}
+                        </button>
                       </div>
-                      <div className="flex gap-2">
-                        <button className="btn-secondary"
-                          onClick={async () => {
-                            await fetch(`/api/games/${gameId}/scripts/vote`, {
-                              method: 'POST', headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ voterSeatId: seatId, proposalId: p.id, vote: true })
-                            });
-                          }}
-                        >Vote Yes</button>
-                        <button className="btn-secondary"
-                          onClick={async () => {
-                            await fetch(`/api/games/${gameId}/scripts/vote`, {
-                              method: 'POST', headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ voterSeatId: seatId, proposalId: p.id, vote: false })
-                            });
-                          }}
-                        >Vote No</button>
+                      <div className="mt-1 flex gap-1 text-[10px]">
+                        {(['beginner','intermediate','advanced'] as const).map(level => (
+                          <button 
+                            key={level} 
+                            className="px-1 py-0.5 rounded bg-black/40 border border-gray-700 capitalize hover:border-gray-500"
+                            onClick={async () => {
+                              await fetch(`/api/games/${gameId}/scripts/vote`, { 
+                                method: 'POST', 
+                                headers: { 'Content-Type': 'application/json' }, 
+                                body: JSON.stringify({ voterSeatId: seatId, proposalId: p.id, difficulty: level }) 
+                              });
+                            }}
+                          >
+                            {level}: {p.tallies?.difficulty?.[level] ?? 0}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   );
-                })}
+                })
+              ) : (
+                <div className="text-gray-400 text-xs px-3 py-2">No scripts proposed yet</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: script or character detail like Zelda BOTW panel */}
+        <div className="col-span-12 md:col-span-4 h-[600px] flex flex-col">
+          <div className="grid grid-cols-3 gap-3 h-full">
+            {/* Preview Panel */}
+            <div className="card p-3 flex flex-col col-span-2">
+              <div className="aspect-square w-full mb-3 bg-black/40 border border-gray-700 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img
+                  src={hoverCharacter ? `/artwork/characters/${(hoverCharacter.id || '').toLowerCase()}.png` : artworkSrc}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/script-art/placeholder.svg'; }}
+                  alt={hoverCharacter ? hoverCharacter.name : selectedScript?.name || 'art'}
+                  className="object-contain max-h-full"
+                />
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <div className="text-lg font-semibold">
+                  {hoverCharacter ? hoverCharacter.name : selectedScript?.name || 'Pick a script'}
+                </div>
+                <div className="text-xs text-gray-400 capitalize">
+                  {hoverCharacter ? hoverCharacter.team : selectedScript?.meta?.complexity}
+                </div>
+                <p className="text-sm text-gray-200 mt-2 whitespace-pre-line">
+                  {hoverCharacter ? hoverCharacter.ability : selectedScript?.meta?.description}
+                </p>
+
+                {/* Modifiers preview */}
+                {selectedScript?.modifiers && selectedScript.modifiers.length > 0 && (
+                  <div className="mt-3">
+                    <div className="text-sm font-semibold text-gray-200 mb-1">Modifiers</div>
+                    <ul className="space-y-1 text-xs text-gray-300">
+                      {selectedScript.modifiers.map((m: any, idx: number) => {
+                        const label = m.type;
+                        const detail = m.type === 'requires'
+                          ? `${m.whenCharacter} → requires ${m.requireCharacters?.join(', ')}`
+                          : m.type === 'adjustCounts'
+                          ? `${m.whenCharacter} → ${Object.entries(m.delta||{}).map(([k,v])=>`${k}:${v}`).join(', ')}`
+                          : m.type === 'mutuallyExclusive'
+                          ? `exclusive: ${m.characters?.join(' vs ')}`
+                          : m.type === 'atLeastOneOf'
+                          ? `at least one of: ${m.characters?.join(', ')}`
+                          : JSON.stringify(m);
+                        return (
+                          <li key={idx} className="p-2 rounded bg-clocktower-dark/40 border border-gray-700">
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium capitalize">{label}</span>
+                              {m.note && <span className="text-[10px] text-gray-400 ml-2">{m.note}</span>}
+                            </div>
+                            <div className="text-[11px] text-gray-300 mt-0.5">{detail}</div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Night Order Panel */}
+            <div className="card p-3 flex flex-col col-span-1">
+              <div className="text-lg font-semibold mb-2">Night Order</div>
+              <div className="flex-1 overflow-y-auto">
+                {selectedScript?.characters ? (
+                  <div className="space-y-1">
+                    {selectedScript.characters
+                      .filter((c: any) => c.firstNight && c.firstNight > 0)
+                      .sort((a: any, b: any) => a.firstNight - b.firstNight)
+                      .map((c: any) => (
+                        <div key={c.id} className="flex items-center justify-between text-xs p-1 rounded bg-clocktower-dark/50">
+                          <span className="font-medium">{c.name}</span>
+                          <span className="text-gray-400">{c.firstNight}</span>
+                        </div>
+                      ))}
+                    {selectedScript.characters.filter((c: any) => c.firstNight && c.firstNight > 0).length === 0 && (
+                      <div className="text-gray-400 text-xs">No first night actions</div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-gray-400 text-xs">Select a script to see night order</div>
+                )}
               </div>
             </div>
           </div>
-        )}
+        </div>
+      </div>
 
-        {/* Phase Information */}
-        {currentGame?.phase === GamePhase.SETUP && (
-          <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-blue-300 mb-2">Setup in Progress</h3>
-            <p className="text-gray-300 text-sm">
-              {isStoryteller 
-                ? "You are configuring the game setup. Click 'Continue Setup' to manage character selection."
-                : "The Storyteller is setting up the game. Please wait..."
-              }
-            </p>
-          </div>
-        )}
+      {/* Phase Information */}
+  {currentGame?.phase === Enums.GamePhase.SETUP && (
+        <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 mt-4">
+          <h3 className="text-lg font-semibold text-blue-300 mb-2">Setup in Progress</h3>
+          <p className="text-gray-300 text-sm">
+            {isStoryteller
+              ? "You are configuring the game setup. Click 'Continue Setup' to manage character selection."
+              : 'The Storyteller is setting up the game. Please wait...'}
+          </p>
+        </div>
+      )}
 
-        <div className="flex gap-3 justify-between">
+      {/* Controls */}
+      <div className="flex items-center justify-between mt-4 gap-3">
+        <div className="flex gap-2">
           <button
             className="btn-secondary"
             onClick={async () => { if (gameId) await fetch(`/api/games/${gameId}/npc`, { method: 'POST' }); }}
           >
             Add NPC
           </button>
-          <button className="btn-secondary" onClick={() => navigator.clipboard.writeText(window.location.href)}>
+          <button
+            className="btn-secondary"
+            onClick={() => {
+              if (!gameId) return;
+              const origin = window.location.origin;
+              const joinUrl = `${origin}/join/${gameId}`;
+              navigator.clipboard.writeText(joinUrl);
+            }}
+          >
             Copy Lobby Link
           </button>
-          
-      {isStoryteller && currentGame?.phase === GamePhase.LOBBY && (
-            <button 
-              className="btn-primary" 
-        onClick={handleSetup} 
-        disabled={!connected || !hasEnoughPlayers}
+          {currentGame?.phase === Enums.GamePhase.LOBBY && (
+            <button
+              className="btn-secondary"
+              onClick={async () => {
+                const ok = await leaveGame();
+                if (ok) navigate('/');
+              }}
             >
-        Begin Setup
-            </button>
-          )}
-          
-          {isStoryteller && currentGame?.phase === GamePhase.SETUP && (
-            <button 
-              className="btn-primary" 
-              onClick={handleSetup}
-            >
-              Continue Setup
-            </button>
-          )}
-          
-          {currentGame?.phase === GamePhase.NIGHT && (
-            <button className="btn-primary" onClick={handleStart}>
-              View Game
+              Leave Game
             </button>
           )}
         </div>
+        <div className="flex gap-2">
+          {isStoryteller && currentGame?.phase === Enums.GamePhase.LOBBY && (
+            <button
+              className="btn-primary"
+              onClick={handleSetup}
+              disabled={!connected || !hasEnoughPlayers}
+            >
+              Begin Setup
+            </button>
+          )}
+          {isStoryteller && currentGame?.phase === Enums.GamePhase.SETUP && (
+            <button className="btn-primary" onClick={handleSetup}>Continue Setup</button>
+          )}
+          {currentGame?.phase === Enums.GamePhase.NIGHT && (
+            <button className="btn-primary" onClick={handleStart}>View Game</button>
+          )}
+        </div>
       </div>
-      {isStoryteller && currentGame?.phase === GamePhase.LOBBY && (
+
+      {/* Storyteller readiness hint */}
+  {isStoryteller && currentGame?.phase === Enums.GamePhase.LOBBY && (
         <div className="text-sm text-gray-300 mt-2">
           {connected ? (
             hasEnoughPlayers ? (
-              <span>Ready to begin. Players: {seatCount}{scriptInfo?.playerCount ? ` (min ${minPlayersRequired})` : ''}.</span>
+              <span>Ready to begin. Players: {playerCount}{selectedScript?.meta?.playerCount ? ` (min ${minPlayersRequired})` : ''}. Storyteller: 1.</span>
             ) : (
-              <span>Need {minPlayersRequired - seatCount} more player{minPlayersRequired - seatCount === 1 ? '' : 's'} to begin setup{scriptInfo?.playerCount ? ` for ${scriptInfo.name}` : ''}.</span>
+              <span>Need {minPlayersRequired - playerCount} more player{minPlayersRequired - playerCount === 1 ? '' : 's'} to begin setup{selectedScript?.meta?.playerCount ? ` for ${selectedScript?.name}` : ''}. Current: {playerCount} players, 1 storyteller.</span>
             )
           ) : (
             <span>Connecting…</span>

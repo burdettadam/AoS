@@ -1,0 +1,49 @@
+{
+  "id": "deus-ex-fiasco",
+  "name": "Deus ex Fiasco",
+  "team": "fabled",
+  "ability": "At least once per game, the Storyteller will make a mistake, correct it, and publicly admit to it.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "fabled",
+    "storyteller-behavior",
+    "mistake-correction"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "deus-ex-fiasco-make-mistake",
+        "type": "character",
+        "action": "make-mistake-correct-admit",
+        "description": "At least once per game, the Storyteller will make a mistake, correct it, and publicly admit to it.",
+        "targets": ["deus-ex-fiasco"],
+        "information": {
+          "customMessage": "Make a mistake, correct it, and admit publicly."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

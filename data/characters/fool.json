@@ -1,0 +1,50 @@
+{
+  "id": "fool",
+  "name": "Fool",
+  "team": "townsfolk",
+  "ability": "The first time you die, you don't.",
+  "reminders": [
+    "Used"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "passive",
+    "protection",
+    "death-protection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "fool-first-death-survive",
+        "type": "character",
+        "action": "first-death-survive",
+    "label": "Survive first death",
+        "description": "The first time the Fool dies, they don't.",
+        "targets": ["fool"],
+        "information": {
+          "customMessage": "The Fool survives their first death."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

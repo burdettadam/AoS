@@ -1,0 +1,52 @@
+{
+  "id": "fisherman",
+  "name": "Fisherman",
+  "team": "townsfolk",
+  "ability": "Once per game, during the day, visit the Storyteller for some advice to help your team win.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "day-active",
+    "once-per-game",
+    "advice",
+    "private"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "fisherman-get-advice",
+        "type": "character",
+        "action": "visitStorytellerForAdviceOnce",
+        "description": "Once per game during the day, visit the Storyteller for advice to help your team win.",
+        "targets": [
+          "fisherman"
+        ],
+        "information": {
+          "customMessage": "Advice: [ADVICE_TEXT]"
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

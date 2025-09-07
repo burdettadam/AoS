@@ -1,0 +1,137 @@
+{
+  "id": "insanity-and-intuition",
+  "name": "Insanity & Intuition",
+  "description": "Insanity & Intuition is a script that explores themes of madness and instinct. Characters have abilities that blur the line between rational thought and intuitive insight.",
+  "author": "Sam",
+  "version": "1.0.0",
+  "characters": [
+    "investigator",
+    "librarian",
+    "chef",
+    "empath",
+    "fortune-teller",
+    "ravenkeeper",
+    "oracle",
+    "savant",
+    "seamstress",
+    "philosopher",
+    "artist",
+    "juggler",
+    "sage",
+    "town-crier",
+    "mathematician",
+    "flowergirl",
+    "dreamer",
+    "clockmaker",
+    "snake-charmer",
+    "barber",
+    "sweetheart",
+    "klutz",
+    "mutant",
+    "damsel",
+    "golem",
+    "hatter",
+    "heretic",
+    "hermit",
+    "ogre",
+    "plague-doctor",
+    "politician",
+    "puzzlemaster",
+    "snitch",
+    "zealot",
+    "spy",
+    "poisoner",
+    "scarlet-woman",
+    "baron",
+    "witch",
+    "cerenovus",
+    "pit-hag",
+    "evil-twin",
+    "godfather",
+    "devils-advocate",
+    "assassin",
+    "mastermind",
+    "fang-gu",
+    "vigormortis",
+    "no-dashii",
+    "vortox",
+    "al-hadikhia",
+    "kazali",
+    "legion",
+    "leviathan",
+    "lil-monsta",
+    "lleech",
+    "lord-of-typhon",
+    "ojo",
+    "riot",
+    "yaggababble"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "8-12"
+  },
+  "complexity": "intermediate",
+  "tags": [
+    "carousel",
+    "madness",
+    "intuition",
+    "featured"
+  ],
+  "estimatedTime": "75-90 minutes",
+  "characterDistribution": {
+    "townsfolk": 20,
+    "outsiders": 11,
+    "minions": 16,
+    "demons": 11
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Focus on madness and intuitive abilities",
+    "Characters that blur rational and instinctual behavior",
+    "Explores concepts of sanity and insight"
+  ],
+  "setupNotes": "This script explores the boundary between rational thought and instinct. Players should be prepared for abilities that challenge conventional logic.",
+  "winConditions": {
+    "good": "Execute all evil characters",
+    "evil": "Survive to equal the number of good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "Madness and gut-reading theme. Enforce madness consistently but gently. Keep a list of declared intuitions to measure over time.",
+  "firstNight": [
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": ["minions"],
+      "information": {
+        "showPlayersByTeam": ["minions", "demons"],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info",
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": ["demons"],
+      "information": {
+        "showPlayersByTeam": ["minions"],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    }
+  ],
+  "tipsAndTricks": "Good: Turn intuition into hypotheses and test them. Evil: Fake madness constraints to excuse contradictions.",
+  "bluffing": "Claim intuitive pings and evolve them gradually to fit outcomes.",
+  "legacy": null
+}

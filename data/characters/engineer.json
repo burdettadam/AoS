@@ -1,0 +1,52 @@
+{
+  "id": "engineer",
+  "name": "Engineer",
+  "team": "townsfolk",
+  "ability": "Once per game, at night, choose which Minions or which Demon is in play.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "active",
+    "once-per-game",
+    "character-change"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Engineer has not used their ability: The Engineer either shows a 'no' head shake or points to Minion/Demon character tokens. If characters are chosen, replace the existing Minions or Demon with the chosen ones."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "engineer-choose-minion-demon",
+        "type": "character",
+        "action": "choose-minion-or-demon",
+        "description": "Once per game, choose which Minions or which Demon is in play.",
+        "targets": ["engineer"],
+        "information": {
+          "customMessage": "Choose a Minion or Demon character to replace the current one."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

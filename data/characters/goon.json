@@ -1,0 +1,51 @@
+{
+  "id": "goon",
+  "name": "Goon",
+  "team": "outsider",
+  "ability": "Each night, the 1st player to choose you with their ability is drunk until dusk. You become their alignment.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "alignment-change",
+    "drunk",
+    "selection-trigger"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Goon was selected for an ability tonight: The Goon becomes the same alignment as the player that selected them. Wake the player that selected the Goon. Show 'This character selected you' card, then the Goon token. That player is drunk until dusk."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "goon-first-selector-drunk-alignment-change",
+        "type": "character",
+        "action": "firstSelectorDrunkChangeAlignment",
+        "description": "Each night, the 1st player to choose you with their ability is drunk until dusk. You become their alignment.",
+        "targets": [
+          "goon"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

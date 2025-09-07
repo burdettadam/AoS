@@ -1,0 +1,47 @@
+{
+  "id": "hermit",
+  "name": "Hermit",
+  "team": "outsider",
+  "ability": "You have all Outsider abilities. [-0 or -1 Outsider]",
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "ability-gain",
+    "setup",
+    "all-outsiders"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "hermit-gain-all-outsider-abilities",
+        "type": "character",
+        "action": "gain-all-outsider-abilities",
+        "description": "You have all Outsider abilities.",
+        "targets": ["hermit"],
+        "information": {
+          "customMessage": "Gain all Outsider abilities."
+        },
+        "order": 1
+      }
+    ],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

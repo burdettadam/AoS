@@ -1,0 +1,51 @@
+{
+  "id": "minstrel",
+  "name": "Minstrel",
+  "team": "townsfolk",
+  "ability": "When a Minion dies by execution, all other players (except Travellers) are drunk until dusk tomorrow.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "passive",
+    "execution-trigger",
+    "drunk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "minstrel-make-others-drunk-if-minion-executed",
+        "type": "character",
+        "action": "make-others-drunk-if-minion-executed",
+        "description": "When a Minion dies by execution, all other players (except Travellers) are drunk until dusk tomorrow.",
+        "targets": ["minstrel"],
+        "information": {
+          "customMessage": "If a Minion is executed, make all other players drunk until dusk tomorrow."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

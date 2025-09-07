@@ -1,0 +1,97 @@
+{
+  "id": "innkeeper",
+  "name": "Innkeeper",
+  "team": "townsfolk",
+  "ability": "Each night*, choose 2 players: they can't die tonight, but 1 is drunk until dusk.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Safe",
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "protection",
+    "drunk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "goal": {
+    "actionType": "protectAndDrunk",
+    "description": "Protects 2 players from death but makes one drunk each night",
+    "selection": {
+      "type": "MULTIPLE_PLAYERS",
+      "criteria": {
+        "minTargets": 2,
+        "maxTargets": 2,
+        "allowSelf": true,
+        "requireAlive": true
+      }
+    },
+    "effects": [
+      {
+        "type": "PROTECT_FROM_DEATH",
+        "target": "ALL_SELECTED",
+        "duration": "TONIGHT"
+      },
+      {
+        "type": "APPLY_STATUS",
+        "target": "ONE_OF_SELECTED",
+        "duration": "UNTIL_DUSK",
+        "statusEffect": "DRUNK"
+      }
+    ],
+    "frequency": "nightly"
+  },
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Innkeeper points to two players. Those players are safe from death tonight. One of those players is drunk until dusk."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "innkeeper-protect-and-drunk",
+        "actionType": "protectAndDrunk",
+        "description": "Each night, choose 2 players: they can't die tonight, but 1 is drunk until dusk.",
+        "selection": {
+          "type": "MULTIPLE_PLAYERS",
+          "criteria": {
+            "minTargets": 2,
+            "maxTargets": 2,
+            "allowSelf": true,
+            "requireAlive": true
+          }
+        },
+        "effects": [
+          {
+            "type": "PROTECT_FROM_DEATH",
+            "target": "ALL_SELECTED",
+            "duration": "TONIGHT"
+          },
+          {
+            "type": "APPLY_STATUS",
+            "target": "ONE_OF_SELECTED",
+            "duration": "UNTIL_DUSK",
+            "statusEffect": "DRUNK"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

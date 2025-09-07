@@ -11,13 +11,15 @@ import {
 } from '@botc/shared';
 import { randomUUID } from 'crypto';
 import { logger } from '../utils/logger';
+import { resolveLineup } from './lineup-resolver';
+import { NodeScriptDataSource } from '../data/nodeScriptDataSource';
 
 export class SetupManager {
   
   /**
    * Initialize setup state when entering SETUP phase
    */
-  initializeSetup(game: GameState, script: Script): SetupState {
+  async initializeSetup(game: GameState, script: Script): Promise<SetupState> {
     const setupState: SetupState = {
       selectedCharacters: [],
       characterModifications: [],
@@ -40,7 +42,31 @@ export class SetupManager {
     }
 
     game.setupState = setupState;
-    return setupState;
+
+    // If the script metadata includes a composition policy, pre-seed selection to target counts
+    try {
+      const playerCount = game.seats.filter(seat => seat.id !== (game as any).storytellerSeatId).length;
+      const dataSource = new NodeScriptDataSource();
+      const rawMeta = await dataSource.loadMetadata(script.id);
+      const composition = rawMeta?.composition;
+      const loadedScriptLike: any = {
+        id: script.id,
+        name: script.name,
+        characters: script.roles.map(r => ({ id: r.id, name: r.name, team: this.roleTypeToTeam(r.type) })) as any,
+        meta: { characterList: rawMeta?.characters || script.roles.map(r => r.id) },
+        composition
+      };
+      if (composition) {
+        const { selection, counts, notes } = resolveLineup({ script: loadedScriptLike, playerCount });
+        setupState.selectedCharacters = selection;
+        // Also set distributionOverride so validation matches seeding
+        setupState.distributionOverride = counts as any;
+        if (notes.length) logger.info(`Seeded setup from composition: ${notes.join('; ')}`);
+      }
+    } catch (e) {
+      logger.warn('Failed to seed setup from composition', e as any);
+    }
+  return setupState;
   }
 
   /**
@@ -122,7 +148,8 @@ export class SetupManager {
     }
 
     const errors: string[] = [];
-    const playerCount = game.seats.length;
+    // Count players excluding storyteller
+    const playerCount = game.seats.filter(seat => seat.id !== (game as any).storytellerSeatId).length;
     
     // Calculate required distribution
     const requiredDistribution = this.calculateRequiredDistribution(playerCount, game.setupState);
@@ -269,10 +296,12 @@ export class SetupManager {
    * Calculate required character distribution including modifications
    */
   private calculateRequiredDistribution(playerCount: number, setupState: SetupState): Record<string, number> {
-    // Start with base distribution
-    let distribution = this.getBaseDistribution(playerCount);
+    // Start with base distribution (composition override if provided)
+    let distribution = setupState.distributionOverride
+      ? { ...setupState.distributionOverride }
+      : this.getBaseDistribution(playerCount);
 
-    // Apply character modifications
+    // Apply character modifications on top of base/composition
     for (const mod of setupState.characterModifications) {
       switch (mod.type) {
         case 'add_outsiders':
@@ -288,11 +317,6 @@ export class SetupManager {
           distribution.outsiders -= mod.count;
           break;
       }
-    }
-
-    // Apply override if present
-    if (setupState.distributionOverride) {
-      distribution = { ...setupState.distributionOverride };
     }
 
     return distribution;
@@ -319,6 +343,17 @@ export class SetupManager {
         minions: Math.min(2, Math.max(1, Math.floor(playerCount / 4))), 
         demons: 1 
       };
+    }
+  }
+
+  private roleTypeToTeam(type: typeof RoleType[keyof typeof RoleType]): 'townsfolk'|'outsider'|'minion'|'demon'|'traveller'|'fabled' {
+    switch (type) {
+      case RoleType.TOWNSFOLK: return 'townsfolk';
+      case RoleType.OUTSIDER: return 'outsider';
+      case RoleType.MINION: return 'minion';
+      case RoleType.DEMON: return 'demon';
+      case RoleType.TRAVELLER: return 'traveller';
+      case RoleType.FABLED: return 'fabled';
     }
   }
 

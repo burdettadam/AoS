@@ -1,0 +1,52 @@
+{
+  "id": "Ravenswood_data",
+  "name": "Ravenswood_data",
+  "description": "",
+  "author": "Blood on the Clocktower",
+  "version": "1.0.0",
+  "characters": [
+    "washerwoman",
+    "librarian",
+    "investigator",
+    "chef",
+    "empath",
+    "drunk",
+    "poisoner",
+    "imp"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "7-10"
+  },
+  "complexity": "intermediate",
+  "tags": [],
+  "estimatedTime": "",
+  "characterDistribution": {},
+  "specialRules": [],
+  "setupNotes": "MINIMAL SETUP: Simple beginner-friendly script. Use exact character distribution. SETUP PROCESS: 1) Use only the 8 characters listed. 2) Give Drunk reminder if needed. 3) Distribute characters randomly. 4) Begin straightforward first night.",
+  "winConditions": {
+    "good": "Execute all Demons",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "A minimal TB showcase. Keep it simple: one Demon, one Minion, clean info, minimal distortion.",
+  "firstNight": [
+    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
+    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+  ],
+  "nightOrder": [
+    "minion-info",
+    "demon-info",
+    "drunk",
+    "washerwoman", 
+    "librarian",
+    "investigator",
+    "chef",
+    "empath"
+  ],
+  "otherNights": "OTHER NIGHTS ORDER: 1) Poisoner: Choose player to poison. 2) Imp: Choose player to kill.",
+  "tipsAndTricks": "Good: Share early, execute on confirmable leads. Evil: Keep lies tiny; big swings get caught in simple setups.",
+  "bluffing": "Use classic TB bluffs (Soldier/Saint/Fortune Teller) and avoid complexity.",
+  "legacy": null
+}

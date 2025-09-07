@@ -1,0 +1,62 @@
+{
+  "id": "vizier",
+  "name": "Vizier",
+  "team": "minion",
+  "ability": "All players know you are the Vizier. You cannot die during the day. If good voted, you may choose to execute immediately.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "public-knowledge",
+    "day-protection",
+    "execution-control"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "firstNightReminder": "Announce that the Vizier is in play and point to them."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "vizier-announce",
+        "type": "character",
+        "action": "announce-vizier-in-play",
+        "description": "All players know you are the Vizier.",
+        "targets": ["vizier"],
+        "information": {
+          "customMessage": "Announce that the Vizier is in play."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [
+      {
+        "id": "vizier-choose-execute-if-good-voted",
+        "type": "character",
+        "action": "choose-immediate-execution",
+        "description": "If good voted, you may choose to execute immediately.",
+        "targets": ["vizier"],
+        "information": {
+          "customMessage": "If good voted, choose to execute immediately."
+        },
+        "order": 1
+      }
+    ],
+    "execution": []
+  }
+}

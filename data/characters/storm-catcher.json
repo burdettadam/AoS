@@ -1,0 +1,51 @@
+{
+  "id": "storm-catcher",
+  "name": "Storm Catcher",
+  "team": "fabled",
+  "ability": "Name a good character. If in play, they can only die by execution, but evil players learn which player it is.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "fabled",
+    "character-protection",
+    "evil-knowledge",
+    "execution-only"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "experimental",
+    "firstNightReminder": "Name a good character. If in play, evil players learn who has it."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "storm-catcher-name-good-character",
+        "type": "character",
+        "action": "name-good-character-protect-reveal",
+        "description": "Name a good character. If in play, they can only die by execution, but evil players learn which player it is.",
+        "targets": ["storm-catcher"],
+        "information": {
+          "customMessage": "Name a good character; if in play, protect from non-execution death and reveal to evil."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

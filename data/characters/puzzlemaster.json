@@ -1,0 +1,66 @@
+{
+  "id": "puzzlemaster",
+  "name": "Puzzlemaster",
+  "team": "outsider",
+  "ability": "1 player is drunk, even if you die. If you guess (once) who it is, learn the Demon player, but guess wrong & get false info.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "drunk",
+    "guessing",
+    "demon-detection",
+    "once-per-game",
+    "false-information"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental",
+    "firstNightReminder": "One player becomes drunk."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "puzzlemaster-choose-drunk-player",
+        "type": "character",
+        "action": "choose-player-to-be-drunk",
+        "description": "1 player is drunk, even if you die.",
+        "targets": ["puzzlemaster"],
+        "information": {
+          "customMessage": "Choose a player to be drunk."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "puzzlemaster-guess-drunk-player",
+        "type": "character",
+        "action": "guess-who-is-drunk",
+        "description": "If you guess (once) who it is, learn the Demon player, but guess wrong & get false info.",
+        "targets": ["puzzlemaster"],
+        "information": {
+          "customMessage": "Guess who is drunk to learn Demon or get false info."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

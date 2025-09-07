@@ -1,0 +1,87 @@
+{
+  "id": "chef",
+  "name": "Chef",
+  "team": "townsfolk",
+  "ability": "Learns how many pairs of neighbouring evil players exist.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "Ravenswood_data"
+  ],
+  "tags": [
+    "information"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Chef",
+  "imageUrl": null,
+  "howToRun": "During the first night, wake the Chef. Show the Chef fingers (0, 1, 2, etc.) equaling the number of pairs of neighboring evil players. Put the Chef to sleep.",
+  "firstNightDescription": "During the first night, wake the Chef. Show the Chef fingers (0, 1, 2, etc.) equaling the number of pairs of neighboring evil players. Put the Chef to sleep.",
+  "tipsAndTricks": "At the start of the game, your information is not very useful by itself, but can be extremely helpful when combined with the information of your allies. If you can find an Empath, or Fortune Teller, then knowing who is Good or Evil, or who is or is not the Demon, can be very powerful. This is because you know something about their neighbours too. Even learning about a Washerwoman's, Librarian's or Investigator's information can be great. For example, if you know that Evil players are sitting next to each other, and the Investigator says that either player A or player B is a Minion, you know that a neighbour of player A or B is more likely to be Evil.\nIf an Undertaker sees that an Evil player was executed, you have information about their neighbours. If you got a \"0\", their neighbours are likely good, but you should be suspicious of them if you learnt anything higher.\nYour information will be most useful towards the end of the game, so remember to be vocal at that point. When just three players are left alive, and you know for a fact that at least one of them is Evil, the knowledge that Evil players are, or are not, sitting next to each other, can decide the fate of the game. Remind the group of your vital information at this point.\nGetting a \"0\" means that no Evil players are sitting next to each other; look for players who are getting up and whispering with each other during the day. They may be Evil, but remember that they may also just be Good players with secrets to tell.\nIf you know that Evil players are not sitting next to each other, and you believe that a particular player is Evil, you know their neighbours are Good. So, if the player two steps away from you is Evil, then the player sitting between the two of you must be Good.\nGetting a \"1\" or more means that Evil players are sitting next to each other. Pay attention to which players are whispering to each other and forming subtle alliances.\nGetting a \"2\" can mean that there are two separate pairs of Evil players, or three Evil players sitting in a row. Remember that Evil Travellers count, and this can give you valuable information about their neighbours.\nThe Spy might not register as an Evil player for your information, giving you an incorrect count. Similarly, the Recluse might register as an Evil player for your information. For you to be able to trust your information, you will need to do what you can to reveal the existence of a Spy or a Recluse as soon as possible. Simply asking the group if anybody is the Recluse is sometimes enough. Finding out that a Spy  is in play may require you to use your intuition and to pay attention to which players are dying at night. If it looks like the Demon is killing far too efficiently, then a Spy may be helping them.\nIf the game is a Teensyville game (any game with just five or six players), then the Demon and Minion won't know each other, and will be desperately trying to find out who each other are. Giving false Chef information to the group can trick the Evil players into trusting the wrong people. For example, saying that Evil players are sitting next to each other, when you know that they are not, means that the Demon may reveal themselves to a Good neighbour accidentally, or that a Minion will not vote for their Good neighbour's execution and will vote for the Demon's execution instead.",
+  "bluffing": "When bluffing as the Chef, there are a few things you should keep in mind:\nYou would have received your information on night one, and so should have it from that point onward. You will have been shown a number.\nClaiming that either zero or one pair of evil players are sitting next to each other is usually quite believable. Larger claims, such as two or three pairs of evil players, are statistically more unlikely and therefore less believable. Also, keep in mind that in smaller games, claims that there are two pairs of evil players sitting next to each other won't make sense, as there are only two evil characters in play. In general, even if the Recluse registers as Evil to the Chef, there can never be more pairs of Evil players in the game then there are Evil players. In Trouble Brewing, the only way to exceed 4 is with Evil Travellers.\nGiving false information to the group can be very confusing to the good team. If the good team thinks that evil players neighbour each other, but they do not (or vice versa), then they will often tear each other apart due to their own suspicions, whilst you sit back and watch.\nGiving true information to the group can confirm some players' alignments, and help the good team figure things out. The upside is that because you have been so helpful, the good team will trust you, and keep you alive. Or, if they think you are evil, then they will often assume that the information you provided to the group was a lie, and then be operating on shaky ground from that point onward.\nThe Chef is a fairly easy character to bluff as. If you are a beginner, pretending to be the Chef can be a way to spread false information to the group, without needing to continually update your information as the game progresses.\nBe wary of the Recluse! If you know that they're sat next to an Evil player, telling the group that there are Evil pairs may accidentally condemn your teammate to an early grave. If you are or have access to a Spy, you may also wish to tailor your information based off the location of the Fortune Teller's Red Herring.",
+  "legacy": {
+    "category": "Townsfolk",
+    "originalSource": "Ravenswood_data"
+  },
+  "goal": {
+    "actionType": "learnEvilPairsCount",
+    "description": "Counts pairs of neighbouring evil players to inform adjacency deductions",
+    "selection": {
+      "type": "ADJACENT_PLAYERS",
+      "criteria": { "count": 2, "mustBeAlive": true }
+    },
+    "effects": [{
+      "type": "LEARN_INFORMATION",
+      "target": "SELF",
+      "duration": "IMMEDIATE"
+    }],
+    "frequency": "once"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "chef-info",
+        "actionType": "learnEvilPairsCount",
+        "selection": {
+          "type": "ADJACENT_PLAYERS",
+          "criteria": { "count": 2, "mustBeAlive": true }
+        },
+        "effects": [{
+          "type": "LEARN_INFORMATION",
+          "target": "SELF",
+          "duration": "IMMEDIATE",
+          "information": {
+            "customMessage": "You see [COUNT] pairs of neighbouring evil players"
+          }
+        }],
+        "description": "Storyteller shows a number equal to evil adjacency pairs",
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "chef-share-info",
+        "actionType": "shareLearnedInfo",
+        "selection": {
+          "type": "SELF",
+          "criteria": {}
+        },
+        "effects": [{
+          "type": "SHARE_INFORMATION",
+          "target": "ALL_PLAYERS",
+          "duration": "IMMEDIATE",
+          "information": {
+            "customMessage": "I saw [COUNT] evil adjacency pairs"
+          }
+        }],
+        "description": "Chef shares the count to constrain evil seating",
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

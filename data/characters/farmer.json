@@ -1,0 +1,51 @@
+{
+  "id": "farmer",
+  "name": "Farmer",
+  "team": "townsfolk",
+  "ability": "When you die at night, an alive good player becomes a Farmer.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "death-trigger",
+    "character-creation"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Farmer died tonight: Choose an alive good player to become a Farmer."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "farmer-become-farmer-if-died",
+        "type": "character",
+        "action": "choose-good-player-become-farmer",
+        "description": "When you die at night, an alive good player becomes a Farmer.",
+        "targets": ["farmer"],
+        "information": {
+          "customMessage": "If the Farmer died tonight, choose an alive good player to become a Farmer."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

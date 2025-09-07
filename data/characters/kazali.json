@@ -1,0 +1,65 @@
+{
+  "id": "kazali",
+  "name": "Kazali",
+  "team": "demon",
+  "ability": "Each night*, choose a player: they die. [You choose which players are which Minions. -? to +? Outsiders]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "setup",
+    "minion-assignment",
+    "outsider-modification"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "firstNightReminder": "The Kazali chooses which players are which Minions.",
+    "otherNightReminder": "The Kazali points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "kazali-choose-minions",
+        "type": "character",
+        "action": "choose-minions",
+        "description": "You choose which players are which Minions.",
+        "targets": ["kazali"],
+        "information": {
+          "customMessage": "Choose which players are the Minions."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "kazali-choose-kill",
+        "type": "character",
+        "action": "choose-player-to-die",
+        "description": "Each night, choose a player: they die.",
+        "targets": ["kazali"],
+        "information": {
+          "customMessage": "Choose a player to die."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

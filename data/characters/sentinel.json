@@ -1,0 +1,47 @@
+{
+  "id": "sentinel",
+  "name": "Sentinel",
+  "team": "fabled",
+  "ability": "There might be 1 extra or 1 fewer Outsider in play.",
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "setup",
+    "outsider-modification"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "sentinel-modify-outsiders",
+        "type": "character",
+        "action": "modify-outsider-count",
+        "description": "There might be 1 extra or 1 fewer Outsider in play.",
+        "targets": ["sentinel"],
+        "information": {
+          "customMessage": "Modify the number of Outsiders in play."
+        },
+        "order": 1
+      }
+    ],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

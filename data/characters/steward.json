@@ -1,0 +1,50 @@
+{
+  "id": "steward",
+  "name": "Steward",
+  "team": "townsfolk",
+  "ability": "You start knowing 1 good player.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "good-detection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Point to a good player."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "steward-learn-good-player",
+        "type": "character",
+        "action": "learn-one-good-player",
+        "description": "You start knowing 1 good player.",
+        "targets": ["steward"],
+        "information": {
+          "customMessage": "Learn 1 good player."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "id": "ravenkeeper",
+  "name": "Ravenkeeper",
+  "team": "townsfolk",
+  "ability": "If you die at night, you are woken to choose a player: you learn their character.",
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "information",
+    "dead"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Ravenkeeper",
+  "imageUrl": null,
+  "howToRun": "If the Ravenkeeper died tonight, wake them. They point at any player. Show the chosen player's character token to the Ravenkeeper. Put the Ravenkeeper to sleep.\nWe advise you to discourage or even ban players from talking about what they are doing at night as they are doing it.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "If the Demon knows you are the Ravenkeeper, they are very unlikely to kill you. It is to your benefit to bluff as a character who is a constant threat to the evil team, such as the Empath, Fortune Teller, Slayer, or Undertaker. Even bluffing as a good character that tends to be trusted by the good team (such as Chef or Washerwoman) can make you look like a trusted good player in the eyes of the Demon, and attract their attention at night.\nThe Ravenkeeper gets some of the best information in Trouble Brewing. Think about whose character you would like to learn before each night falls. You won't want to make a hasty decision and choose wildly in the moment.\nChoosing living players in usually more beneficial than choosing dead players. If you learn a living player is good, you know not to execute them. If you learn a living player is evil, you know you shouldn't trust them! However, every so often, confirming that a dead player is good can be an enormous help. For example, confirming that a dead Washerwoman, Librarian, Investigator or Chef is telling the truth can help you verify their information, or picking a dead player you have suspicions about can confirm that an evil player is dead. That might even back up the Investigator or Fortune Teller.\nBeware of the Spy and the Recluse. If you believe a player is one of them, it is unlikely that you will learn their true character if you choose them, owing to their abilities to register as other characters.\nIf you learn a player is the Drunk, then not only do you know that they are good, you can be reasonably certain that any information they gave to the group is wrong.\nRemember that you only get your information if you die at night. Getting killed during the day reveals nothing to you.\nSometimes, sitting quietly and refusing to give any information can give you the air of a powerful threat without actually having to provide any justification for your bluff.\nYou may want to tell the group that you are the Ravenkeeper first thing on the first day. This will almost guarantee that you are still alive on the final day, as the Demon will probably not kill you. This strategy means that you have more power in the late game (since living players may vote more than dead players), but you sacrifice the chance of gaining information by your death. Additionally, claiming Ravenkeeper is the sort of thing a Slayer or Undertaker might do early game, so it might just get you killed.\nIf you get to use your ability by dying at night, tell the group you are the Ravenkeeper the following day. Your information will be immediately useful.\nIf you see a good token, consider keeping that information private. If the Demon knows that you know that a player is good, that player becomes a much higher priority target, and you want the player you trust alive as long as possible.\nIf you have told nobody that you are the Ravenkeeper, and you are still alive late in the game, then it is probable that a Spy is in play, telling the Demon who to attack. If you notice this happening, pay attention to who is whispering to whom.",
+  "bluffing": "When bluffing as the Ravenkeeper, there are a few things you should keep in mind:\nThe Ravenkeeper would wake only when they die during the night, not the day. They would wake up and choose a player, then be shown a character token.\nThe Ravenkeeper is a fantastic bluff if you intend to pass the torch at some point to a Minion, or otherwise die protecting the Demon. Dying at night tends to make a player look good, and having information as a result of your death can allow you to throw blame, protect a fellow evil player, or make yourself look extremely trustworthy.\nThrowing blame allows you to point the finger at a good player as an evil one - casting doubt on them, their information, and who they trust.\nAlternatively you can back up the bluff of an evil player, confirming their identity and making them trustworthy for the good team. For example, if your Demon is claiming to be the Monk, you can claim to have chosen them and seen the Monk character token.\nAn advanced technique is to claim they are in fact a different character than the one they have been claiming publicly. Your fellow evil player can then reveal they were lying all along, and you are actually correct! (Make sure your teammate knows you're going to do this, or can otherwise adapt on the fly!)\nFinally, you can back up a good player's claim, which will get them to trust you and work with you. For example, if you know a player is the Empath, claim you chose them and saw the Empath token.\nDon't know the identity of the player you are confirming? Claim that person is the Drunk. This will also cast doubt on their information, adding an extra layer of usefulness to the strategy.\nThe Ravenkeeper is a fantastic bluff if you are trying to stay alive for the whole game. As the Demon will not want to kill a Ravenkeeper, you can claim that you are still alive in the late game because the Demon discovered your identity somehow (perhaps via the Spy, or just some good ol' fashioned eavesdropping).\nYou only get information if you die, so be careful about who you choose to confirm. Dying as a Ravenkeeper usually takes some effort, and if you then appear to 'waste' that on a Chef that nobody doubts, you will look suspicious.\nThe Ravenkeeper is a great bluff to fall back on in the event that your bluff as a different character falls apart. Bluffs like the Fortune Teller, Undertaker or Empath can all run into trouble if you don't appear to have the right information, but if you reveal you were the Ravenkeeper all along, suddenly your duplicity will make sense.\nSome powerful characters will openly bluff as your character to protect themselves. Revealing yourself as the \"real\" Ravenkeeper and allowing them to keep the bluff can help you build trust with a good player while finding ways to undermine their ability.",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": [
+      "trouble-brewing"
+    ],
+    "otherNightReminder": "If the Ravenkeeper died tonight: Wake the Ravenkeeper. The Ravenkeeper points to a player. Show the Ravenkeeper the character token of that player."
+  },
+  "goal": {
+    "actionType": "learnCharacter",
+    "description": "If killed at night, learn any player's character to confirm alignment/information",
+    "selection": {
+      "type": "ANY_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": true
+      }
+    },
+    "effects": [
+      {
+        "type": "LEARN_CHARACTER",
+        "target": "SELF",
+        "duration": "IMMEDIATE"
+      }
+    ],
+    "trigger": {
+      "type": "NIGHT_DEATH"
+    }
+  },
+  "actions": {
+    "night": [
+      {
+        "id": "ravenkeeper-choose-target",
+        "actionType": "learnCharacter",
+        "label": "Learn character if died",
+        "description": "If Ravenkeeper died tonight, choose a player to learn their character",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "LEARN_CHARACTER",
+            "target": "SELF",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "trigger": {
+          "type": "NIGHT_DEATH"
+        },
+        "order": 1
+      }
+    ],
+    "firstNight": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "slayer",
+  "name": "Slayer",
+  "team": "townsfolk",
+  "ability": "Once per game, during the day, publicly choose a player: if they are the Demon, they die.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "killing",
+    "day"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Slayer",
+  "imageUrl": null,
+  "howToRun": "During the day, the Slayer can declare that they wish to use their ability. If so, the Slayer points at any player. If the chosen player is an alive Demon, declare that the chosen player dies—put a shroud on their character token in the Grimoire. If the chosen player is not an alive Demon, say \"Nothing happens.\" Either way, the Slayer loses their ability—put the Slayer's NO ABILITY reminder token by the Slayer token.\nIf a player is bluffing as the Slayer and declares they wish to use their ability, act as if they were indeed the Slayer—allow time for discussion, let them make the decision, and act like you're fiddling with tokens in your Grimoire, then say \"Nothing happens.\"\nWhen the Slayer declares that they wish to use their ability, give the group a minute or two to discuss who the Slayer should choose. This allows the group to feel responsible for the win (or the loss!), but the Slayer always makes the final choice.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Using your ability late in the game is far more effective than using it early in the game. When fewer people are alive, there is a greater chance that you will select the Demon and win the game. Also, if fewer than five players are alive, then the Scarlet Woman cannot become the Demon after you kill it.\nHowever, using your ability early in the game is better than not using your ability at all because you're dead. Most players will die before the final day arrives, so the odds that you'll also be dead by then are high. Make sure you use your ability before you die. The Demon will want to kill you as soon as possible, so it is usually best to wait, then claim to be the Slayer only on the day that you intend to use your ability.\nCoordinate with the other good players to help you select which player to choose. When you tell the group that you are the Slayer, you may find that many players reveal who they are and what information they have, so that you can make the best decision about who to slay. You can make particular use of a Fortune Teller's info to find people who might be the Demon.\nMost of the time, the player that you choose to slay will not be the Demon. This is still useful to do, since you now know a player that is definitely NOT the Demon. Knowing who the Demon isn't is almost as useful as knowing who the Demon is.\nSometimes, it can be useful to choose to slay a player, not because you think that they are the Demon, but because you just want to make sure that they are not. For example, if a player is claiming to be the Saint, and is about to be executed, you can prove that they are not the Demon by using your ability on them - if they don't die, you will probably want to execute somebody else instead!\nAn advanced strategy can be to try to influence the Demon's kills with your shot. If someone claims to be the Ravenkeeper, try to slay them. If they aren't the Imp, the real Demon will be forced to make a difficult choice: to kill them, and give them information, or to leave them alive late into the game with everyone knowing they aren't the Demon?\nWhen you choose to use your ability, the Storyteller should allow a minute or so for the group to discuss who they think you should choose. They may give you advice, but it is always your decision. This period can be a good time to pretend to be \"about to choose\" a particular player... just so you can watch to see how much they sweat under pressure. If, for example, you really want to slay the player claiming to be the Mayor, you can tell the group that you are really keen to choose the player claiming Soldier, but secretly you want to see how the Soldier player reacts before making your final choice.\nIf you find a Monk in play, convince them to protect you every night. This way, you can publicly claim to be the Slayer, safe in the knowledge that the Demon can not kill you tonight. Whilst the Monk is alive, you know you will always be alive tomorrow, so are under no pressure to use your ability today. If the Monk dies at night, you are no longer safe, but if you die at night whilst the Monk is still alive, then you know the player is not actually the Monk.\nBeware the Poisoner! If you publicly claim to be the Slayer, even if the Monk is protecting you, you are a prime target for poisoning.\nYour ability may work on the Recluse, since the Recluse might register as the Demon. If your target dies, and claims to be the Recluse, then they might actually be the Recluse... or they could have been the Demon, but had a Scarlet Woman who is now the Demon.\nYou can use your ability at any time during the day. There's no need to rush. You can even use it with the day about to end. On the block? Take your shot. Even if you don't have a clue who the Demon is, it's better to have shot someone than to die unspent.\nRemember that your ability only works on the Demon. A person surviving your shot does not prove that they are good, merely that they are not the Demon.\nBe aware that the Imp may change players throughout the game. If you choose to slay a Minion early in the game, nothing will happen, but that same player may be the Imp by the end of the game.",
+  "bluffing": "When bluffing as the Slayer, there are a few things you should keep in mind:\nYou would never wake in the night as the Slayer. Instead, you should publicly announce that you want to claim to be the Slayer, and the Storyteller will take care of the rest of your bluff for you. There is nothing tricky about this character as a bluff.\nNobody will ever die as a result of you \"using your Slayer ability\". With this in mind, there are a few ways you can choose to handle it:\nDeliberately slaying a Demon or another evil player to make them look like they are not the Demon, which can be useful for setting up bluffs. This is an especially good tactic when combined with the Scarlet Woman, since the real Demon can die and pass their ability to a player who has already been exonerated.\nSlaying a good player to confirm them as not the Demon; this will enable you to 'trust' them, and will enable them to want to team up with you because of it.\nAlternatively, you can deliberately slay a good player, and then start to appear evil (e.g. Empath, setting yourself up to be read by an Undertaker, etc.) Since you 'protected' a player from suspicion with your ability, they will appear evil as well.\nSolicit the opinion of the group on who you should pick. Good players will be keen to help you make the right choice, and working with them will make you look good, also potentially coaxing information characters out from hiding who want to guide you to the right choice.\nThe Slayer is a good \"backup bluff\". If you claim to be a character that is already in play, or you are otherwise under suspicion by the group, claiming that you were lying about who you were so that you could survive an extra day or two as the Slayer is believable - after all... that is what a real Slayer might very well do.\nBluffing as a Slayer also works for good players! A Slayer with no ability is not a high priority target for the Demon, enabling you to survive and continue secretly gathering information.",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": [
+      "trouble-brewing"
+    ]
+  },
+  "goal": {
+    "actionType": "killPlayer",
+    "description": "Once per game, attempt to kill the Demon during the day",
+    "selection": {
+      "type": "ANY_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "KILL_IF_DEMON",
+        "target": "SELECTED",
+        "duration": "IMMEDIATE"
+      }
+    ],
+    "frequency": "once-per-game"
+  },
+  "actions": {
+    "day": [
+      {
+        "id": "slayer-shoot",
+        "actionType": "killPlayer",
+        "label": "Shoot player",
+        "description": "Publicly choose a player: if they are the Demon, they die (once per game)",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "KILL_IF_DEMON",
+            "target": "SELECTED",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 0
+      }
+    ],
+    "firstNight": [],
+  "night": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

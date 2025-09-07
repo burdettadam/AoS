@@ -1,0 +1,207 @@
+{
+  "id": "investigator",
+  "name": "Investigator",
+  "team": "townsfolk",
+  "ability": "Learns that one of two players is a particular Minion.",
+  "reminders": [
+    "KNOW"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "Ravenswood_data"
+  ],
+  "tags": [
+    "information"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Investigator",
+  "imageUrl": null,
+  "howToRun": "While preparing the first night, put the Investigator's MINION reminder token by any Minion character token, and put the Investigator's WRONG reminder token by any other character token.\nDuring the first night, wake the Investigator and point to the players marked MINION and WRONG. Show the character token marked MINION to the Investigator. Put the Investigator to sleep. Remove the Investigator's reminder tokens when convenient.",
+  "firstNightDescription": "While preparing the first night, put the Investigator's MINION reminder token by any Minion character token, and put the Investigator's WRONG reminder token by any other character token.\nDuring the first night, wake the Investigator and point to the players marked MINION and WRONG. Show the character token marked MINION to the Investigator. Put the Investigator to sleep. Remove the Investigator's reminder tokens when convenient.",
+  "tipsAndTricks": "Tell the group what your information is as soon as possible on the first day. You probably won't be able to determine which of the two players is the Minion, but if you are believed, then the good team will probably have enough time to execute both players, guaranteeing that a Minion is dead on the final day.\nWhilst your information by itself will probably not be enough to condemn a specific player, it might combine well with another good player's information, such as the Empath or the Chef. If you trust them, you can team up to execute a Minion early in the game, which removes their voting power and gives you an advantage.\nIf you have a strong suspicion regarding one of the 2 players shown to you, simply say nothing and study their behaviour. If they continually come to the defense of a particular player, that player is likely the Demon. If they continually try to get a particular player executed, that player is probably good. You can reveal this later in the game when you've gathered a solid portfolio of evidence. If the Minion is still alive on the final day then you know that they are likely not the Demon, and should not be executed.\nInstead of revealing your information publicly, confide in other members of the town secretly. Someone else may have information that exonerates or condemns one of your choices, and it may be easier to persuade them to tell you what they know in secret.\nIf you learn that a Scarlet Woman or a Poisoner is in play, it becomes all the more important to execute them as soon as you can! They have powerful abilities that can continue to disrupt the Good team for as long as they are in play.\nAll minions are dangerous. Even if you learn of a Baron or a Spy, it remains important to execute them. Even if doing so doesn't prevent them from mechanically affecting the game, they still retain their voting and nomination power, and may even go on to become the Imp!\nIf you learn that any minion other than the Baron is in play in a game with only one minion, you know exactly how many outsiders there are. If more than that number are claiming to be outsiders, then you know that at least one of them is lying.\nBeware the Recluse! They may register as a Minion to you. If one of the players you detect is actually the Recluse, the second player could be literally anything, including the Minion you were shown.\nEven though one of the players you detect is a Minion, that does not necessarily mean that the other player is good.",
+  "bluffing": "When bluffing as the Investigator, there are a few things you should keep in mind:\nYou would have received your information on night one, and so should have it from that point onward. You will have been shown two players and one Minion token.\nPick two Good players, and claim that one of them is a Minion to try to get get those players executed. Choosing the Poisoner or Scarlet Woman is usually best if you want the good team to be motivated to execute them both. Good players may not execute a suspected Baron or a Spy immediately, but they might.\nIf you are the Demon, or even an ambitious Minion, telling the good team an actual Minion can make you look extremely trustworthy, particularly if other good players like the Undertaker support your information. This can be greatly enhanced if the Minion does everything they can to look as evil as possible. After all, the more like a Minion they appear to be, the more like the Investigator you appear to be.\nIf you falsely claim that a Baron is in play, another evil player will need to claim to be an Outsider at some point. Otherwise, good will eventually question why there is not the appropriate number of Outsiders in play for a Baron and probably execute you. If you can talk privately to an evil player to give them this hint, great. If another evil player claims to be the Investigator and that a Baron is in play, you may want to claim to be an Outsider in order to back up their story.\nCommunicating your information secretly to one or two good players can sow an enormous amount of distrust. They will often tear themselves apart without you having to do much more.\nClaiming to have seen a Minion that is not actually in play can cause much confusion, or back up other evil players' bluffs. For example, bluffing that a Baron is in play will help confirm a Demon who is bluffing as an Outsider. Bluffing that a Poisoner is in play when there is actually a Scarlet Woman, can make good distrust their own information.\nIf an actual Investigator has already publicly come out with their information, and you are not one of their targets, claiming to be the real Investigator and telling the group that they were one of your two shown Minions can be a great way to make them look Evil. If the real Investigator looks Evil, then the players they accused as potential Minions look Good.\nIf you are the Spy, or have access to a Spy, they can be invaluable in providing you with powerful targets to undermine with your accusation.",
+  "legacy": {
+    "category": "Townsfolk",
+    "originalSource": "Ravenswood_data"
+  },
+  "goal": {
+    "actionType": "learnCharacter",
+    "description": "Identifies a specific Minion character in play and narrows down evil players",
+    "selection": {
+      "type": "TWO_PLAYERS",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "LEARN_CHARACTER",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "information": {
+          "type": "MINION_IDENTITY",
+          "scope": "ONE_OF_TWO"
+        }
+      }
+    ],
+    "frequency": "once"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "investigator-info",
+        "actionType": "learnCharacter",
+        "description": "Storyteller shows Investigator one Minion character and points to two players, indicating one is that Minion",
+        "selection": {
+          "type": "TWO_PLAYERS",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "LEARN_CHARACTER",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "information": {
+              "type": "MINION_IDENTITY",
+              "scope": "ONE_OF_TWO"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "investigator-share-info",
+        "actionType": "shareLearnedInfo",
+        "description": "Investigator can share learned information with the group or privately",
+        "selection": {
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "SHARE_INFORMATION",
+            "target": "GROUP",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      },
+      {
+        "id": "investigator-coordinate-executions",
+        "actionType": "coordinateWithOtherInfo",
+        "description": "Investigator can combine information with other players like Empath or Chef",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "COORDINATE_ACTION",
+            "target": "SELECTED",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 2
+      }
+    ],
+    "nominations": [
+      {
+        "id": "investigator-nominate-suspects",
+        "actionType": "nominateSuspectedMinion",
+        "description": "Investigator can nominate one of the two players they learned about",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "NOMINATE_PLAYER",
+            "target": "SELECTED",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "voting": [
+      {
+        "id": "investigator-vote-strategically",
+        "actionType": "voteBasedOnInfo",
+        "description": "Investigator can use learned information to make informed voting decisions",
+        "selection": {
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "INFLUENCE_VOTE",
+            "target": "GROUP",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "execution": [
+      {
+        "id": "investigator-track-executions",
+        "actionType": "updateInfoAfterExecution",
+        "description": "Investigator updates their information based on execution results",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "UPDATE_INFORMATION",
+            "target": "SELF",
+            "duration": "PERMANENT"
+          }
+        ],
+        "order": 1
+      },
+      {
+        "id": "investigator-verify-balance",
+        "actionType": "verifyGameBalance",
+        "description": "Investigator can verify game balance based on learned Minion type",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "VERIFY_BALANCE",
+            "target": "SELF",
+            "duration": "PERMANENT"
+          }
+        ],
+        "order": 2
+      }
+    ],
+    "otherNights": []
+  }
+}

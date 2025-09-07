@@ -1,0 +1,67 @@
+{
+  "id": "summoner",
+  "name": "Summoner",
+  "team": "minion",
+  "ability": "You get 3 bluffs. On the 3rd night, choose a player: they become an evil Demon of your choice. [No Demon]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "bluffs",
+    "demon-creation",
+    "character-change",
+    "setup"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "firstNightReminder": "Give the Summoner 3 character tokens as bluffs.",
+    "otherNightReminder": "If it is the 3rd night: The Summoner points to a player and a Demon character. That player becomes that evil Demon."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "summoner-get-bluffs",
+        "type": "character",
+        "action": "get-three-bluffs",
+        "description": "You get 3 bluffs.",
+        "targets": ["summoner"],
+        "information": {
+          "giveBluffs": 3,
+          "customMessage": "You get 3 bluffs."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "summoner-choose-player-become-demon",
+        "type": "character",
+        "action": "choose-player-become-demon",
+        "description": "On the 3rd night, choose a player: they become an evil Demon of your choice.",
+        "targets": ["summoner"],
+        "information": {
+          "customMessage": "Choose a player to become an evil Demon."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

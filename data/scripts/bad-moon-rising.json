@@ -1,0 +1,124 @@
+{
+  "id": "bad-moon-rising",
+  "name": "Bad Moon Rising",
+  "description": "Bad Moon Rising is a death extravaganza. Demons kill multiple times per night, and Minions get in on the action too. Good players can take great risks to gain reliable information, but may accidentally kill their friends in the process. Luckily, there are many options to keep players alive long past their use-by date. If the good team cannot determine which specific Minions and Demons are in play, however, their doom is all but certain. Intermediate difficulty - recommended for players who are proactive, dedicated to working as a team, and don't fear dying.",
+  "author": "Steven Medway & Blood on the Clocktower",
+  "version": "1.0.0",
+  "characters": [
+    "grandmother",
+    "sailor",
+    "chambermaid",
+    "exorcist",
+    "innkeeper",
+    "gambler",
+    "gossip",
+    "courtier",
+    "professor",
+    "minstrel",
+    "tea-lady",
+    "pacifist",
+    "fool",
+    "goon",
+    "lunatic",
+    "tinker",
+    "moonchild",
+    "godfather",
+    "devils-advocate",
+    "assassin",
+    "mastermind",
+    "zombuul",
+    "pukka",
+    "shabaloth",
+    "po"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "7-10"
+  },
+  "complexity": "advanced",
+  "tags": [
+    "official",
+    "advanced"
+  ],
+  "estimatedTime": "90-120 minutes",
+  "characterDistribution": {
+    "townsfolk": 13,
+    "outsiders": 4,
+    "minions": 4,
+    "demons": 4
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Multiple deaths per night common",
+    "Protection and resurrection mechanics",
+    "Complex interaction chains"
+  ],
+  "setupNotes": "CHARACTER SELECTION: Focus on protection, information, and multiple death sources. Expect higher death rates than TB. SETUP PROCESS: 1) Choose characters ensuring protection balance (Tea Lady, Innkeeper, Exorcist). 2) Place character tokens face-down. 3) Give characters to players randomly. 4) Verify protection chains won't create locks. 5) Begin first night with clear death resolution order.",
+  "winConditions": {
+    "good": "Execute all Demons",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Bad_Moon_Rising",
+  "howToRun": "Expect multiple night deaths. Keep good protection and resurrection timing clear (Tea Lady, Innkeeper, Exorcist, Professor). Track who is protected or drunk/poisoned and resolve Demon/Minion kills in the correct order each night.",
+  "firstNight": [
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": ["minions"],
+      "information": {
+        "showPlayersByTeam": ["minions", "demons"],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info", 
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": ["demons"],
+      "information": {
+        "showPlayersByTeam": ["minions"],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    },
+    "grandmother",
+    "sailor",
+    "chambermaid",
+    "lunatic"
+  ],
+  "nightOrder": [
+    "sailor",
+    "chambermaid",
+    "exorcist",
+    "innkeeper",
+    "gambler",
+    "gossip",
+    "courtier",
+    "professor",
+    "minstrel",
+    "godfather",
+    "devils-advocate",
+    "assassin",
+    "mastermind",
+    "po",
+    "pukka",
+    "shabaloth",
+    "zombuul"
+  ],
+  "otherNights": "OTHER NIGHTS ORDER: 1) Sailor: Choose who to make drunk tonight. 2) Chambermaid: Learn how many neighbors woke. 3) Exorcist: Choose player (not yourself) - if Demon, they don't wake tonight. 4) Innkeeper: Choose 2 players - they are safe tonight. 5) Gambler: Choose player & guess their character - if wrong, you die. 6) Gossip: If your statement was true, someone might die. 7) Courtier: Choose character - they are drunk for 3 nights. 8) Professor: Choose dead player - they are alive again. 9) Minstrel: Everyone who was drunk/poisoned is healthy. 10) Godfather: Choose 2 players - if both alive day starts, 1 dies. 11) Devil's Advocate: Choose living Minion - if executed tomorrow, no one dies. 12) Assassin: Choose player - they die. 13) Mastermind: If no other Demon alive, choose player - they die. 14) Po: Choose 3 players or no one - they die. Kill up to 3 if no one voted to execute. 15) Pukka: Choose player - they are poisoned. Previously poisoned player dies. 16) Shabaloth: Choose 2 players - they die. Dead player regains ability until dusk. 17) Zombuul: Choose player - they die. If you died today, choose player tonight.",
+  "tipsAndTricks": "Players should manage risk. Confirm Tea Lady triangles, use Gambler sparingly, and coordinate Exorcist/Innkeeper timing. Watch for Lunatic games and misleading Godfather kills.",
+  "bluffing": "Evil can weaponize extra deaths and create chaotic cause-and-effect. Fake protections or claim risky Townsfolk to bait kills. Minions should align with Demon kill patterns to sell a consistent story.",
+  "legacy": null
+}

@@ -1,0 +1,48 @@
+{
+  "id": "politician",
+  "name": "Politician",
+  "team": "outsider",
+  "ability": "If you were the player most responsible for your team losing, you change alignment & win, even if dead.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "alignment-change",
+    "win-condition",
+    "responsibility"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "politician-change-alignment-if-responsible",
+        "type": "character",
+        "action": "changeAlignmentIfMostResponsibleForLoss",
+        "description": "If you were the player most responsible for your team losing, you change alignment & win, even if dead.",
+        "targets": [
+          "politician"
+        ],
+        "order": 1
+      }
+    ]
+  }
+}

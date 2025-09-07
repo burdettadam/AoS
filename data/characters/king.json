@@ -1,0 +1,65 @@
+{
+  "id": "king",
+  "name": "King",
+  "team": "townsfolk",
+  "ability": "Each night, if the dead equal or outnumber the living, you learn 1 alive character. The Demon knows you are the King.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "demon-knowledge",
+    "death-count"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Wake the Demon. Show the King token and point to the King.",
+    "otherNightReminder": "If the dead equal or outnumber the living: Show the King a character token of a living player."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "king-demon-learns-king",
+        "type": "character",
+        "action": "demon-learns-king",
+        "description": "The Demon knows you are the King.",
+        "targets": ["king"],
+        "information": {
+          "customMessage": "The Demon learns the King."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "king-learn-alive-character",
+        "type": "character",
+        "action": "learn-alive-character-if-dead-outnumber",
+        "description": "Each night, if the dead equal or outnumber the living, you learn 1 alive character.",
+        "targets": ["king"],
+        "information": {
+          "customMessage": "If dead >= living, learn an alive character."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

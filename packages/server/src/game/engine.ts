@@ -4,6 +4,9 @@ import { logger } from '../utils/logger';
 import { RulesEngine } from './rules';
 import { ScriptLoader } from './script-loader';
 import { SetupManager } from './setup-manager';
+import { NightOrderProcessor } from './night-order-processor';
+import { ActionSystem } from './action-system';
+import { ValidationSystem } from './validation-system';
 
 export class GameEngine {
   private games: Map<GameId, GameState> = new Map();
@@ -11,6 +14,9 @@ export class GameEngine {
   private rulesEngine: RulesEngine;
   private scriptLoader: ScriptLoader;
   private setupManager: SetupManager;
+  private nightOrderProcessor: NightOrderProcessor;
+  private actionSystem: ActionSystem;
+  private validationSystem: ValidationSystem;
   // Ephemeral per-game context not persisted in GameState schema
   private context: Map<GameId, Record<string, any>> = new Map();
 
@@ -18,6 +24,9 @@ export class GameEngine {
     this.rulesEngine = new RulesEngine();
     this.scriptLoader = new ScriptLoader();
     this.setupManager = new SetupManager();
+    this.nightOrderProcessor = new NightOrderProcessor(this.scriptLoader);
+    this.actionSystem = new ActionSystem();
+    this.validationSystem = new ValidationSystem();
   }
 
   async createGame(scriptId: string = 'trouble-brewing'): Promise<GameId> {
@@ -33,7 +42,8 @@ export class GameEngine {
       seats: [],
       abilities: [],
   storytellerSeatId: undefined as any,
-  scriptProposals: [] as any,
+  availableScriptIds: [],
+  scriptProposals: [],
   selectedRoles: undefined as any,
   roleClaims: {} as any,
       createdAt: new Date(),
@@ -60,6 +70,27 @@ export class GameEngine {
     return gameId;
   }
 
+  /** Set a human-friendly game name (host only in lobby) */
+  setGameName(gameId: GameId, storytellerSeatId: SeatId, name: string): { ok: true } | { ok: false; error: string } {
+    const game = this.games.get(gameId);
+    if (!game) return { ok: false, error: 'Game not found' };
+    if (game.phase !== GamePhase.LOBBY) return { ok: false, error: 'Cannot rename after lobby' };
+    if (!game.storytellerSeatId || game.storytellerSeatId !== storytellerSeatId) return { ok: false, error: 'Only storyteller can set name' };
+    const trimmed = (name || '').trim();
+    if (!trimmed) return { ok: false, error: 'Name required' };
+    if (trimmed.length > 60) return { ok: false, error: 'Name too long' };
+    (game as any).gameName = trimmed;
+    game.updatedAt = new Date();
+    this.addEvent(gameId, {
+      id: randomUUID(),
+      gameId,
+      type: 'chat_message' as any,
+      timestamp: new Date(),
+      payload: { system: true, text: `Game named: ${trimmed}` }
+    });
+    return { ok: true };
+  }
+
   getGame(gameId: GameId): GameState | undefined {
     return this.games.get(gameId);
   }
@@ -72,6 +103,15 @@ export class GameEngine {
     const game = this.games.get(gameId);
     if (!game || game.phase !== GamePhase.LOBBY) {
       return null;
+    }
+
+    // If a non-NPC with the same playerId already exists in the lobby, reuse that seat
+    if (!isNPC) {
+      const existing = game.seats.find(s => !s.isNPC && s.playerId === playerId);
+      if (existing) {
+        logger.info(`Player ${playerId} already in game ${gameId} as seat ${existing.id}, reusing seat`);
+        return existing.id as SeatId;
+      }
     }
 
   const seatId = randomUUID() as SeatId;
@@ -87,7 +127,7 @@ export class GameEngine {
       votingPower: 1
     } as any;
 
-    // First human player becomes storyteller by default
+  // First human player becomes storyteller by default
     if (!isNPC && !(game as any).storytellerSeatId) {
       seat.isStoryteller = true;
       (game as any).storytellerSeatId = seatId;
@@ -110,6 +150,38 @@ export class GameEngine {
   return seatId;
   }
 
+  /** Remove a player from a lobby. Only allowed in LOBBY phase. */
+  removePlayer(gameId: GameId, seatId: SeatId): { ok: true } | { ok: false; error: string } {
+    const game = this.games.get(gameId);
+    if (!game) return { ok: false, error: 'Game not found' };
+    if (game.phase !== GamePhase.LOBBY) return { ok: false, error: 'Can only leave during lobby' };
+    const index = game.seats.findIndex(s => s.id === seatId);
+    if (index === -1) return { ok: false, error: 'Seat not found' };
+
+    const wasStoryteller = game.storytellerSeatId === seatId;
+    // Remove seat
+    game.seats.splice(index, 1);
+    // Re-number positions
+    game.seats.forEach((s, i) => { (s as any).position = i; });
+    // Reassign storyteller if needed
+    if (wasStoryteller) {
+      const nextHuman = game.seats.find(s => !s.isNPC && !!s.playerId);
+      (game as any).storytellerSeatId = nextHuman ? nextHuman.id : undefined;
+      for (const s of game.seats) (s as any).isStoryteller = nextHuman ? s.id === nextHuman.id : false;
+    }
+    game.updatedAt = new Date();
+    this.addEvent(gameId, {
+      id: randomUUID(),
+      gameId,
+      type: 'player_left' as any,
+      timestamp: new Date(),
+      actorId: seatId,
+      payload: { seatId }
+    });
+    logger.info(`Seat ${seatId} left game ${gameId}`);
+    return { ok: true };
+  }
+
   proposeScript(gameId: GameId, proposer: SeatId, scriptId: string): boolean {
     const game = this.games.get(gameId);
     if (!game || game.phase !== GamePhase.LOBBY) return false;
@@ -117,7 +189,8 @@ export class GameEngine {
       id: randomUUID(),
       scriptId,
       proposedBy: proposer,
-      votes: {},
+  votes: {},
+  difficultyVotes: {},
       createdAt: new Date()
     };
   (game as any).scriptProposals.push(proposal as any);
@@ -165,6 +238,46 @@ export class GameEngine {
     return true;
   }
 
+  // Difficulty vote (storyteller-only visibility) does not auto-select; it aggregates preferences
+  voteScriptDifficulty(gameId: GameId, voterSeat: SeatId, proposalId: string, difficulty: 'beginner'|'intermediate'|'advanced'): boolean {
+    const game = this.games.get(gameId);
+    if (!game || game.phase !== GamePhase.LOBBY) return false;
+    const proposal = (game as any).scriptProposals.find((p: any) => p.id === proposalId);
+    if (!proposal) return false;
+    (proposal.difficultyVotes as any)[voterSeat] = difficulty;
+    game.updatedAt = new Date();
+    this.addEvent(gameId, {
+      id: randomUUID(),
+      gameId,
+      type: 'script_vote' as any,
+      timestamp: new Date(),
+      actorId: voterSeat,
+      payload: { proposalId, difficulty }
+    });
+    return true;
+  }
+
+  // Storyteller reassignment
+  setStoryteller(gameId: GameId, setterSeat: SeatId, targetSeat: SeatId): { ok: true } | { ok: false; error: string } {
+    const game = this.games.get(gameId);
+    if (!game || game.phase !== GamePhase.LOBBY) return { ok: false, error: 'Can only set storyteller in lobby' };
+    if (game.storytellerSeatId !== setterSeat) return { ok: false, error: 'Only current storyteller can assign storyteller' };
+    if (!game.seats.some(s => s.id === targetSeat)) return { ok: false, error: 'Invalid target seat' };
+    (game as any).storytellerSeatId = targetSeat;
+    // Clear old flag, set new if we store isStoryteller on seats
+    for (const s of game.seats) (s as any).isStoryteller = s.id === targetSeat;
+    game.updatedAt = new Date();
+    this.addEvent(gameId, {
+      id: randomUUID(),
+      gameId,
+      type: 'storyteller_changed' as any,
+      timestamp: new Date(),
+      actorId: setterSeat,
+      payload: { storytellerSeatId: targetSeat }
+    });
+    return { ok: true };
+  }
+
   selectRoles(gameId: GameId, storytellerSeatId: SeatId, roleIds: string[]): boolean {
     const game = this.games.get(gameId);
   if (!game || game.phase !== GamePhase.LOBBY) return false;
@@ -178,6 +291,24 @@ export class GameEngine {
       timestamp: new Date(),
       actorId: storytellerSeatId,
       payload: { roleIds }
+    });
+    return true;
+  }
+
+  // Update which scripts the storyteller has made available to players
+  setAvailableScripts(gameId: GameId, storytellerSeatId: SeatId, scriptIds: string[]): boolean {
+    const game = this.games.get(gameId);
+    if (!game || game.phase !== GamePhase.LOBBY) return false;
+    if ((game as any).storytellerSeatId !== storytellerSeatId) return false;
+    (game as any).availableScriptIds = scriptIds;
+    game.updatedAt = new Date();
+    this.addEvent(gameId, {
+      id: randomUUID(),
+      gameId,
+      type: 'available_scripts_updated' as any,
+      timestamp: new Date(),
+      actorId: storytellerSeatId,
+      payload: { scriptIds }
     });
     return true;
   }
@@ -248,9 +379,10 @@ export class GameEngine {
       return false;
     }
 
-    this.setupManager.initializeSetup(game, script);
+  await this.setupManager.initializeSetup(game, script);
 
-    logger.info(`Started setup for game ${gameId} with ${game.seats.length} players`);
+    const playerCount = game.seats.filter(seat => seat.id !== (game as any).storytellerSeatId).length;
+    logger.info(`Started setup for game ${gameId} with ${playerCount} players`);
     return true;
   }
 
@@ -267,7 +399,7 @@ export class GameEngine {
     if (!script) return { ok: false, error: 'Failed to load script' };
 
     await this.changePhase(gameId, GamePhase.SETUP);
-    this.setupManager.initializeSetup(game, script);
+  await this.setupManager.initializeSetup(game, script);
 
     this.addEvent(gameId, {
       id: randomUUID(),
@@ -707,5 +839,200 @@ export class GameEngine {
     }
     game.updatedAt = new Date();
     return { ok: true, executed, nominee: (game as any).currentNomination.nominee } as any;
+  }
+
+  // === New Action System Methods ===
+
+  /**
+   * Execute the night order for a game
+   */
+  async executeNightOrder(gameId: GameId, isFirstNight: boolean = false): Promise<{ ok: true; results: any[] } | { ok: false; error: string }> {
+    const game = this.games.get(gameId);
+    if (!game) return { ok: false, error: 'Game not found' };
+    if (game.phase !== GamePhase.NIGHT) return { ok: false, error: 'Not in night phase' };
+
+    try {
+      const { results, events } = await this.nightOrderProcessor.executeNightOrder(game, isFirstNight);
+      
+      // Add events to game
+      events.forEach(event => this.addEvent(gameId, event));
+      
+      game.updatedAt = new Date();
+      return { ok: true, results };
+    } catch (error) {
+      logger.error(`Failed to execute night order for game ${gameId}:`, error);
+      return { ok: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  }
+
+  /**
+   * Get the night order preview for a game
+   */
+  async getNightOrderPreview(gameId: GameId, isFirstNight: boolean = false): Promise<any[] | null> {
+    const game = this.games.get(gameId);
+    if (!game) return null;
+
+    try {
+      return await this.nightOrderProcessor.previewNightOrder(game, isFirstNight);
+    } catch (error) {
+      logger.error(`Failed to get night order preview for game ${gameId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Get active characters for the current night phase
+   */
+  async getActiveCharacters(gameId: GameId, isFirstNight: boolean = false): Promise<any[] | null> {
+    const game = this.games.get(gameId);
+    if (!game) return null;
+
+    try {
+      return await this.nightOrderProcessor.getActiveCharacters(game, isFirstNight);
+    } catch (error) {
+      logger.error(`Failed to get active characters for game ${gameId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Validate the script used by a game
+   */
+  async validateGameScript(gameId: GameId): Promise<any | null> {
+    const game = this.games.get(gameId);
+    if (!game) return null;
+
+    try {
+      return await this.scriptLoader.validateScript(game.scriptId);
+    } catch (error) {
+      logger.error(`Failed to validate script for game ${gameId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Get character actions for a specific character in the game
+   */
+  async getCharacterActions(gameId: GameId, characterId: string, phase: 'firstNight' | 'otherNights' | 'day'): Promise<any[] | null> {
+    const game = this.games.get(gameId);
+    if (!game) return null;
+
+    try {
+      return await this.scriptLoader.getCharacterActions(game.scriptId, characterId, phase);
+    } catch (error) {
+      logger.error(`Failed to get character actions for ${characterId} in game ${gameId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Get meta actions for the script
+   */
+  async getMetaActions(gameId: GameId): Promise<any[] | null> {
+    const game = this.games.get(gameId);
+    if (!game) return null;
+
+    try {
+      return await this.scriptLoader.getMetaActions(game.scriptId);
+    } catch (error) {
+      logger.error(`Failed to get meta actions for game ${gameId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Generate a validation report for the game's script
+   */
+  async generateValidationReport(gameId: GameId): Promise<string | null> {
+    const game = this.games.get(gameId);
+    if (!game) return null;
+
+    try {
+      const validationResult = await this.scriptLoader.validateScript(game.scriptId);
+      return this.validationSystem.generateReport(validationResult);
+    } catch (error) {
+      logger.error(`Failed to generate validation report for game ${gameId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Test action execution for development/debugging
+   */
+  async testActionExecution(gameId: GameId): Promise<{ ok: true; tests: any[] } | { ok: false; error: string }> {
+    const game = this.games.get(gameId);
+    if (!game) return { ok: false, error: 'Game not found' };
+
+    try {
+      const tests = [];
+      
+      // Test meta actions
+      const metaActions = await this.scriptLoader.getMetaActions(game.scriptId);
+      for (const metaAction of metaActions) {
+        try {
+          const context = {
+            gameId: game.id,
+            phase: game.phase,
+            day: game.day
+          };
+          const result = await this.actionSystem.executeMetaAction(metaAction, context, game);
+          tests.push({
+            type: 'meta',
+            actionId: metaAction.id,
+            success: result.success,
+            errors: result.errors
+          });
+        } catch (error) {
+          tests.push({
+            type: 'meta',
+            actionId: metaAction.id,
+            success: false,
+            errors: [error instanceof Error ? error.message : 'Unknown error']
+          });
+        }
+      }
+
+      // Test character actions for characters in play
+      for (const seat of game.seats) {
+        if (seat.role && seat.isAlive) {
+          const loadedScript = await this.scriptLoader.getLoadedScript(game.scriptId);
+          const character = loadedScript?.characters.find(c => c.id === seat.role);
+          
+          if (character?.actions?.firstNight) {
+            for (const action of character.actions.firstNight) {
+              try {
+                const context = {
+                  gameId: game.id,
+                  phase: game.phase,
+                  day: game.day,
+                  acting: seat.id
+                };
+                const result = await this.actionSystem.executeCharacterAction(action, context, game, character, seat);
+                tests.push({
+                  type: 'character',
+                  characterId: character.id,
+                  actionId: action.id,
+                  success: result.success,
+                  errors: result.errors
+                });
+              } catch (error) {
+                tests.push({
+                  type: 'character',
+                  characterId: character.id,
+                  actionId: action.id,
+                  success: false,
+                  errors: [error instanceof Error ? error.message : 'Unknown error']
+                });
+              }
+            }
+          }
+        }
+      }
+
+      return { ok: true, tests };
+    } catch (error) {
+      logger.error(`Failed to test action execution for game ${gameId}:`, error);
+      return { ok: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
   }
 }

@@ -1,0 +1,48 @@
+{
+  "id": "klutz",
+  "name": "Klutz",
+  "team": "outsider",
+  "ability": "When you learn that you died, publicly choose 1 alive player: if they are evil, your team loses.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "death-trigger",
+    "public",
+    "lose-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "sects-and-violets"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [
+      {
+        "id": "klutz-choose-player-if-died",
+        "type": "character",
+        "action": "publicly-choose-player-if-died",
+    "label": "Choose player if died",
+        "description": "When you learn that you died, publicly choose 1 alive player: if they are evil, your team loses.",
+        "targets": ["klutz"],
+        "information": {
+          "customMessage": "If died, publicly choose an alive player; if evil, your team loses."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

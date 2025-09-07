@@ -1,0 +1,109 @@
+{
+  "id": "spy",
+  "name": "Spy",
+  "team": "minion",
+  "ability": "Each night, you can see the Grimoire.",
+  
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "night"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Spy",
+  "imageUrl": null,
+  "howToRun": "Each night, wake the Spy and show them the Grimoire for as long as they need. Put the Spy to sleep.\nEach time the Spy is targeted by an ability that detects or affects good characters, choose what character and alignment the Spy registers as. (Do whatever is appropriate, such as showing a good character token, nodding, giving finger signals, or allowing an ability to work that would normally only affect good, Townsfolk, or Outsider players.)\nRemember to keep your Grimoire tidy and show it to the Spy in the correct orientation, so the Spy can easily see who is who.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "If you're reading this having just pulled the Spy token this tip won't help you, but if you're about to play your first game, ask your Storyteller to show you an example of a grimoire, so you're prepared when they wake you up.\nProviding your memory is good, you start the game knowing everything! All characters in play and who they are will be laid out in the Grimoire. Use this information to help the evil team pick good bluffs and take out high priority targets.\nIt isn't necessary to memorise everything. Some important things to remember can be:\nA character that isn't in play, for you to bluff (perhaps more than one, in case you get chance to talk to a fellow minion), and any information you might need to support your bluff.\nSome people the Imp should kill or your Poisoner poison, like the Slayer or Undertaker\nSome people the Imp should definitely not kill, like the Ravenkeeper or Soldier\nAny reminder tokens you think will be important\nTake your time! The Storyteller will show you the Grimoire for as long as you need.\nIn the Grimoire, you will not only see who everyone is, but the Storyteller reminder tokens. These will allow you to identify who is a Drunk, who your Poisoner targeted, who the Fortune Teller red herring is, who the Demon killed,  who the Washerwoman/Librarian is getting their read on, and the alignment of any Travellers. Remember that you may register as good for a  Washerwoman or Librarian; if you see this in the Grimoire, you can lean into that bluff early on.\nChoosing a good bluff for yourself is easy, because you know all characters that are not in play.\nYou also have access to information that is hard to guess or obtain as an evil player, like player's characters. This makes you an especially potent Washerwoman, Undertaker or Ravenkeeper, since all of these characters learn that sort of information. You can gain the trust of good players by being able to name their character, especially if they haven't revealed yet, or if they are bluffing as something else.\nBluffing as the Librarian or the Investigator and selecting powerful characters (like the Empath, Ravenkeeper or Mayor) to mark as the Drunk or as an evil Minion will let you undermine these players. As the Spy, you can do this before they come out, which lends credibility to your claim compared to other evil players doing the same type of bluff.\nYou can provide support to your Demon and other Minions (like the Poisoner) by secretly giving them powerful characters to target early on, neutralizing them before they pose a serious threat for the evil team. In general, you are going to want to have a lot of secret conversations with fellow evil players to communicate the information that you have; prepare a solid alibi to explain why you were whispering.\nYou will usually register as a good player to characters like the Empath, Chef, and Undertaker. Thanks to this, you will be able to gain the trust of good players much more easily than the other evil characters. This also makes you a great candidate to become the Demon in the later game. Encourage the Imp to pass on their Demonhood to you once you are well established!\nYou are the only evil player that can activate the Virgin ability. Players who die this way are usually the most trusted characters in the game. Deliberately giving false information and then sacrificing yourself on a Virgin can give you a platform to confuse and mislead the good team. Similarly if you know an Undertaker is in play, you can allow yourself to be executed, so when you register as good to them, they will trust you and your information. This can also be a great way to undermine an undesirable execution (for example, your Demon) - you will die and your execution will take priority over the existing vote.\nThe Spy is particularly effective for bluffs that require more than one player. For example, you can claim to be the Washerwoman, Librarian or Ravenkeeper and back up your Demon's character claim. (You should probably let your Demon know you're going to do this!)\nYou will often register as good, which is great if you are sitting near an Empath, or if a Chef is in play. This will help you with your goal of infiltrating the good team and getting them to trust you.\nYou can telegraph possible bluffs to other evil players, without needing to have a private conversation with them. Like talking about \"stars\" or \"jewels\" in order to let a partner know that you are strong in diamonds in a game of bridge, you can use subtleties of language to hint to your allies what characters they can bluff as. Or, sometimes, just tell them directly. For example, if you publicly say, \"I won't say who, but somebody told me that David is the Monk\", then David might realise what you are doing, and start bluffing as the Monk.\nMake sure the Storyteller knows what you are claiming to be - this will enable them to back up your bluff to other players. For example, if you are bluffing as the Butler and you are executed, the Storyteller will know to show the Undertaker the Butler token.\nYou won't always register as good. Sometimes the town will see you as evil - and that's okay! The last thing you want is for your Demon to be executed because you're too well trusted.",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": [
+      "trouble-brewing"
+    ],
+    "otherNightReminder": "You might register as not suspicious."
+  },
+  "goal": {
+    "actionType": "seeGrimoire",
+    "description": "Sees the Grimoire each night to coordinate evil",
+    "selection": {
+      "type": "STORYTELLER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "VIEW_GAME_STATE",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "visibility": {
+          "type": "FULL_GRIMOIRE"
+        }
+      }
+    ],
+    "frequency": "each-night"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "spy-see-grimoire-first",
+        "actionType": "seeGrimoire",
+        "description": "See the Grimoire",
+    "label": "See Grimoire (first night)",
+        "selection": {
+          "type": "STORYTELLER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "VIEW_GAME_STATE",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "visibility": {
+              "type": "FULL_GRIMOIRE"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "night": [
+      {
+        "id": "spy-see-grimoire",
+        "actionType": "seeGrimoire",
+        "description": "See the Grimoire",
+    "label": "See Grimoire (night)",
+        "selection": {
+          "type": "STORYTELLER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "VIEW_GAME_STATE",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "visibility": {
+              "type": "FULL_GRIMOIRE"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

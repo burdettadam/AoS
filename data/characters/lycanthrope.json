@@ -1,0 +1,51 @@
+{
+  "id": "lycanthrope",
+  "name": "Lycanthrope",
+  "team": "townsfolk",
+  "ability": "Each night*, choose an alive player. If good, they die & the Demon doesn't kill tonight. One good player registers as evil.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "active",
+    "conditional-kill",
+    "demon-blocking",
+    "false-registration"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Lycanthrope points to a player. If that player is good: they die and the Demon does not act tonight."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "lycanthrope-choose-player",
+        "type": "character",
+        "action": "choose-player-if-good-die-block-demon",
+        "description": "Each night, choose an alive player. If good, they die & the Demon doesn't kill tonight.",
+        "targets": ["lycanthrope"],
+        "information": {
+          "customMessage": "Choose a player; if good, they die and Demon does not kill."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

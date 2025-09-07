@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Keycloak Test</title>
+    <script src="https://unpkg.com/keycloak-js@latest/dist/keycloak.min.js"></script>
+</head>
+<body>
+    <h1>Keycloak Test Page</h1>
+    <div id="status">Initializing...</div>
+    <button id="login" style="display:none;">Login</button>
+    <button id="logout" style="display:none;">Logout</button>
+    <div id="userInfo"></div>
+
+    <script>
+        const keycloak = new Keycloak({
+            url: 'http://localhost:8080',
+            realm: 'botct',
+            clientId: 'botct-client'
+        });
+
+        keycloak.init({
+            onLoad: 'check-sso',
+            checkLoginIframe: false
+        }).then(authenticated => {
+            console.log('Keycloak initialized, authenticated:', authenticated);
+            document.getElementById('status').innerText = authenticated ? 'Authenticated' : 'Not authenticated';
+            
+            if (authenticated) {
+                document.getElementById('logout').style.display = 'block';
+                document.getElementById('userInfo').innerHTML = `
+                    <h3>User Info:</h3>
+                    <p>Subject: ${keycloak.subject}</p>
+                    <p>Token: ${keycloak.token ? 'Present' : 'Missing'}</p>
+                `;
+            } else {
+                document.getElementById('login').style.display = 'block';
+            }
+        }).catch(error => {
+            console.error('Keycloak initialization failed:', error);
+            document.getElementById('status').innerText = 'Error: ' + error.message;
+        });
+
+        document.getElementById('login').addEventListener('click', () => {
+            keycloak.login();
+        });
+
+        document.getElementById('logout').addEventListener('click', () => {
+            keycloak.logout();
+        });
+    </script>
+</body>
+</html>

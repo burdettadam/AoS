@@ -1,0 +1,52 @@
+{
+  "id": "hatter",
+  "name": "Hatter",
+  "team": "outsider",
+  "ability": "If you died today or tonight, the Minion & Demon players may choose new Minion & Demon characters to be.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "death-trigger",
+    "character-change",
+    "evil-choice"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Hatter died today: Wake the Minions and Demon. They may choose new characters of their type."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "hatter-allow-evil-choose-new-if-died",
+        "type": "character",
+        "action": "allow-minion-demon-choose-new-characters",
+        "description": "If you died today or tonight, the Minion & Demon players may choose new Minion & Demon characters to be.",
+        "targets": ["hatter"],
+        "information": {
+          "customMessage": "If died, allow Minions and Demon to choose new characters."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

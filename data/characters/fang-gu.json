@@ -1,0 +1,59 @@
+{
+  "id": "fang-gu",
+  "name": "Fang Gu",
+  "team": "demon",
+  "ability": "Each night*, choose a player: they die. The 1st Outsider this kills becomes a Fang Gu & you become a Peasant & lose this ability.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "character-transformation"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Fang Gu points to a player. That player dies. If that player was an Outsider: Replace the Fang Gu with a spare Peasant token. Wake the dead Outsider. Show 'You are' and the Fang Gu token."
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [
+      {
+        "id": "fang-gu-kill",
+        "type": "character",
+        "action": "choosePlayerKill",
+    "label": "Choose player to kill",
+        "description": "Each night*, choose a player: they die.",
+        "targets": [
+          "fang-gu"
+        ],
+        "order": 1
+      },
+      {
+        "id": "fang-gu-outsider-becomes-demon",
+        "type": "character",
+        "action": "firstOutsiderKilledBecomesFangGu",
+    "label": "Outsider becomes Fang Gu",
+        "description": "The 1st Outsider this kills becomes a Fang Gu & you become a Peasant & lose this ability.",
+        "targets": [
+          "fang-gu"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

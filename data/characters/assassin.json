@@ -1,0 +1,49 @@
+{
+  "id": "assassin",
+  "name": "Assassin",
+  "team": "minion",
+  "ability": "Once per game, at night*, choose a player: they die, even if for some reason they could not.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "once-per-game",
+    "absolute-kill"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Assassin has not used their ability: The Assassin either shows a 'no' head shake or points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "assassin-kill-once",
+        "type": "character",
+        "action": "killChosenPlayerOnce",
+        "description": "Once per game at night*, choose a player: they die, even if they could not.",
+        "targets": [
+          "assassin"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

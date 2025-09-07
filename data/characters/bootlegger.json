@@ -1,0 +1,37 @@
+{
+  "id": "bootlegger",
+  "name": "Bootlegger",
+  "team": "fabled",
+  "ability": "This script has homebrew characters or rules.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "fabled",
+    "homebrew",
+    "script-modifier"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

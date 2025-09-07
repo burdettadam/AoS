@@ -1,0 +1,52 @@
+{
+  "id": "amnesiac",
+  "name": "Amnesiac",
+  "team": "townsfolk",
+  "ability": "You do not know what your ability is. Each day, privately guess what it is: you learn how accurate you are.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "private",
+    "guessing",
+    "day-active",
+    "hidden-ability"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "amnesiac-guess-ability",
+        "type": "character",
+        "action": "privatelyGuessAbilityLearnAccuracy",
+        "description": "Each day, privately guess what your ability is: you learn how accurate you are.",
+        "targets": [
+          "amnesiac"
+        ],
+        "information": {
+          "customMessage": "Accuracy: [ACCURACY_LEVEL]"
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

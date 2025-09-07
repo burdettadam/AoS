@@ -7,11 +7,11 @@ export class NodeScriptDataSource implements ScriptDataSource {
   constructor(private dataDirectory: string = path.join(process.cwd(), '..', '..', 'data')) {}
 
   async loadCharacters(scriptPath: string): Promise<any> {
-    // First get the script metadata to know which characters to load
-    const metadata = await this.loadMetadata(scriptPath);
-    const characterIds = metadata.characters || [];
+    // Load the script metadata to get both character list and full script data
+    const scriptData = await this.loadMetadata(scriptPath);
+    const characterIds = scriptData.characters || [];
     
-    // Then load each character
+    // Load individual character files to get detailed character data
     const characters = [];
     for (const charId of characterIds) {
       const charFile = path.join(this.dataDirectory, 'characters', `${charId}.json`);
@@ -19,7 +19,8 @@ export class NodeScriptDataSource implements ScriptDataSource {
         const charData = await fs.readFile(charFile, 'utf8');
         characters.push(JSON.parse(charData));
       } catch (error) {
-        console.warn(`Could not load character ${charId}:`, error instanceof Error ? error.message : String(error));
+        console.error(`Failed to load character ${charId}:`, error instanceof Error ? error.message : String(error));
+        throw new Error(`Missing character file: ${charId}.json`);
       }
     }
     
@@ -37,7 +38,32 @@ export class NodeScriptDataSource implements ScriptDataSource {
     }
     
     const data = await fs.readFile(scriptFile, 'utf8');
-    return JSON.parse(data);
+    const scriptData = JSON.parse(data);
+    
+    // Include the structured night order data in metadata
+    return {
+      ...scriptData,
+      meta: {
+        id: scriptData.id,
+        name: scriptData.name,
+        author: scriptData.author,
+        description: scriptData.description,
+        version: scriptData.version,
+        playerCount: scriptData.playerCount,
+        complexity: scriptData.complexity,
+        tags: scriptData.tags,
+        estimatedTime: scriptData.estimatedTime
+      },
+      // Preserve the structured night order
+      firstNight: scriptData.firstNight,
+      nightOrder: scriptData.nightOrder
+    };
+  }
+
+  private formatCharacterName(id: string): string {
+    return id.split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   async listAvailableScripts(): Promise<string[]> {

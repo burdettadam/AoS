@@ -1,4 +1,5 @@
-import { Character, LoadedScript, ScriptMetadata, CharacterSchema, ScriptMetadataSchema } from './types';
+import * as Types from './types';
+import * as Script from './script';
 
 export interface ScriptDataSource {
   loadCharacters(scriptPath: string): Promise<any>;
@@ -6,11 +7,11 @@ export interface ScriptDataSource {
 }
 
 export class ScriptLoader {
-  private static scriptsCache = new Map<string, LoadedScript>();
+  private static scriptsCache = new Map<string, Types.LoadedScript>();
   
   constructor(private dataSource: ScriptDataSource) {}
 
-  async loadScript(scriptName: string): Promise<LoadedScript> {
+  async loadScript(scriptName: string): Promise<Types.LoadedScript> {
     if (ScriptLoader.scriptsCache.has(scriptName)) {
       return ScriptLoader.scriptsCache.get(scriptName)!;
     }
@@ -24,11 +25,17 @@ export class ScriptLoader {
       const characters = this.parseCharacters(charactersData);
       const meta = metaData ? this.parseMetadata(metaData) : undefined;
 
-      const script: LoadedScript = {
+  const script: Types.LoadedScript = {
         id: scriptName,
         name: this.formatScriptName(scriptName),
         characters,
-        meta
+        meta,
+        // Include structured night order data from metadata
+        firstNight: metaData?.firstNight,
+        nightOrder: metaData?.nightOrder,
+        // Legacy fields for compatibility
+        firstNightOrder: metaData?.firstNightOrder,
+        otherNightOrder: metaData?.otherNightOrder
       };
 
       ScriptLoader.scriptsCache.set(scriptName, script);
@@ -38,7 +45,7 @@ export class ScriptLoader {
     }
   }
 
-  async getAllScripts(): Promise<LoadedScript[]> {
+  async getAllScripts(): Promise<Types.LoadedScript[]> {
     const scriptNames = [
       'trouble-brewing',
       'bad-moon-rising', 
@@ -57,7 +64,7 @@ export class ScriptLoader {
     return Promise.all(scriptNames.map(name => this.loadScript(name)));
   }
 
-  private parseCharacters(data: any): Character[] {
+  private parseCharacters(data: any): Types.Character[] {
     // Handle different JSON formats
     let characterArray: any[];
     
@@ -80,18 +87,18 @@ export class ScriptLoader {
     return characterArray.map(char => this.validateAndTransformCharacter(char));
   }
 
-  private parseMetadata(data: any): ScriptMetadata {
-    return ScriptMetadataSchema.parse({
-      id: data.id,
+  private parseMetadata(data: any): Types.ScriptMetadata {
+  return Script.ScriptMetadataSchema.parse({
+  id: data.id,
       name: data.name,
       author: data.author,
       description: data.description,
       version: data.version,
       tags: data.tags,
-      playerCount: data.player_count ? {
-        min: data.player_count.min,
-        max: data.player_count.max,
-        optimal: data.player_count.optimal
+      playerCount: data.playerCount || data.player_count ? {
+        min: (data.playerCount || data.player_count).min,
+        max: (data.playerCount || data.player_count).max,
+        optimal: (data.playerCount || data.player_count).optimal
       } : undefined,
       complexity: data.complexity,
       estimatedTime: data.estimated_time,
@@ -111,7 +118,7 @@ export class ScriptLoader {
     });
   }
 
-  private validateAndTransformCharacter(data: any): Character {
+  private validateAndTransformCharacter(data: any): Types.Character {
     // Transform legacy format to new format
     const transformed = {
       id: data.id,
@@ -123,6 +130,8 @@ export class ScriptLoader {
       reminders: data.tokensUsed || data.tokens_used || [],
       setup: data.tags?.includes('setup') || false,
       special: data.special || undefined,
+      // Add actions field from the character data
+      actions: data.actions || undefined,
       // Legacy fields
       category: data.category,
       edition: data.edition || data.editions,
@@ -136,7 +145,7 @@ export class ScriptLoader {
       imageUrl: data.imageUrl || data.image_url || undefined
     };
 
-    return CharacterSchema.parse(transformed);
+  return Script.CharacterSchema.parse(transformed);
   }
 
   private mapCategoryToTeam(category?: string): 'townsfolk' | 'outsider' | 'minion' | 'demon' | 'traveller' | 'fabled' {
@@ -181,16 +190,16 @@ export class ScriptLoader {
 }
 
 // Validation utilities
-export function validateCharacter(data: any): data is Character {
+export function validateCharacter(data: any): data is Types.Character {
   try {
-    CharacterSchema.parse(data);
+  Script.CharacterSchema.parse(data);
     return true;
   } catch {
     return false;
   }
 }
 
-export function validateScript(data: any): data is LoadedScript {
+export function validateScript(data: any): data is Types.LoadedScript {
   return (
     typeof data.id === 'string' &&
     typeof data.name === 'string' &&

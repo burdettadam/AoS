@@ -1,0 +1,48 @@
+{
+  "id": "exorcist",
+  "name": "Exorcist",
+  "team": "townsfolk",
+  "ability": "Each night*, choose a player (different to last night): the Demon, if chosen, learns who you are then doesn't wake tonight.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "demon-blocking"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Exorcist points to a player, different from the previous night. If that player is the Demon: Wake the Demon and show the 'This character selected you' card and the Exorcist token, then put the Demon to sleep. The Demon does not act tonight."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "exorcist-choose-block-demon",
+        "type": "character",
+        "action": "choosePlayerBlockDemonIfChosen",
+        "description": "Each night*, choose a player (different to last night): the Demon, if chosen, learns who you are then doesn't wake tonight.",
+        "targets": [
+          "exorcist"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

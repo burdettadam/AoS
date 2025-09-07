@@ -1,0 +1,51 @@
+{
+  "id": "banshee",
+  "name": "Banshee",
+  "team": "townsfolk",
+  "ability": "If the Demon kills you, all players learn this. From now on, you may nominate twice per day and vote twice per nomination.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "death-trigger",
+    "public-announcement",
+    "voting",
+    "nominations"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Banshee was killed by the Demon: Announce this publicly."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "banshee-announce-if-killed-by-demon",
+        "type": "character",
+        "action": "announce-if-killed-by-demon",
+        "description": "If the Demon kills you, all players learn this.",
+        "targets": ["banshee"],
+        "information": {
+          "customMessage": "If killed by Demon, announce to all players."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

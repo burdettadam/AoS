@@ -68,7 +68,7 @@ function buildRoleDefinition(input: {
   return rd;
 }
 
-function defaultPrecedence(type: RoleType): number {
+function defaultPrecedence(type: typeof RoleType[keyof typeof RoleType]): number {
   switch (type) {
     case RoleType.TOWNSFOLK:
       return 100;
@@ -87,7 +87,7 @@ function defaultPrecedence(type: RoleType): number {
   }
 }
 
-function inferTimingFromType(type: RoleType): 'night' | 'day' | 'passive' {
+function inferTimingFromType(type: typeof RoleType[keyof typeof RoleType]): 'night' | 'day' | 'passive' {
   // weak heuristic: many townsfolk act at night; outsiders mostly passive; minions/demons at night
   switch (type) {
     case RoleType.TOWNSFOLK:
@@ -150,7 +150,7 @@ export async function importWikiData(
         [RoleType.OUTSIDER]: 0,
         [RoleType.MINION]: 0,
         [RoleType.DEMON]: 1
-      } as Record<RoleType, number>
+  } as Record<typeof RoleType[keyof typeof RoleType], number>
     };
 
     const script: Script = {

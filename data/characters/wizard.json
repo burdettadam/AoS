@@ -1,0 +1,49 @@
+{
+  "id": "wizard",
+  "name": "Wizard",
+  "team": "minion",
+  "ability": "Once per game, choose to make a wish. If granted, it might have a price & leave a clue as to its nature.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "once-per-game",
+    "wish",
+    "storyteller-interaction"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "wizard-choose-make-wish",
+        "type": "character",
+        "action": "choose-make-wish",
+        "description": "Once per game, choose to make a wish.",
+        "targets": ["wizard"],
+        "information": {
+          "customMessage": "Choose to make a wish."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

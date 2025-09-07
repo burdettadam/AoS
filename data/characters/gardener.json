@@ -1,0 +1,49 @@
+{
+  "id": "gardener",
+  "name": "Gardener",
+  "team": "fabled",
+  "ability": "The Storyteller assigns 1 or more players' characters.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "fabled",
+    "character-assignment",
+    "storyteller-choice"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "gardener-assign-characters",
+        "type": "character",
+        "action": "assign-players-characters",
+        "description": "The Storyteller assigns 1 or more players' characters.",
+        "targets": ["gardener"],
+        "information": {
+          "customMessage": "Assign characters to 1 or more players."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

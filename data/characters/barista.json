@@ -1,0 +1,56 @@
+{
+  "id": "barista",
+  "name": "Barista",
+  "team": "traveller",
+  "ability": "Each night, until dusk, 1) a player becomes sober, healthy & gets true info, or 2) their ability works twice. They learn which.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Sober",
+    "Healthy",
+    "Ability x2"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "active",
+    "buff",
+    "choice",
+    "notification"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers",
+    "otherNightReminder": "The Barista chooses a player and an effect: 1) sober, healthy, true info, or 2) ability works twice. Wake that player and show them the appropriate effect."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "barista-choose-player-and-effect",
+        "type": "character",
+        "action": "choose-player-sober-healthy-or-ability-twice",
+        "description": "Each night, until dusk, 1) a player becomes sober, healthy & gets true info, or 2) their ability works twice.",
+        "targets": ["barista"],
+        "information": {
+          "customMessage": "Choose a player and effect: sober/healthy/true info or ability x2."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

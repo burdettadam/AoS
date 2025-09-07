@@ -1,0 +1,102 @@
+{
+  "id": "uncertain-death",
+  "name": "Uncertain Death",
+  "description": "Uncertain Death is an excellent intermediate-level script built almost entirely around characters from the base 3 scripts. It is a highly-focused puzzle game with no crazy mechanics.",
+  "author": "Matt",
+  "version": "1.0.0",
+  "characters": [
+    "washerwoman",
+    "librarian",
+    "investigator",
+    "chef",
+    "empath",
+    "fortune-teller",
+    "undertaker",
+    "monk",
+    "ravenkeeper",
+    "virgin",
+    "slayer",
+    "soldier",
+    "mayor",
+    "butler",
+    "drunk",
+    "recluse",
+    "saint",
+    "poisoner",
+    "spy",
+    "scarlet-woman",
+    "baron",
+    "imp",
+    "grandmother",
+    "sailor",
+    "chambermaid",
+    "exorcist",
+    "innkeeper",
+    "gambler",
+    "gossip",
+    "courtier",
+    "professor",
+    "minstrel",
+    "tea-lady",
+    "pacifist",
+    "fool",
+    "goon",
+    "lunatic",
+    "tinker",
+    "moonchild",
+    "godfather",
+    "devils-advocate",
+    "assassin",
+    "mastermind",
+    "zombuul",
+    "pukka",
+    "shabaloth",
+    "po"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "8-12"
+  },
+  "complexity": "intermediate",
+  "tags": [
+    "featured",
+    "puzzle",
+    "balanced",
+    "intermediate"
+  ],
+  "estimatedTime": "75-90 minutes",
+  "characterDistribution": {
+    "townsfolk": 13,
+    "outsiders": 4,
+    "minions": 4,
+    "demons": 4
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Highly focused puzzle game",
+    "No crazy mechanics",
+    "Built around base 3 scripts",
+    "Excellent for intermediate players"
+  ],
+  "setupNotes": "This script provides a pure puzzle-solving experience with well-balanced character interactions. Perfect for players who have mastered the basics.",
+  "winConditions": {
+    "good": "Execute all evil characters",
+    "evil": "Survive to equal the number of good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "Deaths are unpredictable or conditional. State the resolution order and conditions clearly; log every prevented/redirected death.",
+  "firstNight": [
+    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
+    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+  ],
+  "tipsAndTricks": "Good: Track who “should have died” vs. “did die”. Evil: Set up plausible deniability around failed kills.",
+  "bluffing": "Explain survivals as expected outcomes of your claimed ability.",
+  "legacy": null
+}

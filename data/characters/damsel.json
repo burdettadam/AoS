@@ -1,0 +1,50 @@
+{
+  "id": "damsel",
+  "name": "Damsel",
+  "team": "outsider",
+  "ability": "All Minions know a Damsel is in play. If a Minion publicly guesses you (once), your team loses.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "minion-knowledge",
+    "public-guess",
+    "lose-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental",
+    "firstNightReminder": "Wake all Minions. Show the Damsel token."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "damsel-show-to-minions",
+        "type": "character",
+        "action": "show-damsel-to-minions",
+        "description": "All Minions know a Damsel is in play.",
+        "targets": ["damsel"],
+        "information": {
+          "customMessage": "Show the Damsel token to all Minions."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

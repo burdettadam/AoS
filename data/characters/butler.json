@@ -1,0 +1,128 @@
+{
+  "id": "butler",
+  "name": "Butler",
+  "team": "outsider",
+  "ability": "Each night, choose a player (not yourself): tomorrow, you may only vote if they are voting too.",
+  
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "voting",
+    "active"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Butler",
+  "imageUrl": null,
+  "howToRun": "Each night, wake the Butler. They point at any player. Mark this player with the MASTER reminder token. Put the Butler to sleep.\nDuring a nomination, the Butler may only have their hand raised to vote if the Master has their hand raised to vote or if the Master's vote has already been counted.\nIf the Butler accidentally votes illegally, tally the Butler's vote anyway. If you don't, the total will be less than it should be, and all players will know which player is the Butler, which is unfair for the evil team. Mistakes happen. Just play on and have a private chat later.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "The player who you choose as your \"Master\" is very important. Your vote still counts as much as a normal vote, it is just that you will not be able to vote at all if your Master has their hand down. So, spend a good deal of time listening, and being involved in figuring out which players are good. If your Master is evil, you will only be voting at times when it is unhelpful to you. If your Master is good, then you may be voting at times when it can actually be helpful. Find a good Master, and stick with them.\nIf you tell your Master that you have selected them, they will often vote under the assumption that you will be voting with them. Observing how your Master wants you to vote can give you some hints as to whether your Master is good or evil. An evil Master may encourage you to vote for players that seem trustworthy.\nEven though you may not vote unless your Master has their hand up to vote too, you do not have to vote just because they do. Remember to only vote for players you truly believe are evil, or otherwise deserve it!\nThe player you choose as your Master will usually trust you, and want to keep you alive. After all, you are in their power! It is in their best interest to help you survive, so building up that trust may come in handy if anybody nominates you for execution.\nYou can choose a dead player as your Master, but do this carefully - as dead players only have one remaining vote, they may not use it for a while, meaning that you might not be able to vote at all.\nIf particular other players think that you are evil, and want to execute you, you can often win their support by promising to be their Butler tonight. If you ask them not to nominate or vote for you today, and in return you will choose them as your master tonight, they will often agree, and keep you alive.\nYou may choose a dead player to be your Master. Sometimes, you will do so without intending to, if you and the Imp choose the same player. If this happens, you might find it hard to vote that day, but if you know tomorrow will be the last day, it can be beneficial to tie your vote to that of someone you trust to vote for the Demon - perhaps the Librarian who saw you, or else the Virgin whom you all know to be good?\nThis is not a tip, but a word of warning: the onus is on you as a player to remember your ability. You may not under any circumstances vote if your Master didn't. The Storyteller will still count your vote, but by voting when your ability doesn't allow you to, you have broken the rules of the game. If this happens at a time when it doesn't affect the game, usually your Storyteller and fellow players will understand, but it's nonetheless important to only vote when you're allowed to.",
+  "bluffing": "When bluffing as the Butler, there are a few things you should keep in mind:\nYou would wake each night, including the first night, and select a player. The day after, you would only be allowed to vote if that player is also voting.\nNobody suspects the Butler! It's silly, but it's true; since you don't seem like much of a threat and it is easy for you to associate yourself with good players, the Butler is a great bluff for good and evil players alike.\nYou don't have to stick to a single Master, but choosing one player repeatedly will help you build trust with that individual more easily.\nGiving your vote to a good player is a great way to get them to trust you in the absence of other evidence. People like it when you trust them, and the act of making someone your Master is a great way of building trust. Alternatively, you can tie your vote to a fellow evil player, giving you a great reason to be talking to that player and trusting them... and if they get found out, you look like you were tricked!\nYou can actually vote freely, but nobody else will know that. Players who think they are your Master tend to view your vote as a bonus to their own, rather than you operating independently of them. You can take advantage of this expectation to make the good team think they have greater numbers than they actually do, and catch them off guard with a betrayal vote at the perfect moment.\nIf you really need to vote but have aligned yourself with a persnickety Master, you can just \"vote\" with another Master and claim that you swapped Masters secretly. Beware - This may upset your original Master!\nYou can retroactively decide who your Master was each day. Pay attention to who's voting with you, then when asked who your Master was, name someone who voted with you. If you don't remember who that was, don't worry about it - if you can't remember who voted for what, the good team probably can't either.\nYou can coerce your Master into voting for the player(s) you want them to vote for, by threatening to choose a different Master if they don't let you vote for the players you want to vote for.",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": [
+      "trouble-brewing"
+    ],
+    "otherNightReminder": "The Butler points to a player. Tomorrow, the Butler may only vote if that player is voting too."
+  },
+  "goal": {
+    "actionType": "restrictVoting",
+    "description": "Ties voting permission to a chosen player",
+    "selection": {
+      "type": "ANY_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": true
+      }
+    },
+    "effects": [
+      {
+        "type": "RESTRICT_VOTING",
+        "target": "SELF",
+        "duration": "DAY",
+        "condition": {
+          "type": "MASTER_VOTES_FIRST"
+        }
+      }
+    ],
+    "frequency": "each-night"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "butler-choose-master-first",
+        "actionType": "chooseMaster",
+        "description": "Choose a player; tomorrow you may only vote if they vote",
+    "label": "Choose master (first night)",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "SET_MASTER",
+            "target": "SELECTED",
+            "duration": "DAY"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "night": [
+      {
+        "id": "butler-choose-master",
+        "actionType": "chooseMaster",
+        "description": "Choose a player; tomorrow you may only vote if they vote",
+    "label": "Choose master (night)",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "SET_MASTER",
+            "target": "SELECTED",
+            "duration": "DAY"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "voting": [
+      {
+        "id": "butler-enforce-vote-restriction",
+        "actionType": "enforceVotingRestriction",
+        "description": "May only vote if Master is voting or has voted",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "RESTRICT_VOTING",
+            "target": "SELF",
+            "duration": "IMMEDIATE",
+            "condition": {
+              "type": "MASTER_VOTES_FIRST"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "execution": []
+  }
+}

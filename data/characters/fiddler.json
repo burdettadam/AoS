@@ -1,0 +1,51 @@
+{
+  "id": "fiddler",
+  "name": "Fiddler",
+  "team": "fabled",
+  "ability": "Once per game, the Demon secretly chooses an opposing player: all players choose which of these 2 players win.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "once-per-game",
+    "demon-choice",
+    "player-voting",
+    "win-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "fiddler-demon-choose-opposing-player",
+        "type": "character",
+        "action": "demon-choose-opposing-player-for-vote",
+        "description": "Once per game, the Demon secretly chooses an opposing player: all players choose which of these 2 players win.",
+        "targets": ["fiddler"],
+        "information": {
+          "customMessage": "Demon chooses an opposing player, all vote which of the 2 wins."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

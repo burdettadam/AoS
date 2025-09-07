@@ -1,0 +1,51 @@
+{
+  "id": "cannibal",
+  "name": "Cannibal",
+  "team": "townsfolk",
+  "ability": "You have the ability of the recently killed executee. If they are evil, you are poisoned until a good player dies by execution.",
+  "reminders": [
+    "Character",
+    "Poisoned"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "ability-gain",
+    "execution-trigger",
+    "poisoned"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "cannibal-gain-ability",
+        "type": "character",
+        "action": "gain-ability",
+        "description": "The Cannibal has the ability of the recently killed executee. If they are evil, the Cannibal is poisoned until a good player dies by execution.",
+    "label": "Gain ability of executee",
+        "targets": ["cannibal"],
+        "information": {
+          "customMessage": "The Cannibal gains the ability of the executee."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

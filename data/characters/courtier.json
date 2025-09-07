@@ -1,0 +1,51 @@
+{
+  "id": "courtier",
+  "name": "Courtier",
+  "team": "townsfolk",
+  "ability": "Once per game, at night, choose a character: they are drunk for 3 nights & 3 days.",
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "once-per-game",
+    "drunk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Courtier has not used their ability: The Courtier either shows a 'no' head shake or points to a character on the sheet. If they chose a character: If that character is in play, that player becomes drunk for 3 nights and 3 days."
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [
+      {
+        "id": "courtier-choose-character-to-drunk",
+        "type": "character",
+        "action": "choose-character-to-be-drunk",
+    "label": "Choose character to be drunk",
+        "description": "Once per game, choose a character: they are drunk for 3 nights & 3 days.",
+        "targets": ["courtier"],
+        "information": {
+          "customMessage": "Choose a character to be drunk for 3 nights and 3 days."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

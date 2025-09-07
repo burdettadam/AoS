@@ -1,0 +1,127 @@
+{
+  "id": "sects-and-violets",
+  "name": "Sects & Violets",
+  "description": "Sects & Violets is the craziest of the three editions included in the base set. Good characters get amazing information each and every night. However, the evil team is extremely varied and threatening and can throw massive confusion into the mix. Characters change alignment. Players change characters. Even the evil team can lose track of who is who. This is also the first appearance of madness, which throws all manner of spanners into the works. Intermediate difficulty - recommended for players who want to do wild and unexpected things, pushing the limits of what can be achieved in a bluffing game.",
+  "author": "Steven Medway & Blood on the Clocktower",
+  "version": "1.0.0",
+  "characters": [
+    "clockmaker",
+    "dreamer",
+    "snake-charmer",
+    "mathematician",
+    "flowergirl",
+    "town-crier",
+    "oracle",
+    "savant",
+    "seamstress",
+    "philosopher",
+    "artist",
+    "juggler",
+    "sage",
+    "mutant",
+    "sweetheart",
+    "barber",
+    "klutz",
+    "evil-twin",
+    "witch",
+    "cerenovus",
+    "pit-hag",
+    "fang-gu",
+    "vigormortis",
+    "no-dashii",
+    "vortox"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "7-10"
+  },
+  "complexity": "intermediate",
+  "tags": [
+    "official",
+    "intermediate"
+  ],
+  "estimatedTime": "60-90 minutes",
+  "characterDistribution": {
+    "townsfolk": 13,
+    "outsiders": 4,
+    "minions": 4,
+    "demons": 4
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Mad information mechanics",
+    "Multiple Demon types",
+    "Information manipulation focus"
+  ],
+  "setupNotes": "CHARACTER SELECTION: Emphasize information roles and transformation mechanics. Include sources of false info (Vortox, No Dashii). SETUP PROCESS: 1) Choose characters for complex information web. 2) Place character tokens face-down. 3) Mark any ongoing effects (Vortox false info, No Dashii poisoning). 4) Give characters to players randomly. 5) Prepare for frequent character changes (Pit-Hag, Philosopher).",
+  "winConditions": {
+    "good": "Execute all Demons",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Sects_%26_Violets",
+  "howToRun": "Logic-heavy info script with widespread poisoning and madness. Track ongoing poison/drunk states carefully and resolve information roles with exact timing. Ensure Vortex, No Dashii, and other Demon auras are applied consistently.",
+  "firstNight": [
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": ["minions"],
+      "information": {
+        "showPlayersByTeam": ["minions", "demons"],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info", 
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": ["demons"],
+      "information": {
+        "showPlayersByTeam": ["minions"],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    },
+    "clockmaker",
+    "dreamer",
+    "snake-charmer",
+    "mathematician",
+    "flowergirl"
+  ],
+  "nightOrder": [
+    "philosopher",
+    "snake-charmer",
+    "clockmaker",
+    "dreamer",
+    "mathematician",
+    "flowergirl",
+    "town-crier",
+    "oracle",
+    "juggler",
+    "sage",
+    "mutant",
+    "sweetheart",
+    "witch",
+    "cerenovus",
+    "pit-hag",
+    "fang-gu",
+    "vigormortis",
+    "no-dashii",
+    "vortox"
+  ],
+  "otherNights": "OTHER NIGHTS ORDER: 1) Dreamer: Choose player - learn good/evil character not in play. 2) Snake Charmer: Choose player - if Demon, you become Demon. 3) Mathematician: Learn how many players' abilities worked abnormally. 4) Flowergirl: Learn if Demon voted today. 5) Town Crier: Learn if Minion nominated today. 6) Oracle: Learn how many dead players are evil. 7) Savant: Learn 2 statements - 1 true, 1 false. 8) Seamstress: Choose 2 players - learn if same alignment. 9) Philosopher: Choose good character - gain ability, they are drunk. 10) Artist: Ask yes/no question. 11) Juggler: Learn how many guesses were correct. 12) Evil Twin: Learn who is good twin. 13) Witch: Choose player - if they nominate tomorrow, they die. 14) Cerenovus: Choose player & character - they are mad they are this character. 15) Pit-Hag: Choose player & character - they become this character. 16) Fang Gu: Choose player - they die. If Outsider, they become Fang Gu. 17) Vigormortis: Choose player - they die. Minions keep abilities if killed by Vigormortis. 18) No Dashii: Choose player - they die. 19) Vortox: Choose player - they die.",
+  "tipsAndTricks": "Players should cross-check information webs and test for Vortex early. Verify contradictions over time and use seamstress/investigator-style hard checks to anchor the web.",
+  "bluffing": "Evil should seed subtle contradictions and leverage poisoning to invalidate clear info. Claim information roles with plausible-but-wrong results and keep a consistent narrative across days.",
+  "legacy": null
+}

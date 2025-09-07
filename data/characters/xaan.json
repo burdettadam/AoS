@@ -1,0 +1,53 @@
+{
+  "id": "xaan",
+  "name": "Xaan",
+  "team": "minion",
+  "ability": "On night X, all Townsfolk are poisoned until dusk. [X Outsiders]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "setup",
+    "poison",
+    "outsider-dependent",
+    "townsfolk-targeting"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "otherNightReminder": "If this is night X (where X is the number of Outsiders): All Townsfolk become poisoned until dusk."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "xaan-poison-townsfolk-if-night-x",
+        "type": "character",
+        "action": "poison-townsfolk-if-night-x",
+        "description": "On night X, all Townsfolk are poisoned until dusk.",
+        "targets": ["xaan"],
+        "information": {
+          "customMessage": "If night X, poison all Townsfolk until dusk."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "mastermind",
+  "name": "Mastermind",
+  "team": "minion",
+  "ability": "If the Demon dies by execution, all Minions become Demons.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "passive",
+    "execution-trigger",
+    "game-extension"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "bad-moon-rising"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "mastermind-extend-game-if-demon-executed",
+        "type": "character",
+        "action": "extend-game-if-demon-executed",
+        "label": "Extend game if demon executed",
+        "description": "If the Demon dies by execution (ending the game), play for 1 more day.",
+        "targets": ["mastermind"],
+        "information": {
+          "customMessage": "If Demon executed, extend game for 1 more day."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

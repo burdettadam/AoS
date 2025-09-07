@@ -1,0 +1,62 @@
+{
+  "id": "princess",
+  "name": "Princess",
+  "team": "townsfolk",
+  "ability": "On your 1st day, if you nominated & executed a player, the Demon doesn't kill tonight.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "nomination-trigger",
+    "execution-trigger",
+    "demon-blocking"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Princess nominated and successfully executed someone on their first day: The Demon does not act tonight."
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [],
+    "day": [],
+    "nominations": [
+      {
+        "id": "princess-nominate",
+        "type": "character",
+        "action": "nominate",
+    "label": "Nominate player",
+        "description": "On the Princess's 1st day, if they nominated and executed a player, the Demon doesn't kill tonight.",
+        "targets": ["princess"],
+        "information": {
+          "customMessage": "The Princess nominates."
+        },
+        "order": 1
+      }
+    ],
+    "voting": [],
+    "execution": [
+      {
+        "id": "princess-block-demon",
+        "type": "character",
+        "action": "block-demon",
+    "label": "Block Demon kill",
+        "description": "If the Princess nominated and executed a player on their 1st day, the Demon doesn't kill tonight.",
+        "targets": ["princess"],
+        "information": {
+          "customMessage": "The Demon does not kill tonight."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "choirboy",
+  "name": "Choirboy",
+  "team": "townsfolk",
+  "ability": "If the Demon kills the King, you learn which player is the Demon. [+the King]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "demon-detection",
+    "king-dependent"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the King was killed by the Demon: Point to the Demon."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "choirboy-learn-demon",
+        "type": "character",
+        "action": "learn-demon-if-king-killed",
+        "description": "If the Demon kills the King, you learn which player is the Demon.",
+        "targets": ["choirboy"],
+        "information": {
+          "customMessage": "If the King was killed by the Demon, you learn the Demon."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

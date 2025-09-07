@@ -1,0 +1,74 @@
+{
+  "id": "pukka",
+  "name": "Pukka",
+  "team": "demon",
+  "ability": "Each night, choose a player: they are poisoned. The previously poisoned player dies then becomes healthy.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "poison",
+    "delayed-death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "bad-moon-rising",
+    "firstNightReminder": "The Pukka points to a player. That player is poisoned.",
+    "otherNightReminder": "The previously poisoned player dies. The Pukka points to a player. That player is poisoned."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "pukka-poison-first",
+        "type": "character",
+        "action": "choosePlayerPoison",
+        "description": "On first night, choose a player: they are poisoned.",
+        "targets": [
+          "pukka"
+        ],
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "pukka-previous-dies",
+        "type": "character",
+        "action": "previouslyPoisonedDiesThenHeals",
+        "description": "Previously poisoned player dies, then becomes healthy.",
+        "targets": [
+          "pukka"
+        ],
+        "order": 1
+      },
+      {
+        "id": "pukka-poison-new",
+        "type": "character",
+        "action": "choosePlayerPoison",
+        "description": "Choose a player: they are poisoned.",
+        "targets": [
+          "pukka"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

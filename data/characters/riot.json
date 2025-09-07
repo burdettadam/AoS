@@ -1,0 +1,49 @@
+{
+  "id": "riot",
+  "name": "Riot",
+  "team": "demon",
+  "ability": "On day 3, Minions become Riot & nominees die but nominate an alive player immediately. This must happen.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "day-trigger",
+    "character-change",
+    "forced-nominations",
+    "chain-nominations"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [],
+    "day": [
+      {
+        "id": "riot-trigger-on-day-3",
+        "type": "character",
+        "action": "trigger-riot-on-day-3",
+        "description": "On day 3, Minions become Riot & nominees die but nominate an alive player immediately.",
+        "targets": ["riot"],
+        "information": {
+          "customMessage": "If day 3, trigger Riot: Minions become Riot, nominees die and nominate immediately."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "leviathan",
+  "name": "Leviathan",
+  "team": "demon",
+  "ability": "If more than 1 good player is executed, evil wins. All players know you are in play. After day 5, evil wins.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "public-knowledge",
+    "execution-limit",
+    "time-limit",
+    "win-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "firstNightReminder": "Announce that the Leviathan is in play."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "leviathan-announce-in-play",
+        "type": "character",
+        "action": "announce-leviathan-in-play",
+        "description": "All players know you are in play.",
+        "targets": ["leviathan"],
+        "information": {
+          "customMessage": "Announce that the Leviathan is in play."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id": "scarlet-woman",
+  "name": "Scarlet Woman",
+  "team": "minion",
+  "ability": "If there are 5 or more players alive and the Demon dies, you become the Demon.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "demon"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Scarlet_Woman",
+  "imageUrl": null,
+  "howToRun": "If the Demon dies and there were five or more alive players immediately before the Demon died, replace the Scarlet Woman token with a spare Imp token, changing that player's character from the Scarlet Woman into the Imp. (They are now the Demon and have the Imp's ability. If they die, good wins.)\nThat night, wake the new Imp, show them the YOU ARE info token, then show them the Imp token.\nIn Trouble Brewing, there is only one Demon—the Imp. In other editions, there are multiple possible Demons. If the Scarlet Woman becomes the Demon, they become the same type of Demon that died, and they gain this Demon's ability. When this happens, mark the Scarlet Woman with the IS THE DEMON reminder and refer to that Demon's \"How to Run\" instructions.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "The Scarlet Woman is at her strongest when you co-ordinate with the Demon and figure out a strategy that you both like, since the Demon can safely die. Maybe you accuse the Demon of being evil, and the Demon does everything possible to make the good team think they are indeed evil? This makes you look very good, and trustworthy. Maybe the Demon kills themselves of a night time and claims to be the Ravenkeeper, saying that you are the character you say you are. Maybe the Demon accuses you of being evil, but does so unconvincingly, so that you look good by comparison. Maybe you and the Demon both claim to be the same character, such as the Mayor? After all, \"one of you must be the Mayor\", right? It doesn't matter which one of you dies, since the game continues with a living Demon either way.\nIn the early game, staying alive is more important for you compared to other Minions. Whist it doesn't really matter if the Baron, or Poisoner dies early (since they can often cause a lot of disruption early in the game), you will need to survive until the end of the game if you intend to become the Demon at some point. Waiting, listening, then claiming to be a character that you know is not in play often achieves this best.\nTiming is important. Remember that if fewer than five players are alive when the Demon dies, the game is over and good wins. If your Demon has a lot of heat on them, and you think that they won't survive to the final day, take action and get your Demon killed while five or more players are still alive... before it's too late.\nWhilst you are the Scarlet Woman, you will not register as the Demon. So, if you can get yourself confirmed as such by good characters, such as the Slayer or the Fortune Teller, then become the Demon at a later stage, then the good team will be very confused about the identity of the real Demon, as their information won't add up.\nIf the Demon is playing well, and seems to be trusted by the good team, there is no need to use your ability. You can play the normal Minion role of spreading false information, breeding distrust among the good players and generally being troublesome whilst ignoring your character ability.",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": [
+      "trouble-brewing"
+    ]
+  },
+  "goal": {
+    "actionType": "becomeDemonOnDeath",
+    "description": "If 5+ alive and Demon dies, take over as Demon",
+    "selection": {
+      "type": "SELF",
+      "criteria": {
+        "allowSelf": true,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "BECOME_DEMON",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "condition": {
+          "type": "DEMON_DIES_WITH_5_PLUS_ALIVE"
+        }
+      }
+    ],
+    "frequency": "conditional"
+  },
+  "actions": {
+    "execution": [
+      {
+        "id": "scarlet-woman-takeover",
+        "actionType": "becomeDemonIfEligible",
+        "description": "If Demon dies with 5+ alive, Scarlet Woman becomes the Demon",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "BECOME_DEMON",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "condition": {
+              "type": "DEMON_DIES_WITH_5_PLUS_ALIVE"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "DEMON_DEATH"
+        },
+        "order": 1
+      }
+    ],
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": []
+  }
+}

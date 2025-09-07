@@ -70,10 +70,31 @@ export function maskGameStateForSeat(gameState: GameState, seatId: SeatId): Part
   if (!seat) throw new Error('Seat not found');
   
   // Return a masked version that only includes public information and own seat details
+  const withTallies = (p: any) => {
+    const voteVals = Object.values(p.votes || {}) as boolean[];
+    const yes = voteVals.filter(Boolean).length;
+    const no = voteVals.length - yes;
+    const diffs = Object.values(p.difficultyVotes || {}) as string[];
+    const diffCounts: Record<string, number> = { beginner: 0, intermediate: 0, advanced: 0 };
+    for (const d of diffs) if (diffCounts[d] !== undefined) diffCounts[d]++;
+    return {
+      id: p.id,
+      scriptId: p.scriptId,
+      proposedBy: p.proposedBy,
+      votes: {},
+      difficultyVotes: {},
+      createdAt: p.createdAt,
+      tallies: { yes, no, difficulty: diffCounts }
+    };
+  };
   return {
     id: gameState.id,
     phase: gameState.phase,
     day: gameState.day,
+  gameName: (gameState as any).gameName,
+  storytellerSeatId: (gameState as any).storytellerSeatId,
+  // Publicly visible list of scripts the storyteller has made available
+  availableScriptIds: (gameState as any).availableScriptIds || [],
     seats: gameState.seats.map(s => ({
       ...s,
       // Hide alignment and role for other players
@@ -86,16 +107,40 @@ export function maskGameStateForSeat(gameState: GameState, seatId: SeatId): Part
       // Include publicly known abilities
       false
     ),
+    scriptId: gameState.scriptId,
+  // Show proposals with aggregate tallies only
+  scriptProposals: gameState.scriptProposals?.map(withTallies) || [],
     createdAt: gameState.createdAt,
     updatedAt: gameState.updatedAt
   };
 }
 
 export function maskGameStatePublic(gameState: GameState): Partial<GameState> {
+  const withTallies = (p: any) => {
+    const voteVals = Object.values(p.votes || {}) as boolean[];
+    const yes = voteVals.filter(Boolean).length;
+    const no = voteVals.length - yes;
+    const diffs = Object.values(p.difficultyVotes || {}) as string[];
+    const diffCounts: Record<string, number> = { beginner: 0, intermediate: 0, advanced: 0 };
+    for (const d of diffs) if (diffCounts[d] !== undefined) diffCounts[d]++;
+    return {
+      id: p.id,
+      scriptId: p.scriptId,
+      proposedBy: p.proposedBy,
+      votes: {},
+      difficultyVotes: {},
+      createdAt: p.createdAt,
+      tallies: { yes, no, difficulty: diffCounts }
+    };
+  };
   return {
     id: gameState.id,
     phase: gameState.phase,
     day: gameState.day,
+  gameName: (gameState as any).gameName,
+  storytellerSeatId: (gameState as any).storytellerSeatId,
+  // Publicly visible list of scripts the storyteller has made available
+  availableScriptIds: (gameState as any).availableScriptIds || [],
     seats: gameState.seats.map(s => ({
       id: s.id,
       playerId: s.playerId,
@@ -108,8 +153,8 @@ export function maskGameStatePublic(gameState: GameState): Partial<GameState> {
     createdAt: gameState.createdAt,
     updatedAt: gameState.updatedAt,
     scriptId: gameState.scriptId,
-    // expose proposals minimally
-    scriptProposals: gameState.scriptProposals?.map(p => ({ ...p, votes: {} })) || []
+  // expose proposals with tallies only
+  scriptProposals: gameState.scriptProposals?.map(withTallies) || []
   } as Partial<GameState>;
 }
 

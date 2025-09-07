@@ -1,0 +1,37 @@
+{
+  "id": "spirit-of-ivory",
+  "name": "Spirit of Ivory",
+  "team": "fabled",
+  "ability": "There can't be more than 1 extra evil player.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "setup",
+    "evil-limitation"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

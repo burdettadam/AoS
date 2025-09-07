@@ -1,0 +1,82 @@
+{
+  "id": "scapegoat",
+  "name": "Scapegoat",
+  "team": "traveller",
+  "ability": "If a player of your alignment is executed, you might be executed instead.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "execution-protection",
+    "alignment-dependent"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "goal": {
+    "actionType": "redirectExecution",
+    "description": "If a player of your alignment is executed, you might be executed instead",
+    "selection": {
+      "type": "SAME_ALIGNMENT_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "REDIRECT_EXECUTION",
+        "target": "SELF",
+        "duration": "IMMEDIATE",
+        "condition": {
+          "type": "SAME_ALIGNMENT_EXECUTED"
+        }
+      }
+    ],
+    "frequency": "conditional"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "scapegoat-might-be-executed-instead",
+        "actionType": "redirectExecution",
+        "description": "If a player of your alignment is executed, you might be executed instead.",
+        "selection": {
+          "type": "SAME_ALIGNMENT_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "REDIRECT_EXECUTION",
+            "target": "SELF",
+            "duration": "IMMEDIATE",
+            "condition": {
+              "type": "SAME_ALIGNMENT_EXECUTED"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "SAME_ALIGNMENT_EXECUTION"
+        },
+        "order": 1
+      }
+    ]
+  }
+}

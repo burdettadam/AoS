@@ -1,0 +1,62 @@
+{
+  "id": "lunatic",
+  "name": "Lunatic",
+  "team": "outsider",
+  "ability": "You think you are a Demon, but you are not. The Demon knows who you are & who you choose to kill.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "false-role",
+    "demon-knowledge"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "bad-moon-rising",
+    "firstNightReminder": "Show the Lunatic a Demon token. Show the Demon the Lunatic token and point to the Lunatic.",
+    "otherNightReminder": "Allow the Lunatic to do the Demon's kill. Show the Demon the Lunatic's choice."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "lunatic-learn-demon-token",
+        "type": "character",
+        "action": "learn-demon-token",
+        "description": "You think you are a Demon, but you are not.",
+        "targets": ["lunatic"],
+        "information": {
+          "customMessage": "You learn a Demon token."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "lunatic-choose-player-to-kill",
+        "type": "character",
+        "action": "choose-player-to-kill",
+        "description": "The Demon knows who you are & who you choose to kill.",
+        "targets": ["lunatic"],
+        "information": {
+          "customMessage": "Choose a player to kill."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

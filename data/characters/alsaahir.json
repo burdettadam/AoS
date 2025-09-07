@@ -1,0 +1,50 @@
+{
+  "id": "alsaahir",
+  "name": "Alsaahir",
+  "team": "townsfolk",
+  "ability": "Each day, if you publicly guess which players are Minion(s) and which are Demon(s), good wins.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "public",
+    "guessing",
+    "day-active",
+    "win-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "alsaahir-publicly-guess-minions-demons",
+        "type": "character",
+        "action": "publicly-guess-minions-and-demons",
+        "description": "Each day, if you publicly guess which players are Minion(s) and which are Demon(s), good wins.",
+        "targets": ["alsaahir"],
+        "information": {
+          "customMessage": "Publicly guess which players are Minions and Demons."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

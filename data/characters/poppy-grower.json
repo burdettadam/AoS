@@ -1,0 +1,50 @@
+{
+  "id": "poppy-grower",
+  "name": "Poppy Grower",
+  "team": "townsfolk",
+  "ability": "Minions & Demons do not know each other. If you die, they learn who each other are that night.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "setup-modifier",
+    "death-trigger",
+    "evil-knowledge"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Poppy Grower died today: Wake all Minions and Demons together. Let them see each other."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "poppy-grower-reveal-evil-if-died",
+        "type": "character",
+        "action": "reveal-minions-demons-if-died",
+        "description": "If you die, they learn who each other are that night.",
+        "targets": ["poppy-grower"],
+        "information": {
+          "customMessage": "If died, reveal Minions and Demons to each other."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

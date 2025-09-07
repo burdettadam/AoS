@@ -1,0 +1,100 @@
+{
+  "id": "catfishing",
+  "name": "Catfishing",
+  "description": "A script focused on information manipulation and false identities. Characters often receive wrong information or appear to be something they're not.",
+  "author": "Community Created",
+  "version": "1.0.0",
+  "characters": [
+    "washerwoman",
+    "librarian",
+    "investigator",
+    "chef",
+    "empath",
+    "fortune-teller",
+    "undertaker",
+    "monk",
+    "ravenkeeper",
+    "virgin",
+    "slayer",
+    "soldier",
+    "mayor",
+    "recluse",
+    "spy",
+    "baron",
+    "scarlet-woman",
+    "poisoner",
+    "imp"
+  ],
+  "playerCount": {
+    "min": 7,
+    "max": 15,
+    "optimal": "9-12"
+  },
+  "complexity": "intermediate",
+  "tags": [
+    "community",
+    "custom",
+    "information-manipulation",
+    "intermediate"
+  ],
+  "estimatedTime": "75-90 minutes",
+  "characterDistribution": {
+    "townsfolk": 13,
+    "outsiders": 1,
+    "minions": 4,
+    "demons": 1
+  },
+  "composition": {
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Information roles are prominent",
+    "Multiple ways to receive false information",
+    "Baron ensures extra Outsiders for confusion"
+  ],
+  "setupNotes": "Classic Trouble Brewing characters with emphasis on information roles that can be manipulated.",
+  "winConditions": {
+    "good": "Execute the Demon",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "Identity misdirection theme. Clarify timing on character identity effects. Keep a log of claims vs. ability results to spot reveals/conflicts.",
+  "firstNight": [
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": ["minions"],
+      "information": {
+        "showPlayersByTeam": ["minions", "demons"],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info", 
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": ["demons"],
+      "information": {
+        "showPlayersByTeam": ["minions"],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    },
+    "poisoner",
+    "spy",
+    "washerwoman",
+    "investigator",
+    "chef",
+    "empath"
+  ],
+  "tipsAndTricks": "Good: Track who claimed what, when. Test for contradictions via hard-check roles. Evil: Impersonate low-info roles and pivot identities on schedule.",
+  "bluffing": "Change claims sparingly with a reason (drunk/poison/morph), not randomly.",
+  "legacy": null
+}

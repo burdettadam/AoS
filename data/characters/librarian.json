@@ -1,0 +1,128 @@
+{
+  "id": "librarian",
+  "name": "Librarian",
+  "team": "townsfolk",
+  "ability": "Learns that one of two players is a particular Outsider.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "KNOW"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "Ravenswood_data",
+    "trouble-brewing"
+  ],
+  "tags": [
+    "information"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Librarian",
+  "imageUrl": null,
+  "howToRun": "While preparing the first night, put the Librarian's OUTSIDER reminder token by any Outsider character token, and put the Librarian's WRONG reminder token by any other character token.\nDuring the first night, wake the Librarian and point to the players marked OUTSIDER and WRONG. Show the character token marked OUTSIDER to the Librarian. Put the Librarian to sleep. Remove the Librarian's reminder tokens when convenient.",
+  "firstNightDescription": "While preparing the first night, put the Librarian's OUTSIDER reminder token by any Outsider character token, and put the Librarian's WRONG reminder token by any other character token.\nDuring the first night, wake the Librarian and point to the players marked OUTSIDER and WRONG. Show the character token marked OUTSIDER to the Librarian. Put the Librarian to sleep. Remove the Librarian's reminder tokens when convenient.",
+  "tipsAndTricks": "It is vital to figure out early which of the two players is the one you have information about. The player that you know is good even if they are an Outsider - while their ability may be detrimental to the good team, they are a guaranteed good vote and also one player who you know for sure is definitely not the Demon.\nIf you get a 0, this information is super powerful if you aren't the Drunk or poisoned, as then you know for sure there are no Outsiders in the game. This means there is no Baron in play, and any Outsider claims are probably evil players bluffing. You can also try to encourage Outsider bluffs by lying about your information and claiming there is at least one Outsider in play; a Minion or Demon may jump on that to back up their bluff.\nYou learn your information on the first night of the game. Revealing what you know early can help confirm a player as good, which might in turn confirm other information from Townsfolk like the Empath or the Ravenkeeper.\nIf you do not reveal your information until late in the game and the player you are confirming is still alive, then you can reveal them on the final day or close to it, taking them out of contention as a potential Demon and reducing the number of players for the good team to deliberate on from 3 to 2.\nBecause you get all of your information at the start of the game, you might find it useful to confirm it by nominating a Virgin. Alternatively, you might want to claim to be something more powerful to incite the demon into attacking you rather than the Undertaker or the Monk.\nCharacters like the Saint would rather die at night than by execution. Since Outsiders are generally not targets a Demon will want to kill, you can try to bait the Imp into attacking them during the night. Perhaps you could imply that they are a powerful Townsfolk, or else you can make it known that they are confirmed not to be the Demon, meaning the real Demon will have to kill them in the night or have only 1 other person who might be the demon at the end of the game. In either case, the Imp attacking an Outsider means they aren't attacking an Empath or a Fortune Teller.\nIf you see that your two shown players are the Drunk, it is a good idea to communicate this early, especially if they think they are actually a character who receives information. Knowing that their information may be wrong is information in itself.\nAlternatively, you can deliberately give false information about who the Drunk is - the Demon is less likely to attack a player they think is the Drunk, which means that you can protect players who are sober and getting information while getting the Imp to target the actual Drunk instead.\nIf you see two players as the Drunk, remember that you might be the real drunk!\nGiving away your information freely will mean that the other player can trust you, but not that you can necessarily trust them - it is always possible they are an evil player simply agreeing with you to shore up their own bluff. In turn, asking the player to reveal to you means you can trust them, but not that they can trust you. Try to find a middle ground where it's reasonable that both of you knew the information. For example, you could share a small list of characters they could potentially be, and get them to pick from the list who they are.",
+  "bluffing": "When bluffing as the Librarian, there are a few things you should keep in mind:\nYou would have received your information on night one, and so should have it from that point onward. You will have been shown two players and one Outsider token.\nYou can use your information to back up a fellow evil player and make them look good. This lends credibility to their claim (especially if they are claiming to be a Saint or Recluse) and allows you to work with them directly as you are both 'good players' who know each other.\nYou can also use your information to back up a good player. A Saint who is having trouble being believed, or a Butler looking for someone to trust will appreciate a Librarian confirming them, and will be more willing to trust and vote with you.\nNaming two good players as the Drunk can cause them to doubt their information, or undermine powerful characters like the Mayor. The Drunk is a very safe option, since the people that you pick will not be able to confirm your information (at least for a while).\nYou can also name one of your fellow evil players as a potential Drunk. This means that if they mess up their bluff (e.g. giving information that doesn't make sense, dying as the Soldier) that's fine - they're obviously just the Drunk!\nAs a show of confidence, immediately reveal which Outsider is 'in play' very early in the game, but don't name your 'players'. This can lead to a good player confirming your information, or it can allow an evil player to jump in and bluff if you are wrong.\nIf you are the Spy or have access to a Spy, they can be invaluable in providing you accurate information to back up your story.",
+  "legacy": {
+    "category": "Townsfolk",
+    "originalSource": "Ravenswood_data"
+  },
+  "goal": {
+    "actionType": "learnCharacter",
+    "description": "Confirms a specific Outsider is in play and identifies one good player",
+    "selection": {
+      "type": "TWO_PLAYERS",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "LEARN_CHARACTER",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "information": {
+          "type": "OUTSIDER_IDENTITY",
+          "scope": "ONE_OF_TWO"
+        }
+      }
+    ],
+    "frequency": "once"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "librarian-info",
+        "actionType": "learnCharacter",
+        "description": "Storyteller shows Librarian one Outsider character and points to two players, indicating one is that Outsider",
+        "selection": {
+          "type": "TWO_PLAYERS",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "LEARN_CHARACTER",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "information": {
+              "type": "OUTSIDER_IDENTITY",
+              "scope": "ONE_OF_TWO"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "librarian-share-info",
+        "actionType": "shareLearnedInfo",
+        "description": "Librarian can share learned information with the group or privately",
+        "selection": {
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "SHARE_INFORMATION",
+            "target": "GROUP",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [
+      {
+        "id": "librarian-protect-known-good",
+        "actionType": "defendKnownGoodPlayer",
+        "description": "Librarian can defend the known good player from nomination",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "DEFEND_PLAYER",
+            "target": "SELECTED",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "voting": [],
+    "execution": []
+  }
+}

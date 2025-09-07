@@ -1,0 +1,52 @@
+{
+  "id": "boffin",
+  "name": "Boffin",
+  "team": "minion",
+  "ability": "The Demon (even if drunk or poisoned) has a not-in-play good character's ability. You both know which.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon-buff",
+    "ability-gain",
+    "mutual-knowledge"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the Boffin and Demon a not-in-play good character token. The Demon gains that ability."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "boffin-assign-good-ability-to-demon",
+        "type": "character",
+        "action": "assign-good-character-ability-to-demon",
+        "description": "The Demon has a not-in-play good character's ability. You both know which.",
+        "targets": ["boffin"],
+        "information": {
+          "customMessage": "Assign a not-in-play good character's ability to the Demon."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "balloonist",
+  "name": "Balloonist",
+  "team": "townsfolk",
+  "ability": "Each night, you learn a player of a different character type than last night. [+0 or +1 Outsider]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "character-type"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Point to a player. Show their character type token.",
+    "otherNightReminder": "Point to a player of a different character type than last night. Show their character type token."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "balloonist-learn-character-type",
+        "type": "character",
+        "action": "learn-player-character-type",
+        "description": "You learn a player of a different character type than last night.",
+        "targets": ["balloonist"],
+        "information": {
+          "customMessage": "Learn a player's character type."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "balloonist-learn-different-type",
+        "type": "character",
+        "action": "learn-player-different-type",
+        "description": "You learn a player of a different character type than last night.",
+        "targets": ["balloonist"],
+        "information": {
+          "customMessage": "Learn a player of a different character type."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

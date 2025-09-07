@@ -1,0 +1,50 @@
+{
+  "id": "devils-advocate",
+  "name": "Devil's Advocate",
+  "team": "minion",
+  "ability": "Each night, choose a living player (different to last night): if executed tomorrow, they don't die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Survives"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "execution-protection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Devil's Advocate points to a living player, different from the previous night. That player survives execution tomorrow."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "devils-advocate-protect",
+        "type": "character",
+        "action": "choosePlayerSurvivesExecutionTomorrow",
+        "description": "Each night, choose a living player (different to last night): if executed tomorrow, they don't die.",
+        "targets": [
+          "devils-advocate"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

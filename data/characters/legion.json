@@ -1,0 +1,50 @@
+{
+  "id": "legion",
+  "name": "Legion",
+  "team": "demon",
+  "ability": "Each night*, a player might die. Executions fail if only evil voted. You register as a Minion too. [Most players are Legion]",
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "setup",
+    "execution-protection",
+    "minion-registration",
+    "mass-character"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "otherNightReminder": "A player might die."
+  },
+  "actions": {
+    "firstNight": [],
+    "night": [
+      {
+        "id": "legion-choose-player-to-die",
+        "type": "character",
+        "action": "choose-player-to-die",
+        "description": "Each night, a player might die.",
+        "targets": ["legion"],
+        "information": {
+          "customMessage": "Choose a player to die."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

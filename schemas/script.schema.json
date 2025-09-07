@@ -1,0 +1,346 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Script",
+  "type": "object",
+  "required": ["id", "name", "characters"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "author": { "type": "string" },
+    "version": { "type": "string" },
+    "characters": { "type": "array", "items": { "type": "string" } },
+    "playerCount": {
+      "type": "object",
+      "properties": {
+        "min": { "type": ["number", "string"] },
+        "max": { "type": ["number", "string"] },
+        "optimal": { "type": "string" }
+      },
+      "required": ["min", "max", "optimal"]
+    },
+    "complexity": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "estimatedTime": { "type": "string" },
+    "characterDistribution": { "type": "object" },
+    "composition": {
+      "description": "Per-player-count composition targets. Keys can be exact numbers (e.g. '5') or ranges (e.g. '7-9'). Counts can be numbers or expressions like 'p-3' meaning players minus 3.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "townsfolk": { "type": ["number", "string"] },
+          "outsiders": { "type": ["number", "string"] },
+          "minions": { "type": ["number", "string"] },
+          "demons": { "type": ["number", "string"] }
+        },
+        "required": ["townsfolk", "outsiders", "minions", "demons"],
+        "additionalProperties": false
+      }
+    },
+    "setup": {
+      "type": "object",
+      "properties": {
+        "playerCount": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "integer" },
+            "max": { "type": "integer" },
+            "optimal": { "type": "string" }
+          }
+        },
+        "characterDistribution": {
+          "type": "object",
+          "patternProperties": {
+            "^\\d+$": {
+              "type": "object",
+              "properties": {
+                "townsfolk": { "oneOf": [{ "type": "integer" }, { "type": "string" }] },
+                "outsiders": { "type": "integer" },
+                "minions": { "type": "integer" },
+                "demons": { "type": "integer" }
+              }
+            }
+          }
+        },
+        "specialSetup": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "condition": { "type": "string" },
+              "addCharacters": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "fabled": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "specialRules": { "type": "array", "items": { "type": "string" } },
+    "setupNotes": { "type": "string" },
+    "winConditions": { "type": "object" },
+    "phaseRules": {
+      "type": "object",
+      "properties": {
+        "dayStart": {
+          "type": "object",
+          "properties": {
+            "triggers": { "type": "array", "items": { "type": "string" } },
+            "actions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "nightStart": {
+          "type": "object",
+          "properties": {
+            "triggers": { "type": "array", "items": { "type": "string" } },
+            "actions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "gameEnd": {
+          "type": "object",
+          "properties": {
+            "triggers": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "votingRules": {
+      "type": "object",
+      "properties": {
+        "nominationProcess": {
+          "type": "object",
+          "properties": {
+            "order": { "type": "string" },
+            "timeLimit": { "type": "integer" },
+            "canNominateSelf": { "type": "boolean" },
+            "canNominateDead": { "type": "boolean" }
+          }
+        },
+        "voteProcess": {
+          "type": "object",
+          "properties": {
+            "voteType": { "type": "string" },
+            "tieBreaker": { "type": "string" },
+            "deadCanVote": { "type": "boolean" }
+          }
+        },
+        "executionRules": {
+          "type": "object",
+          "properties": {
+            "immediate": { "type": "boolean" },
+            "canExecuteDead": { "type": "boolean" },
+            "specialCases": { "type": "object" }
+          }
+        }
+      }
+    },
+    "validationRules": {
+      "type": "object",
+      "properties": {
+        "actionValidation": {
+          "type": "object",
+          "properties": {
+            "maxActionsPerNight": { "type": "integer" },
+            "cannotTargetSelf": { "type": "boolean" },
+            "deadCannotAct": { "type": "boolean" }
+          }
+        },
+        "stateValidation": {
+          "type": "object",
+          "properties": {
+            "minAlivePlayers": { "type": "integer" },
+            "maxNominationsPerDay": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "actionResolution": {
+      "type": "object",
+      "properties": {
+        "simultaneousActions": { "type": "object" },
+        "conflictResolution": { "type": "object" }
+      }
+    },
+    "informationRules": { "type": "object" },
+    "deathRules": { "type": "object" },
+    "communication": { "type": "object" },
+    "randomization": { "type": "object" },
+    "errorRecovery": { "type": "object" },
+    "wikiUrl": { "type": ["string", "null"] },
+    "howToRun": { "type": "string" },
+    "firstNight": {
+      "oneOf": [
+        { "type": "string" },
+        { 
+          "type": "array", 
+          "items": { 
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["id", "type", "action", "description", "targets", "information"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "type": { "const": "meta" },
+                  "action": { "type": "string" },
+                  "description": { "type": "string" },
+                  "targets": { 
+                    "type": "array", 
+                    "items": { 
+                      "enum": ["townsfolk", "outsiders", "minions", "demons"] 
+                    } 
+                  },
+                  "information": {
+                    "type": "object",
+                    "properties": {
+                      "showPlayersByTeam": { 
+                        "type": "array", 
+                        "items": { 
+                          "enum": ["townsfolk", "outsiders", "minions", "demons"] 
+                        } 
+                      },
+                      "showPlayers": { 
+                        "type": "array", 
+                        "items": { "type": "string" } 
+                      },
+                      "showPlayer": { "type": "string" },
+                      "showRoles": { "type": "boolean" },
+                      "giveBluffs": { "type": "number" },
+                      "customMessage": { "type": "string" }
+                    },
+                    "additionalProperties": false
+                  },
+                  "order": { "type": "number" }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "otherNights": { "type": "string" },
+    "nightOrder": { 
+      "type": "array", 
+      "items": { 
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "required": ["id", "type", "action", "description", "targets", "information"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "const": "meta" },
+              "action": { "type": "string" },
+              "description": { "type": "string" },
+              "targets": { 
+                "type": "array", 
+                "items": { 
+                  "enum": ["townsfolk", "outsiders", "minions", "demons"] 
+                } 
+              },
+              "information": {
+                "type": "object",
+                "properties": {
+                  "showPlayersByTeam": { 
+                    "type": "array", 
+                    "items": { 
+                      "enum": ["townsfolk", "outsiders", "minions", "demons"] 
+                    } 
+                  },
+                  "showPlayers": { 
+                    "type": "array", 
+                    "items": { "type": "string" } 
+                  },
+                  "showPlayer": { "type": "string" },
+                  "showRoles": { "type": "boolean" },
+                  "giveBluffs": { "type": "number" },
+                  "customMessage": { "type": "string" }
+                },
+                "additionalProperties": false
+              },
+              "order": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "tipsAndTricks": { "type": "string" },
+    "bluffing": { "type": "string" },
+    "legacy": { "type": ["object", "null"] },
+    "modifiers": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["type", "whenCharacter", "requireCharacters"],
+            "properties": {
+              "type": { "const": "requires" },
+              "whenCharacter": { "type": "string" },
+              "requireCharacters": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "note": { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "whenCharacter", "delta"],
+            "properties": {
+              "type": { "const": "adjustCounts" },
+              "whenCharacter": { "type": "string" },
+              "delta": {
+                "type": "object",
+                "properties": {
+                  "townsfolk": { "type": "number" },
+                  "outsiders": { "type": "number" },
+                  "minions": { "type": "number" },
+                  "demons": { "type": "number" }
+                },
+                "additionalProperties": false
+              },
+              "note": { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "characters"],
+            "properties": {
+              "type": { "const": "mutuallyExclusive" },
+              "characters": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+              "note": { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "characters"],
+            "properties": {
+              "type": { "const": "atLeastOneOf" },
+              "characters": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+              "note": { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "rules"],
+            "properties": {
+              "type": { "const": "endConditions" },
+              "rules": {
+                "type": "object",
+                "description": "Rule deltas applied to engine end conditions (e.g., evilParity:false, maxDays:5).",
+                "additionalProperties": {
+                  "oneOf": [
+                    { "type": "boolean" },
+                    { "type": "number" },
+                    { "type": "string" }
+                  ]
+                }
+              },
+              "note": { "type": "string" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

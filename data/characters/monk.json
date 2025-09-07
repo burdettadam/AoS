@@ -1,0 +1,72 @@
+{
+  "id": "monk",
+  "name": "Monk",
+  "team": "townsfolk",
+  "ability": "Each night*, choose a player (not yourself): they are safe from the Demon tonight.",
+  
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "protection",
+    "active"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Monk",
+  "imageUrl": null,
+  "howToRun": "Each night except the first, wake the Monk. The Monk points at any player except themself. (If the Monk points at themself, shake your head no and prompt them to point at another player.) Put the Monk to sleep. Put the Monk's SAFE reminder token by the chosen player's character token.\nIf the Demon attacks the player marked SAFE, the player remains alive. (Do not mark them with the Demon's DEAD reminder token or add a shroud as you normally would.) At dawn, declare that no one died at night. (Do not say why.)\nAt dawn, remove the SAFE reminder token.\nIn other editions, Demons may have abilities other than killing. The Monk's protection also prevents all other harmful effects of the Demon's ability, such as poisoning or turning the protected player evil.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Your goal is to keep valuable good players alive and stall the Demon's mayhem. Try to predict who the Demon may target each night based on the available information in the game and how the players are acting. Every Demon is different, and figuring out the methodology of yours can enable you to save more than one player.\nDon't try to predict what the Demon will do. Instead, talk to your fellow players and find someone to keep alive at all costs. Valuable characters, such as the Fortune Teller or Empath, or players that you trust, such as a confirmed Virgin can survive for entire games under your protection.\nIf you find a Slayer or a Virgin, you can convince them not to use their ability right away, since you can protect them. This will enable them to use their once per game abilities later, when more information is on the table.\nYou are the only player that you cannot protect, and if you thwart the Demon, they are probably going to want to identify and kill you, so try to avoid the Demon's attention. You can do this by bluffing as a low priority target for the Demon like the Chef, or an undesirable one like the Ravenkeeper or Soldier.\nComing out publicly as the Monk can let you coordinate with the good team, finding the best choice for your protection that night. Even if you die, you are protecting the town; the night the Demon had to spend killing you was a night the Demon wasn't killing your Undertaker or Virgin. Beware of the Poisoner if you take this route! They can disable you and let the demon kill freely.\nIf you successfully protect someone at night, you can be reasonably certain that they are good, since the Demon wanted them dead. The only exception is the Imp, who has the special ability to die and pass their Demonhood onto one of their Minions, but the chances of this are slim.\nIf you suspect that someone is the Imp and about to kill themselves to move the Demon, you can deliberately protect them, preventing them from doing so.\nMisdirect the Demon about who you are going to protect. You can do this publicly or by privately whispering to select players. If the Demon believes you are guarding the Fortune Teller, they may not target them, leaving you free to provide your actual protection to someone else. Keeping the evil team guessing is a good way to spread your 'protection' among multiple players. Be aware, though, that if the player that you say you're going to protect dies, it might make you look evil, so consider confiding in them that they won't actually be protected.\nIf you wake up and nobody is dead, you might not have protected anyone. The Demon may have attacked a Soldier.\nIf think you've successfully protected your target, ask them to bluff as the Soldier. This will cause the Demon to think they are not worth targeting again, and mask your existence for another night.",
+  "bluffing": "When bluffing as the Monk, there are a few things you should keep in mind:\nThe Storyteller would have woken you on nights that the Imp wakes - every night except the first - and you would have pointed to a player.\nYour choice for who you 'protect' should have some logic behind it. If a publicly revealed Fortune Teller  dies on your watch, that can be a big clue that you are not who you say you are. However, if you tell the group that you don't believe that the Fortune Teller  is telling the truth, and that you instead protected a player that has privately revealed that they are the Empath to you, your choices seem much more reasonable. You can come up with all sorts of reasons about why you protected player A instead of player B, particularly if you prepare what you are going to say beforehand.\nThe Demon can choose to pick a dead player instead of an alive player at night. If you are claiming to be the Monk, getting the Demon to do this supports your bluff. When nobody dies at night, all players will want to know why. This also means that the player you claimed to have protected from the Demon will look more trustworthy, since the Demon almost always attacks good players. The player that you claim to protect is likely to be seen by other players as the same alignment as you, so you can either ingratiate yourself by claiming to have picked a good player, or back up the Demon by saying you picked them.\nThe Monk usually operates in secret, not revealing who they are to the group until they have successfully protected a player from death. You can use this secrecy as an excuse to talk to many players in private, either spreading lies to the good players, or coordinating with your evil team mates. If anybody asks why you are being so secretive, the players that believe you are the Monk will come to your defense.\nIf you are still alive on the final day, and a player has died each night this game, the good players will probably be convinced that you are either a particularly inept Monk, or just evil. If you are a Minion, this can be quite helpful, since the good players will want to execute you, ending the game with an evil victory.\nYou can draw attention to yourself as a Minion by claiming to have protected the player who died last night. There are legitimate reasons why it might have happened - you could be the Drunk or poisoned, but providing such an outlandish topic of discussion distracts from the information that the Fortune Teller has pointing directly at your Demon.",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": [
+      "trouble-brewing"
+    ],
+    "otherNightReminder": "The Monk points to a player. That player is safe from the Demon tonight."
+  },
+  "goal": {
+    "actionType": "protectPlayer",
+    "description": "Keeps key good players alive by preventing Demon harm",
+    "selection": {
+      "type": "ANY_PLAYER",
+      "criteria": { "allowSelf": false, "mustBeAlive": true }
+    },
+    "effects": [{
+      "type": "GRANT_IMMUNITY",
+      "target": "TARGET",
+      "duration": "NIGHT",
+      "immunityType": "DEMON_ATTACK"
+    }],
+    "frequency": "nightly"
+  },
+  "actions": {
+    "night": [
+      {
+        "id": "monk-protect",
+        "actionType": "protectPlayer",
+        "label": "Protect player",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": { "allowSelf": false, "mustBeAlive": true }
+        },
+        "effects": [{
+          "type": "GRANT_IMMUNITY",
+          "target": "TARGET",
+          "duration": "NIGHT",
+          "immunityType": "DEMON_ATTACK",
+          "note": "Prevents Demon kill and harmful Demon effects tonight"
+        }],
+        "description": "Choose a player (not yourself): they are safe from the Demon tonight",
+        "order": 1
+      }
+    ],
+    "firstNight": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

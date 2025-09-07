@@ -1,0 +1,64 @@
+{
+  "id": "alchemist",
+  "name": "Alchemist",
+  "team": "townsfolk",
+  "ability": "You have a Minion ability. When using this, the Storyteller may prompt you to choose differently.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "ability-gain",
+    "minion-ability"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the Alchemist a Minion token. The Alchemist gains that Minion's ability.",
+    "otherNightReminder": "The Alchemist acts as their Minion ability."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "alchemist-gain-minion-ability",
+        "type": "character",
+        "action": "gain-minion-ability",
+        "description": "You have a Minion ability.",
+        "targets": ["alchemist"],
+        "information": {
+          "customMessage": "Gain a Minion ability."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "alchemist-use-minion-ability",
+        "type": "character",
+        "action": "use-minion-ability",
+        "description": "When using this, the Storyteller may prompt you to choose differently.",
+        "targets": ["alchemist"],
+        "information": {
+          "customMessage": "Use the Minion ability."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

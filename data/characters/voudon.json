@@ -1,0 +1,50 @@
+{
+  "id": "voudon",
+  "name": "Voudon",
+  "team": "traveller",
+  "ability": "Only you & the dead can vote. They don't need a vote token to do so. A 50% majority isn't required.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "voting-restriction",
+    "dead-empowerment",
+    "majority-change"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [
+      {
+        "id": "voudon-allow-dead-vote",
+        "type": "character",
+        "action": "allow-dead-to-vote",
+        "description": "Only you & the dead can vote. They don't need a vote token to do so. A 50% majority isn't required.",
+        "targets": ["voudon"],
+        "information": {
+          "customMessage": "Allow dead players to vote without tokens, no 50% majority required."
+        },
+        "order": 1
+      }
+    ],
+    "execution": []
+  }
+}

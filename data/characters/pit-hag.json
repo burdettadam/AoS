@@ -1,0 +1,49 @@
+{
+  "id": "pit-hag",
+  "name": "Pit-Hag",
+  "team": "minion",
+  "ability": "Each night*, choose a player & a character they become (if not-in-play). If a Demon is made, deaths tonight are arbitrary.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "active",
+    "character-change",
+    "arbitrary-death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Pit-Hag points to a player and a character on the sheet. If that character is not in play, wake that player and show 'You are' card and the new character token. If the new character is a Demon, show the Demon info tokens and then the Minion tokens."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "pit-hag-change-character",
+        "type": "character",
+        "action": "choosePlayerAndCharacterChange",
+        "description": "Each night*, choose a player & a character they become (if not-in-play). If a Demon is made, deaths tonight are arbitrary.",
+        "targets": [
+          "pit-hag"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

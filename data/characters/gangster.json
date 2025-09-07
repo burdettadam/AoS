@@ -1,0 +1,50 @@
+{
+  "id": "gangster",
+  "name": "Gangster",
+  "team": "traveller",
+  "ability": "Once per day, you may choose to kill an alive neighbor, if your other alive neighbor agrees.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "traveller",
+    "day-active",
+    "neighbor-kill",
+    "neighbor-agreement",
+    "once-per-day"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "gangster-kill-neighbor-if-other-agrees",
+        "type": "character",
+        "action": "killNeighborIfOtherNeighborAgrees",
+        "description": "Once per day, you may choose to kill an alive neighbor, if your other alive neighbor agrees.",
+        "targets": [
+          "gangster"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

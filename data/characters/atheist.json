@@ -1,0 +1,49 @@
+{
+  "id": "atheist",
+  "name": "Atheist",
+  "team": "townsfolk",
+  "ability": "The Storyteller can break the game rules, and if executed, good wins, even if you are dead. [No evil characters]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "setup",
+    "rule-breaking",
+    "execution-win",
+    "no-evil"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "atheist-good-wins-if-executed",
+        "type": "character",
+        "action": "goodWinsIfExecutedEvenIfDead",
+        "description": "If executed, good wins, even if you are dead. [No evil characters]",
+        "targets": [
+          "atheist"
+        ],
+        "order": 1
+      }
+    ]
+  }
+}

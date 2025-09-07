@@ -1,0 +1,49 @@
+{
+  "id": "gunslinger",
+  "name": "Gunslinger",
+  "team": "traveller",
+  "ability": "Each day, after the 1st vote has been tallied, you may choose a player that voted: they die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "day-active",
+    "voting-consequence",
+    "kill"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "gunslinger-kill-voter-after-first-vote",
+        "type": "character",
+        "action": "killVoterAfterFirstVoteTallied",
+        "description": "Each day, after the 1st vote has been tallied, you may choose a player that voted: they die.",
+        "targets": [
+          "gunslinger"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

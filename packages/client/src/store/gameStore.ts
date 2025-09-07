@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { GameState, GameId, WSMessage, GamePhase, LoadedScript } from '@botc/shared';
+import { GameState, GameId, WSMessage, LoadedScript } from '@botc/shared';
+import * as Enums from '@botc/shared';
 import { SetupApi } from '../api/setupApi';
 
 interface GameStore {
@@ -32,6 +33,7 @@ interface GameStore {
   sendMessage: (message: WSMessage) => void;
   setCurrentGame: (game: GameState) => void;
   setSeat: (seatId: string, isStoryteller?: boolean) => void;
+  leaveGame: () => Promise<boolean>;
   
   // Setup actions
   enterSetup: () => Promise<boolean>;
@@ -57,8 +59,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
   ws: null,
   currentGame: null,
   gameId: null,
-  seatId: null,
-  isStoryteller: false,
+  seatId: (() => {
+    try { return localStorage.getItem('botc-seat-id'); } catch { return null; }
+  })(),
+  isStoryteller: (() => {
+    try { const v = localStorage.getItem('botc-is-storyteller'); return v ? JSON.parse(v) : false; } catch { return false; }
+  })(),
   
   // Setup state
   setupState: null,
@@ -89,10 +95,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
       set({ connected: true, connecting: false, ws: websocket });
       
       // Subscribe to game updates
+      const viewer = viewerSeatId || get().seatId || undefined;
       websocket.send(JSON.stringify({
         type: 'subscribe',
     gameId,
-    viewerSeatId: viewerSeatId || undefined
+    viewerSeatId: viewer || undefined
       }));
     };
 
@@ -144,8 +151,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       connecting: false, 
       ws: null, 
       currentGame: null, 
-      gameId: null,
-      setupState: null,
+  gameId: null,
+  setupState: null,
       grimoireState: null,
       setupError: null
     });
@@ -163,7 +170,36 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
   
   setSeat: (seatId: string, isStoryteller?: boolean) => {
+    try {
+      if (seatId) localStorage.setItem('botc-seat-id', seatId);
+      if (typeof isStoryteller === 'boolean') localStorage.setItem('botc-is-storyteller', JSON.stringify(!!isStoryteller));
+    } catch {}
     set({ seatId, isStoryteller: !!isStoryteller });
+  },
+
+  // Leave the current game (lobby only). Clears local identity.
+  leaveGame: async (): Promise<boolean> => {
+    const state = get();
+    if (!state.gameId || !state.seatId) return false;
+    try {
+      const res = await fetch(`/api/games/${state.gameId}/leave`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seatId: state.seatId })
+      });
+      if (!res.ok) return false;
+      try {
+        localStorage.removeItem('botc-seat-id');
+        localStorage.removeItem('botc-is-storyteller');
+      } catch {}
+      // Disconnect and clear game state
+      const { ws } = get();
+      if (ws) ws.close();
+      set({ connected: false, connecting: false, ws: null, currentGame: null, gameId: null, seatId: null, isStoryteller: false, setupState: null, grimoireState: null, setupError: null });
+      return true;
+    } catch {
+      return false;
+    }
   },
   
   // Setup actions
@@ -171,7 +207,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     if (!state.gameId || !state.seatId) return false;
     // If we're already in SETUP, just load state and return success
-    if (state.currentGame?.phase === GamePhase.SETUP) {
+  if (state.currentGame?.phase === Enums.GamePhase.SETUP) {
       try {
         await get().loadSetupState();
         set({ currentSetupStep: 'characters', setupError: null, setupLoading: false });

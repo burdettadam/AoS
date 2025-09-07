@@ -1,0 +1,49 @@
+{
+  "id": "professor",
+  "name": "Professor",
+  "team": "townsfolk",
+  "ability": "Once per game, at night*, choose a dead player: if they are a Townsfolk, they are resurrected.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "once-per-game",
+    "resurrection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Professor has not used their ability: The Professor either shakes their head no or points to a dead player. If that dead player is a Townsfolk, they are now alive."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "professor-resurrect",
+        "type": "character",
+        "action": "resurrectDeadTownsfolkOnce",
+        "description": "Once per game at night*, choose a dead player: if Townsfolk, they are resurrected.",
+        "targets": [
+          "professor"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

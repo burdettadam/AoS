@@ -1,0 +1,52 @@
+{
+  "id": "bureaucrat",
+  "name": "Bureaucrat",
+  "team": "traveller",
+  "ability": "Each night, choose a player (not yourself): their vote counts as 3 votes tomorrow.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "3 votes"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "active",
+    "vote-manipulation",
+    "buff"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers",
+    "otherNightReminder": "The Bureaucrat points to a player. That player's vote counts as 3 votes tomorrow."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "bureaucrat-choose-player-3-votes",
+        "type": "character",
+        "action": "choosePlayerVoteCountsAsThreeTomorrow",
+        "description": "Each night, choose a player (not yourself): their vote counts as 3 votes tomorrow.",
+        "targets": [
+          "bureaucrat"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "id": "lil-monsta",
+  "name": "Lil' Monsta",
+  "team": "demon",
+  "ability": "Each night, Minions choose who babysits Lil' Monsta & \"is the Demon\". Each night*, a player might die. [+1 Minion]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "setup",
+    "minion-choice",
+    "babysitting",
+    "variable-demon"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "firstNightReminder": "Minions choose who babysits Lil' Monsta.",
+    "otherNightReminder": "Minions choose who babysits Lil' Monsta. A player might die."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "lil-monsta-minions-choose-babysitter",
+        "type": "character",
+        "action": "minions-choose-babysitter",
+        "description": "Minions choose who babysits Lil' Monsta.",
+        "targets": ["lil-monsta"],
+        "information": {
+          "customMessage": "Minions choose a player to babysit Lil' Monsta and be the Demon."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "lil-monsta-minions-choose-babysitter",
+        "type": "character",
+        "action": "minions-choose-babysitter",
+        "description": "Minions choose who babysits Lil' Monsta.",
+        "targets": ["lil-monsta"],
+        "information": {
+          "customMessage": "Minions choose a player to babysit Lil' Monsta and be the Demon."
+        },
+        "order": 1
+      },
+      {
+        "id": "lil-monsta-demon-kill",
+        "type": "character",
+        "action": "choose-player-to-die",
+        "description": "Each night, a player might die.",
+        "targets": ["lil-monsta"],
+        "information": {
+          "customMessage": "Choose a player to die."
+        },
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

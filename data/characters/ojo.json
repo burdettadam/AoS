@@ -1,0 +1,50 @@
+{
+  "id": "ojo",
+  "name": "Ojo",
+  "team": "demon",
+  "ability": "Each night*, choose a character: they die. If they are not in play, the Storyteller chooses who dies.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "character-targeting",
+    "storyteller-choice"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Ojo points to a character on the sheet. If that character is in play, they die. Otherwise, the Storyteller chooses who dies."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "ojo-choose-character-to-die",
+        "type": "character",
+        "action": "chooseCharacterToDie",
+        "description": "Each night*, choose a character: they die. If they are not in play, the Storyteller chooses who dies.",
+        "targets": [
+          "ojo"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

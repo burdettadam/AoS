@@ -1,0 +1,66 @@
+{
+  "id": "pixie",
+  "name": "Pixie",
+  "team": "townsfolk",
+  "ability": "You start knowing 1 in-play Townsfolk. If you were mad that you were this character, you gain their ability when they die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "madness",
+    "ability-gain"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the Pixie a Townsfolk character token that is in play."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "pixie-learn-townsfolk",
+        "type": "character",
+        "action": "learnInPlayTownsfolk",
+        "description": "On first night, learn 1 in-play Townsfolk character.",
+        "targets": [
+          "pixie"
+        ],
+        "information": {
+          "customMessage": "In-play Townsfolk: [TOWNSFOLK_CHARACTER]"
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "pixie-gain-ability-if-mad-and-they-die",
+        "type": "character",
+        "action": "gainAbilityIfMadAndTargetDies",
+        "description": "If you were mad that you were this character, gain their ability when they die.",
+        "targets": [
+          "pixie"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

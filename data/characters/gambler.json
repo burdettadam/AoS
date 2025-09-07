@@ -1,0 +1,49 @@
+{
+  "id": "gambler",
+  "name": "Gambler",
+  "team": "townsfolk",
+  "ability": "Each night*, choose a player & guess their character: if you guess wrong, you die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "active",
+    "guessing",
+    "self-risk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Gambler points to a player and a character on the sheet. If incorrect, the Gambler dies."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "gambler-guess",
+        "type": "character",
+        "action": "guessCharacterOrDie",
+        "description": "Each night, choose a player and guess their character: if wrong, you die.",
+        "targets": [
+          "gambler"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

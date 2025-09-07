@@ -1,0 +1,231 @@
+{
+  "id": "imp",
+  "name": "Imp",
+  "team": "demon",
+  "ability": "Kills one player each night (except the first). If it kills itself, a Minion becomes the new Imp.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "Ravenswood_data"
+  ],
+  "tags": [
+    "killing",
+    "team_info"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Imp",
+  "imageUrl": null,
+  "howToRun": "Each night except the first, wake the Imp. The Imp points at any player. Put the Imp to sleep. The chosen player dies—put the Imp's DEAD reminder by the chosen player's character token in the Grimoire and put a shroud on it.\nIf the Imp killed themself at night, choose an alive Minion and replace their character token with a spare Imp token, changing their character to the Imp. Wake the new Imp, show them the YOU ARE info token, then show them the Imp token. Put the new Imp to sleep.\nAt dawn, declare which player died at night. (Do not say how they died.)\nIf the Imp attacks a dead player at night, let them do so. Whenever a character's ability says \"choose a player,\" that means that any player—alive or dead—can be chosen. The Imp may be planning on bluffing as the Soldier, and this kind of thing helps their bluff look stronger.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "There are many strategies for evil players, particularly the Imp, that are covered in more detail in Player Strategy section. Generally speaking, as the Demon, you want to look trustworthy, spread false information where possible, get your Minions to confirm that you are a good player, and sacrifice them when needed. Take a look at this section for more information.\nStay alive during the day at all costs. Even in games with three Minions, do not assume there is a Scarlet Woman in play. (However, if you talk to your Minion(s) and you learn that there is, then ignore this advice!)\nIf you are under suspicion, night time suicide is always an option. Killing yourself and passing the Demonhood to a Minion that is looking more trustworthy robs you of the support of their continued voting power, but survival is more important. You can also do this when there is no suspicion on you - people tend to trust players that die at night. Either way, if you die at night, giving false information to the good team the day after, such as claiming to be the Ravenkeeper, can change the course of the game.\nYour Minions are pawns to be sacrificed! Kill them! Kill them all! You're the only one that matters!\nAt the beginning of the game, the Storyteller will give you three possible bluffs to choose from. You can bluff as whatever you want, of course, but these few bluffs are safe. Since the Imp can die at night, and pass the Demonhood to a Minion, both the more passive and the more aggressive bluffs can be useful. If you are new to the game, or don't quite understand how certain characters work, either ask the Storyteller for help, or bluff as a more passive character, such as the Soldier or the Recluse. If you are more adventurous, more high-risk high-reward bluffs such as the Fortune Teller or Undertaker can be risked.\nA very bold strategy, to be employed on occasion when playing with players who are more familiar with the game, is to claim to be a character that you did not see as one of your bluffs. If you're bluffing as a character that's really in the game, then maybe the good team will assume that you're just a Baron who didn't learn any out of play characters, and kill the other players instead. Of course, they might decide that you're actually the Scarlet Woman and execute you just to be on the safe side.\nWhen choosing who to kill, you generally want to kill powerful, troublesome, information-gathering Townsfolk sooner rather than later, such as the Empath, Undertaker, Monk or Slayer. Removing their information (or power) from the game early can help you later on. Every so often, deliberately keeping one of these Townsfolk alive until the final day can double-bluff the good players. They may ask this player \"If you are really the Fortune Teller, why are you still alive?\", and kill them.\nAlso, when deciding who to attack at night, you are best killing the more trusted players earlier rather than later. A Virgin that everybody knows is the Virgin will never be executed, which decreases your odds of being executed later on. A pair of Outsiders that everybody believes are actually Outsiders will need to disappear, because they will not be executed either. On the final day, you will want at least one other player, preferably two, to be looking more suspicious than you.\nSend your Minions out on information-gathering missions. Gather as much information as you can about who is who. This will help you avoid attacking troublesome characters like the Ravenkeeper or the Soldier, and the problems that consequently follow.\nTalk to your Minions! Co-ordinate with them, by helping them bluff. Agree that one of you will look as evil as possible, while the other one will take the Demonhood and survive to the end of the game. Find out what your Spy knows. Co-ordinate with your Poisoner so that you choose different players at night. Let your Baron run wild. Learn if your Scarlet Woman's plan is to kill you, or keep you alive.\nThere are lots of reasons why you should register as an evil Imp to good players. If this happens, don't despair! Maybe you can convince the group that Empath is drunk? Maybe you can argue that you are that Fortune Teller's \"red herring\"?\nIf you don't want to kill one night, you can choose a dead player instead. This can also help you bluff well as the Soldier or the Monk, as no death of a night-time makes it look like your Soldier or Monk ability triggered. If no one is dead after the first day, there are no dead players to 'sink' a kill into, but if you're committed to bluffing as one of those characters, just ask your Poisoner pick you!",
+  "bluffing": "",
+  "legacy": {
+    "category": "Demon",
+    "originalSource": "Ravenswood_data"
+  },
+  "interactions": {
+    "conflicts": [
+      {
+        "with": "soldier",
+        "effect": "abilityBlocked",
+        "description": "Soldier is immune to Demon attacks"
+      },
+      {
+        "with": "monk",
+        "effect": "abilityBlocked",
+        "description": "Monk can protect players from Demon attacks"
+      }
+    ],
+    "dependencies": [],
+    "immunity": {
+      "demonAttack": false,
+      "poison": false,
+      "execution": false
+    }
+  },
+  "goal": {
+    "actionType": "killPlayer",
+    "description": "Kills one player each night to eliminate threats and create chaos",
+    "selection": {
+      "type": "ANY_PLAYER",
+      "criteria": { "allowSelf": true }
+    },
+    "effects": [{
+      "type": "KILL_PLAYER",
+      "target": "TARGET",
+      "duration": "IMMEDIATE"
+    }, {
+      "type": "TRANSFER_DEMONHOOD",
+      "target": "MINION",
+      "duration": "PERMANENT",
+      "condition": "selfTargeted"
+    }],
+    "frequency": "nightly"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "imp-receive-bluffs",
+        "actionType": "receiveBluffCharacters",
+        "selection": {
+          "type": "SELF",
+          "criteria": {}
+        },
+        "effects": [{
+          "type": "LEARN_INFORMATION",
+          "target": "SELF",
+          "duration": "GAME",
+          "information": {
+            "giveBluffs": 3,
+            "customMessage": "Here are 3 characters you can bluff as during the game"
+          }
+        }],
+        "description": "Storyteller gives Imp 3 character tokens as bluffs for the game",
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "imp-kill-player",
+        "actionType": "killPlayer",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": { "allowSelf": true }
+        },
+        "effects": [{
+          "type": "KILL_PLAYER",
+          "target": "TARGET",
+          "duration": "IMMEDIATE",
+          "information": { "customMessage": "You have killed [PLAYER]" }
+        }],
+        "description": "Imp chooses one player to kill each night",
+        "order": 1
+      },
+      {
+        "id": "imp-suicide-transfer",
+        "actionType": "transferDemonhood",
+        "selection": {
+          "type": "MINIONS",
+          "criteria": { "mustBeAlive": true }
+        },
+        "effects": [{
+          "type": "CHANGE_ROLE",
+          "target": "TARGET",
+          "duration": "PERMANENT",
+          "newRole": "IMP",
+          "information": { "customMessage": "[PLAYER] is now the Imp" }
+        }],
+        "description": "If Imp kills itself, a Minion becomes the new Imp",
+        "order": 2,
+        "condition": "selfTargeted"
+      }
+    ],
+    "day": [
+      {
+        "id": "imp-coordinate-with-minions",
+        "actionType": "coordinateEvilTeam",
+        "selection": {
+          "type": "SELF",
+          "criteria": {}
+        },
+        "effects": [{
+          "type": "SHARE_INFORMATION",
+          "target": "TEAM",
+          "duration": "IMMEDIATE",
+          "information": {
+            "customMessage": "Let's coordinate our bluffs and strategy for today"
+          }
+        }],
+        "description": "Imp can coordinate with Minions on strategy and bluffs",
+        "order": 1
+      },
+      {
+        "id": "imp-bluff-as-character",
+        "actionType": "maintainBluff",
+        "selection": {
+          "type": "SELF",
+          "criteria": {}
+        },
+        "effects": [{
+          "type": "CLAIM_ROLE",
+          "target": "ALL_PLAYERS",
+          "duration": "DAY",
+          "information": {
+            "customMessage": "I am claiming to be [BLUFF_CHARACTER]"
+          }
+        }],
+        "description": "Imp maintains chosen character bluff throughout the day",
+        "order": 2
+      }
+    ],
+    "nominations": [
+      {
+        "id": "imp-deflect-suspicion",
+        "actionType": "nominate",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": { "excludeSelf": true }
+        },
+        "effects": [{
+          "type": "NOMINATE_FOR_EXECUTION",
+          "target": "TARGET",
+          "duration": "DAY"
+        }],
+        "description": "Imp can nominate suspicious players to deflect attention from themselves",
+        "order": 1
+      }
+    ],
+    "voting": [
+      {
+        "id": "imp-vote-strategically",
+        "actionType": "voteToSurvive",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": { "excludeSelf": true }
+        },
+        "effects": [{
+          "type": "CAST_VOTE",
+          "target": "TARGET",
+          "duration": "IMMEDIATE"
+        }],
+        "description": "Imp votes strategically to avoid execution and eliminate threats",
+        "order": 1
+      }
+    ],
+    "execution": [
+      {
+        "id": "imp-survive-execution",
+        "actionType": "avoidExecution",
+        "selection": {
+          "type": "SELF",
+          "criteria": {}
+        },
+        "effects": [{
+          "type": "GRANT_IMMUNITY",
+          "target": "SELF",
+          "duration": "EXECUTION",
+          "immunityType": "EXECUTION"
+        }],
+        "description": "Imp uses various strategies to avoid being executed",
+        "order": 1
+      },
+      {
+        "id": "imp-sacrifice-minions",
+        "actionType": "sacrificeMinions",
+        "selection": {
+          "type": "MINIONS",
+          "criteria": { "mustBeAlive": true }
+        },
+        "effects": [{
+          "type": "REDIRECT_THREAT",
+          "target": "TARGET",
+          "duration": "IMMEDIATE"
+        }],
+        "description": "Imp can sacrifice Minions to protect themselves",
+        "order": 2
+      }
+    ]
+  }
+}

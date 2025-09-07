@@ -1,0 +1,49 @@
+{
+  "id": "tinker",
+  "name": "Tinker",
+  "team": "outsider",
+  "ability": "You might die at night.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "random-death",
+    "passive"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Tinker might die."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "tinker-might-die",
+        "type": "character",
+        "action": "might-die-at-night",
+        "description": "You might die at night.",
+        "targets": ["tinker"],
+        "information": {
+          "customMessage": "The Tinker might die."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

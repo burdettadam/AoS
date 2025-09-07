@@ -1,0 +1,203 @@
+{
+  "id": "washerwoman",
+  "name": "Washerwoman",
+  "team": "townsfolk",
+  "ability": "Learns that one of two players is a particular Townsfolk.",
+  "reminders": [
+    "KNOW"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "Ravenswood_data",
+    "trouble-brewing"
+  ],
+  "tags": [
+    "information"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Washerwoman",
+  "imageUrl": null,
+  "howToRun": "While preparing the first night, put the Washerwoman's TOWNSFOLK reminder token by any Townsfolk character token, and put the Washerwoman's WRONG reminder token by any other character token.\nDuring the first night, wake the Washerwoman and point to the players marked TOWNSFOLK and WRONG. Show the character token marked TOWNSFOLK to the Washerwoman. Put the Washerwoman to sleep. Remove the Washerwoman's reminder tokens when convenient.",
+  "firstNightDescription": "While preparing the first night, put the Washerwoman's TOWNSFOLK reminder token by any Townsfolk character token, and put the Washerwoman's WRONG reminder token by any other character token.\nDuring the first night, wake the Washerwoman and point to the players marked TOWNSFOLK and WRONG. Show the character token marked TOWNSFOLK to the Washerwoman. Put the Washerwoman to sleep. Remove the Washerwoman's reminder tokens when convenient.",
+  "tipsAndTricks": "The Washerwoman is deceptively powerful. Even though you don't gain information on the evil players, you can confirm the identity of a good player. This player should be your focus for the game, because if they have great information, then you have that information too. If they have a useful ability that they choose to use, you can help them use it wisely.\nWhen the Washerwoman  is poisoned or is actually the Drunk, they will often get information that is easy to figure out is incorrect—at least compared to other characters. While the Chef has no clue as to whether their \"1\" is incorrect, if both of the players the Storyteller pointed at tell you they're a different character to the one the Storyteller showed you, it is likely that you are the Drunk or poisoned. You can use this information to your team's advantage: if you know you are the Drunk, you know nobody else is; if you think you were poisoned on the first night, nobody else could have been. Furthermore, if your information seems like it's correct, it probably is, because of how easy it is to tell when it's wrong.\nYou know that of the two players you are shown, one must be the Townsfolk you are shown. Importantly, this means that you know that the person you see is not the Drunk.\nTo find out which of the two players is the Townsfolk, either ask the group publicly or have a private conversation with each player individually. It is usually best to reveal what you know before the Townsfolk in question says who they are so they trust you more.\nIf you share your information on the first day, and speak up quickly, the good team has some solid information to begin with. This is particularly useful if you confirm another information-receiving Townsfolk like the Empath or the Fortune Teller.\nWaiting until the final day - or at least very late in the game - to share your information with the group can also be very useful. If you can keep the Townsfolk that you know alive until the final day, then you know one player who is not the Imp! This can either make the Demon player obvious to you, or at least reduce the possible Demon players down to 1 in 2 instead of 1 in 3.\nTalk to the Townsfolk player that you know, and secretly let them know that you know who they are. This way, you can hopefully form an alliance, and can come to each other's defence if either of you are nominated for execution, whilst avoiding telling the group (and therefore the evil team) who the other is. This is particularly useful if you learn a character that the Demon really wants to attack, like the Fortune Teller, or even a character that the Demon wants to avoid attacking at all costs, like the Ravenkeeper or the Soldier.\nAfter talking to the Townsfolk that you know in private, and confirming who they are, you can tell the group that they are a different character than they actually are. This strategy is useful if you want to protect a powerful Townsfolk from characters like the Poisoner, or to trick evil players into attacking a Townsfolk that has already used their ability, such as the Chef.\nYou can claim to be a more powerful character than you actually are. You start with all the information you're going to get, so if the demon kills you, they aren't killing the Slayer or the Fortune Teller. You may also want to consider nominating a Virgin, and confirming yourself, the Virgin, and the Townsfolk you were shown all to be good.\nSometimes the Storyteller will point to evil players as possible Townsfolk to you. If you think this might be the case, don't say directly which Townsfolk you know to be in play. You might instead state a false Townsfolk character to try and trick evil players into admitting to being a character that you didn't learn, or you can tempt good players into revealing their Townsfolk character to you before you reveal what you know to them. This allows you to trust them more... but they may trust you less!\nIf the 'wrong' player the Storyteller pointed to is an evil player, telling them the Townsfolk you saw may alert the Imp to the presence of the character you saw. If you saw the Empath, for example, telling the Demon that may cause the Empath to be killed in the night.\nThe two of you can reveal your characters publicly to the group, without having a private conversation beforehand. This goes a long way towards proving publicly that you are both telling the truth.\nPublicly reveal which character is in play, but not which player it is. This way, the evil team gets little information, but the Townsfolk in question will trust you, and will look more trustworthy when they reveal who they are to the group.\nYou could claim to be the Washerwoman and point to a player you suspect is evil, stating that they are the Townsfolk you learned about. An opportunistic evil player may pounce on an opportunity to appear good, and claim that they are, in fact, the Townsfolk you learned about, thus outing them to you as, at the very least, a liar.\nBeware of the Spy! They may register as a Townsfolk character to you. That player who you think is the Investigator may not be the Investigator after all...\nRemember that while the Spy is likely to know that you've seen them as a Townsfolk, they won't know which Townsfolk you've seen them as.",
+  "bluffing": "When bluffing as the Washerwoman, there are a few things you should keep in mind:\nYou would have received your information on night one, and so should have it from that point onward. You will have been shown two players and one Townsfolk token.\nClaim to be the Washerwoman  and point to at least one evil player. Then, name the Townsfolk character (preferably one that you suspect/know is not in play). If that evil player is clever, they may realize that you are trying to make them look good, and claim to be that Townsfolk. For example, if you point to the Imp and a random good player, and say that one of them is the Monk, then the Imp may claim to be the Monk, which makes you both look good.\nIf a good player claims to be a particular Townsfolk character, you can claim to be the Washerwoman, and confirm that they are who they say they are. This can help them to trust you, and lead them astray with their own information.\nImmediately upon awakening, tell the group that a particular Townsfolk is in play. Cross your fingers and hope that you are correct! If you are, great. If not, an evil player may bluff as the Townsfolk you claimed is in play.\nThe Washerwoman can be a difficult bluff, because sometimes the Townsfolk you say is in play, isn't. If this happens, you can always claim to be the Drunk or poisoned. Another option is to claim that Washerwoman  was a bluff, and that you are actually a character that is more powerful later in the game such as a Slayer or an Undertaker, and that you were trying to look like a character that has already used their ability so that the Demon would not attack you.\nIf you are the Spy or have access to a Spy, they can be invaluable in providing you accurate information to back up your story.",
+  "legacy": {
+    "category": "Townsfolk",
+    "originalSource": "Ravenswood_data"
+  },
+  "interactions": {
+    "conflicts": [],
+    "dependencies": [],
+    "immunity": {
+      "demonAttack": false,
+      "poison": true,
+      "execution": false
+    }
+  },
+  "goal": {
+    "actionType": "learnCharacter",
+    "description": "Confirms a specific Townsfolk character is in play and identifies one good player",
+    "selection": {
+      "type": "TWO_PLAYERS",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "LEARN_CHARACTER",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "information": {
+          "type": "TOWNSFOLK_IDENTITY",
+          "scope": "ONE_OF_TWO"
+        }
+      }
+    ],
+    "frequency": "once"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "washerwoman-info",
+        "actionType": "learnCharacter",
+        "description": "Storyteller shows Washerwoman one Townsfolk character and points to two players, indicating one is that Townsfolk",
+    "label": "Learn Townsfolk identity",
+        "selection": {
+          "type": "TWO_PLAYERS",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "LEARN_CHARACTER",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "information": {
+              "type": "TOWNSFOLK_IDENTITY",
+              "scope": "ONE_OF_TWO"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "washerwoman-share-info",
+        "actionType": "shareLearnedInfo",
+        "description": "Washerwoman can share learned information with the group or privately",
+    "label": "Share learned information",
+        "selection": {
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "SHARE_INFORMATION",
+            "target": "GROUP",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      },
+      {
+        "id": "washerwoman-verify-claims",
+        "actionType": "verifyPlayerClaims",
+        "description": "Washerwoman can verify if players claiming to be the learned Townsfolk are telling the truth",
+    "label": "Verify player claims",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "VERIFY_CLAIM",
+            "target": "SELECTED",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 2
+      }
+    ],
+    "nominations": [
+      {
+        "id": "washerwoman-protect-known-good",
+        "actionType": "defendKnownGoodPlayer",
+        "description": "Washerwoman can defend the known good player from nomination",
+    "label": "Defend known good player",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "DEFEND_PLAYER",
+            "target": "SELECTED",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "voting": [
+      {
+        "id": "washerwoman-vote-strategically",
+        "actionType": "voteBasedOnInfo",
+        "description": "Washerwoman can use learned information to make informed voting decisions",
+    "label": "Vote strategically",
+        "selection": {
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "INFLUENCE_VOTE",
+            "target": "GROUP",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "execution": [
+      {
+        "id": "washerwoman-track-executions",
+        "actionType": "updateInfoAfterExecution",
+        "description": "Washerwoman updates their information based on execution results",
+    "label": "Track executions",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "UPDATE_INFORMATION",
+            "target": "SELF",
+            "duration": "PERMANENT"
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "night": []
+  }
+}

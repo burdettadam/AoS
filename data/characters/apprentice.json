@@ -1,0 +1,52 @@
+{
+  "id": "apprentice",
+  "name": "Apprentice",
+  "team": "traveller",
+  "ability": "On your 1st night, you gain a Townsfolk ability (if good), or a Minion ability (if evil).",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "ability-gain",
+    "alignment-dependent"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers",
+    "firstNightReminder": "Show the Apprentice a Townsfolk token (if good) or Minion token (if evil). The Apprentice gains that ability."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "apprentice-gain-ability",
+        "type": "character",
+        "action": "gain-townsfolk-or-minion-ability",
+        "description": "You gain a Townsfolk ability (if good), or a Minion ability (if evil).",
+        "targets": ["apprentice"],
+        "information": {
+          "customMessage": "Gain a Townsfolk or Minion ability based on alignment."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

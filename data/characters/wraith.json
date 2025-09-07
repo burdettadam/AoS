@@ -1,0 +1,49 @@
+{
+  "id": "wraith",
+  "name": "Wraith",
+  "team": "minion",
+  "ability": "You may choose to open your eyes at night. You wake when other evil players do.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "night-vision",
+    "evil-coordination"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Wraith may open their eyes and see what happens at night."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "wraith-choose-open-eyes",
+        "type": "character",
+        "action": "choose-open-eyes",
+        "description": "You may choose to open your eyes at night. You wake when other evil players do.",
+        "targets": ["wraith"],
+        "information": {
+          "customMessage": "Choose to open your eyes and see what happens."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

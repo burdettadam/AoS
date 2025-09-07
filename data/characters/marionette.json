@@ -1,0 +1,55 @@
+{
+  "id": "marionette",
+  "name": "Marionette",
+  "team": "minion",
+  "ability": "You think you are a good character, but you are not. The Demon knows who you are. [You neighbor the Demon]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "false-role",
+    "demon-knowledge",
+    "setup",
+    "neighbors"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "firstNightReminder": "Wake the Demon. Show the Marionette token and point to the Marionette player."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "marionette-demon-learns-identity",
+        "type": "character",
+        "action": "demonLearnsMarionette",
+        "description": "On first night, the Demon learns who the Marionette is.",
+        "targets": [
+          "marionette"
+        ],
+        "information": {
+          "showPlayer": "[MARIONETTE]"
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

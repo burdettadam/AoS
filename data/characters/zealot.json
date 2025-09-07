@@ -1,0 +1,48 @@
+{
+  "id": "zealot",
+  "name": "Zealot",
+  "team": "outsider",
+  "ability": "If there are 5 or more players alive, you must vote for every nomination.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "voting-restriction",
+    "forced-voting"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [
+      {
+        "id": "zealot-must-vote-if-5-plus",
+        "type": "character",
+        "action": "must-vote-for-every-nomination",
+        "description": "If there are 5 or more players alive, you must vote for every nomination.",
+        "targets": ["zealot"],
+        "information": {
+          "customMessage": "Must vote for every nomination if 5+ players alive."
+        },
+        "order": 1
+      }
+    ],
+    "execution": []
+  }
+}

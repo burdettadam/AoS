@@ -1,0 +1,48 @@
+{
+  "id": "knight",
+  "name": "Knight",
+  "team": "townsfolk",
+  "ability": "You start knowing 2 players that are not the Demon.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "not-demon"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Point to 2 players that are not the Demon."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "knight-learn-two-not-demon",
+        "type": "character",
+        "action": "learn-two-players-not-demon",
+        "description": "You start knowing 2 players that are not the Demon.",
+        "targets": ["knight"],
+        "information": {
+          "customMessage": "Learn 2 players that are not the Demon."
+        },
+        "order": 1
+      }
+    ],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

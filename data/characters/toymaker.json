@@ -1,0 +1,49 @@
+{
+  "id": "toymaker",
+  "name": "Toymaker",
+  "team": "fabled",
+  "ability": "The Demon may choose not to attack & must do this at least once per game. Evil players get normal starting info.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "demon-restriction",
+    "attack-limitation",
+    "information-normalization"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "toymaker-demon-may-choose-not-to-attack",
+        "type": "character",
+        "action": "demonMayChooseNotToAttack",
+        "description": "The Demon may choose not to attack & must do this at least once per game. Evil players get normal starting info.",
+        "targets": [
+          "toymaker"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

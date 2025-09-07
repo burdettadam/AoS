@@ -1,0 +1,50 @@
+{
+  "id": "angel",
+  "name": "Angel",
+  "team": "fabled",
+  "ability": "Something bad might happen to whoever is most responsible for the death of a new player.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "new-player-protection",
+    "consequence",
+    "responsibility"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "angel-punish-responsible",
+        "type": "character",
+        "action": "punish-most-responsible",
+        "description": "Something bad might happen to whoever is most responsible for the death of a new player.",
+        "targets": ["angel"],
+        "information": {
+          "customMessage": "Punish the player most responsible for a new player's death."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

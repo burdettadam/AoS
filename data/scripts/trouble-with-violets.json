@@ -1,0 +1,100 @@
+{
+  "id": "trouble-with-violets",
+  "name": "Trouble with Violets",
+  "description": "Trouble with Violets combines Trouble Brewing and Sects & Violets characters, creating an interesting blend of classic and experimental gameplay with enhanced outsider mechanics.",
+  "author": "Ben Burns",
+  "version": "1.0.0",
+  "characters": [
+    "washerwoman",
+    "librarian",
+    "investigator",
+    "chef",
+    "empath",
+    "fortune-teller",
+    "undertaker",
+    "monk",
+    "ravenkeeper",
+    "virgin",
+    "slayer",
+    "soldier",
+    "mayor",
+    "butler",
+    "drunk",
+    "recluse",
+    "saint",
+    "poisoner",
+    "spy",
+    "scarlet-woman",
+    "baron",
+    "imp",
+    "clockmaker",
+    "dreamer",
+    "snake-charmer",
+    "mathematician",
+    "flowergirl",
+    "town-crier",
+    "oracle",
+    "savant",
+    "seamstress",
+    "philosopher",
+    "artist",
+    "juggler",
+    "sage",
+    "mutant",
+    "sweetheart",
+    "klutz",
+    "evil-twin",
+    "witch",
+    "cerenovus",
+    "pit-hag",
+    "fang-gu",
+    "vigormortis",
+    "no-dashii",
+    "vortox"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "8-12"
+  },
+  "complexity": "intermediate",
+  "tags": [
+    "hybrid",
+    "outsiders",
+    "experimental",
+    "featured"
+  ],
+  "estimatedTime": "75-90 minutes",
+  "characterDistribution": {
+    "townsfolk": 13,
+    "outsiders": 8,
+    "minions": 4,
+    "demons": 4
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Combines Trouble Brewing and Sects & Violets",
+    "Enhanced outsider mechanics",
+    "Interesting blend of classic and experimental"
+  ],
+  "setupNotes": "This script provides a transition between the base Trouble Brewing and the more complex Sects & Violets. The outsider mechanics create additional tension and strategy.",
+  "winConditions": {
+    "good": "Execute all evil characters",
+    "evil": "Survive to equal the number of good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "TB fundamentals with SV-style logic traps. Keep poisoning/falsehood sources light to preserve TB readability.",
+  "firstNight": [
+    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
+    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+  ],
+  "tipsAndTricks": "Good: Use TB anchors and then probe for SV-style distortions. Evil: Look TB-honest while inserting one clean contradiction path.",
+  "bluffing": "Blend classic TB bluffs with a subtle SV twist.",
+  "legacy": null
+}

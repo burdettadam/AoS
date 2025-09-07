@@ -1,0 +1,62 @@
+{
+  "id": "vigormortis",
+  "name": "Vigormortis",
+  "team": "demon",
+  "ability": "Each night*, choose a player: they die. Minions you kill keep their ability & poison 1 Townsfolk neighbor. [-1 Outsider]",
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "setup",
+    "poison"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Vigormortis points to a player. That player dies. If a Minion died: The Vigormortis chooses a Townsfolk neighbor of that Minion to poison."
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [
+      {
+        "id": "vigormortis-kill",
+        "type": "character",
+        "action": "choosePlayerKill",
+    "label": "Choose player to kill",
+        "description": "Each night*, choose a player: they die.",
+        "targets": [
+          "vigormortis"
+        ],
+        "order": 1
+      },
+      {
+        "id": "vigormortis-minion-poison-neighbor",
+        "type": "character",
+        "action": "killedMinionKeepsAbilityPoisonNeighbor",
+    "label": "Minion keeps ability, poison neighbor",
+        "description": "Minions you kill keep their ability & poison 1 Townsfolk neighbor.",
+        "targets": [
+          "vigormortis"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "golem",
+  "name": "Golem",
+  "team": "outsider",
+  "ability": "You may only nominate once per game. When you do, if the nominee is not the Demon, they die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Used"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "nomination-limit",
+    "conditional-kill",
+    "once-per-game"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [
+      {
+        "id": "golem-nominate-once",
+        "type": "character",
+        "action": "nominate-player",
+        "description": "You may only nominate once per game. When you do, if the nominee is not the Demon, they die.",
+        "targets": ["golem"],
+        "information": {
+          "customMessage": "Nominate a player; if not the Demon, they die."
+        },
+        "order": 1
+      }
+    ],
+    "voting": [],
+    "execution": []
+  }
+}

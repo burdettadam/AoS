@@ -43,10 +43,15 @@ This project uses a monorepo structure with:
    cd botct
    ```
 
-2. **Install dependencies**
+2. **Install dependencies and build shared package**
    ```bash
    npm run setup
    ```
+
+   This will:
+   - Install all package dependencies
+   - Build the shared package with dual output (CommonJS + ESM)
+   - Set up the monorepo for development
 
 3. **Set up environment variables**
    ```bash
@@ -65,10 +70,25 @@ This will start:
 
 ### Development Scripts
 
-- `npm run dev` - Start both client and server in development mode
-- `npm run build` - Build both packages for production
+- `npm run dev` - Start both client and server in development mode  
+- `npm run dev:docker` - Start all services using Docker
+- `npm run build` - Build all packages for production
+- `npm run build:shared` - Build only the shared package (required before other builds)
 - `npm run test` - Run tests for all packages
 - `npm run lint` - Lint all packages
+
+### Package Management
+
+This project uses a monorepo with shared packages. The `@botc/shared` package is built with dual output:
+- **CommonJS** for Node.js (server)
+- **ES Modules** for browsers (client)
+
+If you encounter module resolution errors, run:
+```bash
+npm run build:shared
+```
+
+For more details, see [docs/MONOREPO_SETUP.md](./docs/MONOREPO_SETUP.md).
 
 ## 📁 Project Structure
 

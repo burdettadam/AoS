@@ -1,0 +1,116 @@
+{
+  "id": "mad-as-a-hatter",
+  "name": "Mad as a Hatter",
+  "description": "A script focused on madness mechanics and character transformations. Players must navigate a web of false claims and changing identities.",
+  "author": "Community Created",
+  "version": "1.0.0",
+  "characters": [
+    "clockmaker",
+    "dreamer",
+    "snake-charmer",
+    "philosopher",
+    "artist",
+    "juggler",
+    "sage",
+    "flowergirl",
+    "town-crier",
+    "oracle",
+    "savant",
+    "seamstress",
+    "mutant",
+    "sweetheart",
+    "barber",
+    "klutz",
+    "evil-twin",
+    "witch",
+    "cerenovus",
+    "pit-hag",
+    "fang-gu",
+    "no-dashii",
+    "vortox"
+  ],
+  "playerCount": {
+    "min": 7,
+    "max": 15,
+    "optimal": "9-12"
+  },
+  "complexity": "advanced",
+  "tags": [
+    "community",
+    "custom",
+    "madness",
+    "transformation",
+    "advanced"
+  ],
+  "estimatedTime": "90-120 minutes",
+  "characterDistribution": {
+    "townsfolk": 12,
+    "outsiders": 4,
+    "minions": 4,
+    "demons": 3
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Multiple madness-inducing abilities",
+    "Character transformation mechanics",
+    "Complex information manipulation",
+    "Multiple Demons possible"
+  ],
+  "setupNotes": "Sects & Violets characters emphasizing madness and character-changing abilities.",
+  "winConditions": {
+    "good": "Execute all Demons",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "Madness-heavy. Explain penalties and detection. Track who risks which madness each day.",
+  "firstNight": [
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": ["minions"],
+      "information": {
+        "showPlayersByTeam": ["minions", "demons"],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info", 
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": ["demons"],
+      "information": {
+        "showPlayersByTeam": ["minions"],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    },
+    {
+      "id": "madness-setup",
+      "type": "meta", 
+      "action": "initializeMadnessConditions",
+      "description": "Establish initial madness conditions for Hatter script. Prepare madness tracking.",
+      "targets": ["townsfolk"],
+      "information": {
+        "customMessage": "Madness conditions are now active. Players must comply with character-specific madness requirements or face penalties."
+      },
+      "order": 3
+    },
+    "hatter",
+    "clockmaker",
+    "dreamer"
+  ],
+  "tipsAndTricks": "Good: Use safe-madness plays to bait evil. Evil: Accuse townsfolk of soft-breaking madness to discredit info.",
+  "bluffing": "Perform controlled eccentricity that never breaks rules.",
+  "legacy": null
+}

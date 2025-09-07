@@ -1,0 +1,50 @@
+{
+  "id": "snake-charmer",
+  "name": "Snake Charmer",
+  "team": "townsfolk",
+  "ability": "Each night, choose an alive player: a chosen Demon swaps characters & alignments with you & is then poisoned.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "active",
+    "alignment-change"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Snake Charmer points to a player. If that player is the Demon: swap the Demon and Snake Charmer character and alignments. Wake the new Snake Charmer. Show the 'You are' info token, then the Snake Charmer token. The new Snake Charmer is poisoned."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "snake-charmer-choose-swap",
+        "type": "character",
+        "action": "chooseDemonSwapCharacterAndAlignment",
+        "description": "Each night, choose an alive player: a chosen Demon swaps characters & alignments with you & is then poisoned.",
+        "targets": [
+          "snake-charmer"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

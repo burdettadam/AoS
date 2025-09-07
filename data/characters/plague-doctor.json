@@ -1,0 +1,47 @@
+{
+  "id": "plague-doctor",
+  "name": "Plague Doctor",
+  "team": "outsider",
+  "ability": "When you die, the Storyteller gains a Minion ability.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "death-trigger",
+    "storyteller-ability"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "plague-doctor-storyteller-gains-minion-ability",
+        "type": "character",
+        "action": "storyteller-gains-minion-ability",
+    "label": "Storyteller gains Minion ability",
+        "description": "When the Plague Doctor dies, the Storyteller gains a Minion ability.",
+        "targets": ["plague-doctor"],
+        "information": {
+          "customMessage": "The Storyteller gains a Minion ability."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

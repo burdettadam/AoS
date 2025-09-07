@@ -1,0 +1,52 @@
+{
+  "id": "general",
+  "name": "General",
+  "team": "townsfolk",
+  "ability": "Each night, you learn which alignment the Storyteller believes is winning: good, evil, or neither.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "game-state"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the General a thumbs up for good winning, thumbs down for evil winning, or a closed fist for neither.",
+    "otherNightReminder": "Show the General a thumbs up for good winning, thumbs down for evil winning, or a closed fist for neither."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "general-learn-winning-alignment",
+        "type": "character",
+        "action": "learnStorytellerBelievedWinningAlignment",
+        "description": "Each night, you learn which alignment the Storyteller believes is winning: good, evil, or neither.",
+        "targets": [
+          "general"
+        ],
+        "information": {
+          "customMessage": "Winning alignment: [ALIGNMENT]"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

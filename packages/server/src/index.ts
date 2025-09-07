@@ -3,6 +3,8 @@ import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
 import cors from '@fastify/cors';
 import { randomUUID } from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { GameId, GameState, SeatId } from '@botc/shared';
 import { maskGameStateForSeat, maskGameStatePublic } from '@botc/shared';
 import { GameEngine } from './game/engine';
@@ -26,9 +28,13 @@ async function start() {
     logger.info(`🎭 Script cache ready: ${scriptCount} scripts, ${totalCharacters} characters`);
 
     // Register plugins
+    const isProd = process.env.NODE_ENV === 'production';
     await fastify.register(cors, {
-      origin: process.env.CORS_ORIGIN || 'http://localhost:3000'
-    });
+      // In dev, allow all origins so Vite (5173) works; in prod, use CORS_ORIGIN or disable
+      origin: isProd
+        ? (process.env.CORS_ORIGIN || false)
+  : ((origin: string | undefined, cb: (err: Error | null, allow?: boolean) => void) => cb(null, true))
+    } as any);
     
     await fastify.register(websocket);
 
@@ -67,6 +73,27 @@ async function start() {
     // List available scripts
     fastify.get('/api/scripts', async () => {
       return gameEngine.listScripts();
+    });
+
+    // Static-like route to serve character artwork from repo data (png files)
+    fastify.get('/artwork/characters/:image', async (request, reply) => {
+      const { image } = request.params as { image: string };
+      // Basic validation: only .png under known folder, prevent path traversal
+      if (!image || !/^[a-z0-9\-]+\.png$/i.test(image)) {
+        reply.code(400);
+        return { error: 'Invalid image name' };
+      }
+      // Resolve from monorepo root: packages/server/src -> ../../.. -> repo root
+      const repoRoot = path.resolve(__dirname, '../../..');
+      const filePath = path.join(repoRoot, 'data', 'artwork', 'characters', image);
+      try {
+        await fs.promises.access(filePath, fs.constants.R_OK);
+        reply.type('image/png');
+        return fs.createReadStream(filePath);
+      } catch {
+        reply.code(404);
+        return { error: 'Not found' };
+      }
     });
 
     fastify.get('/api/scripts/:scriptId', async (request) => {
@@ -122,8 +149,21 @@ async function start() {
         return { error: 'Failed to load characters' };
       }
     });    fastify.post('/api/games', async (request, reply) => {
-      const gameId = await matchmaking.createGame();
-      return { gameId };
+      try {
+        const { gameName } = ((request.body as any) || {});
+        const gameId = await matchmaking.createGame();
+        if (typeof gameName === 'string' && gameName.trim()) {
+          const game = gameEngine.getGame(gameId);
+          if (game) {
+            (game as any).gameName = gameName.trim().slice(0, 60);
+          }
+        }
+        return { gameId };
+      } catch (error) {
+  logger.error('POST /api/games failed:', error);
+  reply.code(500);
+  return { error: 'Failed to create game', details: (error && typeof error === 'object' && 'message' in error) ? (error as any).message : String(error) };
+      }
     });
 
     // Get a game's current state; optional viewerSeatId to return masked view
@@ -135,8 +175,10 @@ async function start() {
         reply.code(404);
         return { error: 'Game not found' };
       }
-      if (!viewerSeatId) return game;
+      if (!viewerSeatId) return maskGameStatePublic(game);
       try {
+        // Storyteller gets full state
+        if (game.storytellerSeatId && viewerSeatId === game.storytellerSeatId) return game;
         return maskGameStateForSeat(game, viewerSeatId as SeatId);
       } catch {
         return maskGameStatePublic(game);
@@ -159,6 +201,18 @@ async function start() {
       const game = gameEngine.getGame(gameId as any)!;
       const isStoryteller = game.storytellerSeatId === seatId;
       return { ok: true, seatId, isStoryteller };
+    });
+
+    // Assign/change storyteller (only current storyteller can set)
+    fastify.post('/api/games/:gameId/storyteller', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { setterSeatId, targetSeatId } = (request.body as any) || {};
+      if (!setterSeatId || !targetSeatId) { reply.code(400); return { error: 'setterSeatId and targetSeatId required' }; }
+      const res = gameEngine.setStoryteller(gameId as any, setterSeatId as any, targetSeatId as any);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'storyteller_changed', payload: { storytellerSeatId: game.storytellerSeatId } });
+      return { ok: true, storytellerSeatId: game.storytellerSeatId };
     });
 
     // Start a game
@@ -209,6 +263,19 @@ async function start() {
       return { ok: true, phase: game?.phase };
     });
 
+    // Set the game's display name (storyteller only, lobby only)
+    fastify.post('/api/games/:gameId/name', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId, name } = (request.body as any) || {};
+      const res = gameEngine.setGameName(gameId as any, storytellerSeatId as any, name as string);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) {
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'game_created', payload: { renamed: true } });
+      }
+      return { ok: true };
+    });
+
     // Add an NPC player
     fastify.post('/api/games/:gameId/npc', async (request, reply) => {
       const { gameId } = request.params as { gameId: string };
@@ -216,6 +283,20 @@ async function start() {
       if (!ok) {
         reply.code(400);
         return { error: 'Failed to add NPC' };
+      }
+      return { ok: true };
+    });
+
+    // Leave a game (lobby only)
+    fastify.post('/api/games/:gameId/leave', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { seatId } = (request.body as any) || {};
+      if (!seatId) { reply.code(400); return { error: 'seatId required' }; }
+      const res = gameEngine.removePlayer(gameId as any, seatId as any);
+      if (!res.ok) { reply.code(400); return { error: res.error }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) {
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'player_left', payload: { seatId } });
       }
       return { ok: true };
     });
@@ -230,6 +311,20 @@ async function start() {
       const game = gameEngine.getGame(gameId as any)!;
       if (game && matchmaking['onUpdate']) {
         matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'roles_selected', payload: { roleCount: roleIds.length } });
+      }
+      return { ok: true };
+    });
+
+    // Set available scripts for players (storyteller only)
+    fastify.post('/api/games/:gameId/scripts/available', async (request, reply) => {
+      const { gameId } = request.params as { gameId: string };
+      const { storytellerSeatId, scriptIds } = (request.body as any) || {};
+      if (!Array.isArray(scriptIds) || !storytellerSeatId) { reply.code(400); return { error: 'Invalid body' }; }
+      const ok = gameEngine.setAvailableScripts(gameId as any, storytellerSeatId as any, scriptIds);
+      if (!ok) { reply.code(400); return { error: 'Failed to set available scripts' }; }
+      const game = gameEngine.getGame(gameId as any)!;
+      if (game && matchmaking['onUpdate']) {
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'available_scripts_updated', payload: { scriptIds } });
       }
       return { ok: true };
     });
@@ -267,6 +362,19 @@ async function start() {
 
     // Setup routes
     fastify.register(setupRoutes, { prefix: '/api/games', gameEngine });
+
+    // ASR routes
+    fastify.register(async function (fastify) {
+      fastify.post('/asr/stream', async (request, reply) => {
+        const { ASRController } = await import('./controllers/asrController');
+        return ASRController.streamAudio(request as any, reply);
+      });
+
+      fastify.post('/asr/summarize', async (request, reply) => {
+        const { ASRController } = await import('./controllers/asrController');
+        return ASRController.summarizePhase(request as any, reply);
+      });
+    });
 
     // Day mechanics: nomination & voting
     fastify.post('/api/games/:gameId/nominate', async (request, reply) => {
@@ -327,15 +435,19 @@ async function start() {
 
     fastify.post('/api/games/:gameId/scripts/vote', async (request, reply) => {
       const { gameId } = request.params as { gameId: string };
-      const { voterSeatId, proposalId, vote } = (request.body as any) || {};
-      if (!voterSeatId || !proposalId || typeof vote !== 'boolean') {
-        reply.code(400); return { error: 'voterSeatId, proposalId and vote required' };
+      const { voterSeatId, proposalId, vote, difficulty } = (request.body as any) || {};
+      if (!voterSeatId || !proposalId) { reply.code(400); return { error: 'voterSeatId and proposalId required' }; }
+      let ok = true;
+      if (typeof vote === 'boolean') {
+        ok = matchmaking.voteOnScript(gameId as any, voterSeatId, proposalId, vote);
       }
-      const ok = matchmaking.voteOnScript(gameId as any, voterSeatId, proposalId, vote);
+      if (ok && difficulty) {
+        ok = gameEngine.voteScriptDifficulty(gameId as any, voterSeatId as any, proposalId, difficulty);
+      }
       if (!ok) { reply.code(400); return { error: 'Failed to vote' }; }
       const game = gameEngine.getGame(gameId as any)!;
       if (game && matchmaking['onUpdate']) {
-        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'script_vote', payload: { proposalId, vote } });
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'script_vote', payload: { proposalId } });
       }
       return { ok: true };
     });

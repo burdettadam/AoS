@@ -1,0 +1,67 @@
+{
+  "id": "lleech",
+  "name": "Lleech",
+  "team": "demon",
+  "ability": "Each night*, choose a player: they die. You start by choosing a player: they are poisoned. You die if & only if they are dead.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "poison",
+    "linked-death",
+    "host-dependent"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "firstNightReminder": "The Lleech chooses a player to poison. The Lleech dies if and only if that player is dead.",
+    "otherNightReminder": "The Lleech points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "lleech-choose-poison",
+        "type": "character",
+        "action": "choose-player-to-poison",
+        "description": "You start by choosing a player: they are poisoned. You die if & only if they are dead.",
+        "targets": ["lleech"],
+        "information": {
+          "customMessage": "Choose a player to poison."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "lleech-choose-kill",
+        "type": "character",
+        "action": "choose-player-to-die",
+        "description": "Each night, choose a player: they die.",
+        "targets": ["lleech"],
+        "information": {
+          "customMessage": "Choose a player to die."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

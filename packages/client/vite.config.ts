@@ -38,16 +38,24 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      // Ensure the client can import the shared workspace package without a prebuild
-      '@botc/shared': path.resolve(__dirname, '../shared/src')
+      // Use the built package root, let module resolution handle the rest
+      '@botc/shared': path.resolve(__dirname, '../shared')
     }
   },
+  optimizeDeps: {
+    // Ensure that the shared package is treated as a prebundled dependency
+    include: ['@botc/shared']
+  },
   server: {
-    port: 3000,
+    // Use a non-conflicting default dev port; keep strict to expose port issues early
+    port: 5173,
+    strictPort: true,
     proxy: {
-      '/api': 'http://127.0.0.1:3001',
+      '/api': 'http://botct-server:3001',
+      // Proxy artwork routes to the server so dev uses backend file serving
+      '/artwork': 'http://botct-server:3001',
       '/ws': {
-        target: 'ws://127.0.0.1:3001',
+        target: 'ws://botct-server:3001',
         ws: true
       }
     }

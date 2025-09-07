@@ -1,0 +1,48 @@
+{
+  "id": "tea-lady",
+  "name": "Tea Lady",
+  "team": "townsfolk",
+  "ability": "If both your alive neighbors are good, they can't die.",
+  "reminders": [
+    "Safe"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "passive",
+    "protection",
+    "neighbors"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "tea-lady-ongoing-neighbor-protection",
+        "type": "character",
+        "action": "protectGoodNeighborsPassive",
+        "description": "If both your alive neighbors are good, they can't die (ongoing passive ability).",
+        "targets": [
+          "tea-lady"
+        ],
+        "order": 1
+      }
+    ],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

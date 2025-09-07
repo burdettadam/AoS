@@ -1,0 +1,50 @@
+{
+  "id": "psychopath",
+  "name": "Psychopath",
+  "team": "minion",
+  "ability": "Each day, before nominations, you may publicly choose a player: they die. If executed, you only die if you lose roshambo.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "day-active",
+    "public",
+    "execution-protection",
+    "roshambo"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "psychopath-choose-player-to-die",
+        "type": "character",
+        "action": "choose-player-to-die-publicly",
+        "description": "Each day, before nominations, you may publicly choose a player: they die.",
+        "targets": ["psychopath"],
+        "information": {
+          "customMessage": "Publicly choose a player to die."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

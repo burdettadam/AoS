@@ -1,0 +1,74 @@
+{
+  "id": "on-thin-ice",
+  "name": "On Thin Ice",
+  "description": "A high-risk, high-reward script where dangerous characters and risky abilities can lead to quick victories or devastating defeats.",
+  "author": "Community Created",
+  "version": "1.0.0",
+  "characters": [
+    "grandmother",
+    "sailor",
+    "exorcist",
+    "gambler",
+    "gossip",
+    "professor",
+    "fool",
+    "pacifist",
+    "tea-lady",
+    "slayer",
+    "virgin",
+    "mayor",
+    "tinker",
+    "lunatic",
+    "moonchild",
+    "assassin",
+    "mastermind",
+    "godfather",
+    "shabaloth"
+  ],
+  "playerCount": {
+    "min": 8,
+    "max": 15,
+    "optimal": "10-13"
+  },
+  "complexity": "advanced",
+  "tags": [
+    "community",
+    "custom",
+    "high-risk",
+    "dangerous",
+    "advanced"
+  ],
+  "estimatedTime": "60-90 minutes",
+  "characterDistribution": {
+    "townsfolk": 12,
+    "outsiders": 3,
+    "minions": 3,
+    "demons": 1
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "specialRules": [
+    "Multiple characters can die from their own abilities",
+    "Protection and resurrection mechanics",
+    "Game can end suddenly or extend dramatically"
+  ],
+  "setupNotes": "Bad Moon Rising characters emphasizing risk/reward mechanics and multiple death possibilities.",
+  "winConditions": {
+    "good": "Execute all Demons",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "Risky plays and fragile states. Announce when conditions worsen or improve. Be consistent with break-once rules.",
+  "firstNight": [
+    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
+    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+  ],
+  "tipsAndTricks": "Good: Take calculated risks early; cash out before endgame. Evil: Lure good into overcommitting or into lethal trades.",
+  "bluffing": "Claim you’re saving a clutch once-per-game—until you “must” use it.",
+  "legacy": null
+}

@@ -1,0 +1,51 @@
+{
+  "id": "flowergirl",
+  "name": "Flowergirl",
+  "team": "townsfolk",
+  "ability": "Each night*, you learn if a Demon voted today.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "voting"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "Nod your head or shake your head to indicate whether the Demon voted today."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "flowergirl-learn-demon-voted",
+        "type": "character",
+        "action": "learnIfDemonVotedToday",
+        "description": "Each night*, learn if a Demon voted today.",
+        "targets": [
+          "flowergirl"
+        ],
+        "information": {
+          "customMessage": "YES if a Demon voted today, otherwise NO"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

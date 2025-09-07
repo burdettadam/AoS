@@ -1,0 +1,65 @@
+{
+  "id": "yaggababble",
+  "name": "Yaggababble",
+  "team": "demon",
+  "ability": "You start knowing a secret phrase. For each time you said it publicly today, a player might die.",
+  "reminders": [
+    "Secret Phrase",
+    "Said Phrase"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "secret-phrase",
+    "public-speaking",
+    "repetition-kill"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "Demon",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [
+      {
+        "id": "yaggababble-kill-player",
+        "type": "character",
+        "action": "kill-player",
+    "label": "Kill player for phrase",
+        "description": "For each time Yaggababble said the secret phrase publicly today, a player might die.",
+        "targets": ["yaggababble"],
+        "information": {
+          "customMessage": "A player might die for each time the phrase was said."
+        },
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "yaggababble-say-phrase",
+        "type": "character",
+        "action": "say-phrase",
+    "label": "Say secret phrase",
+        "description": "Yaggababble may say the secret phrase publicly today.",
+        "targets": ["yaggababble"],
+        "information": {
+          "customMessage": "Yaggababble says the secret phrase."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

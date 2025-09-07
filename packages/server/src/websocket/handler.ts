@@ -1,7 +1,7 @@
 import { FastifyRequest } from 'fastify';
 import { SocketStream } from '@fastify/websocket';
 import { WSMessage, GameId, SeatId } from '@botc/shared';
-import { maskGameStateForSeat } from '@botc/shared';
+import { maskGameStateForSeat, maskGameStatePublic } from '@botc/shared';
 import { randomUUID } from 'crypto';
 import { GameEngine } from '../game/engine';
 import { MatchmakingService } from '../services/matchmaking';
@@ -70,7 +70,10 @@ export class WebSocketHandler {
     // Send current game state
     const game = this.gameEngine.getGame(gameId);
     if (game) {
-  const snapshot = viewerSeatId ? maskGameStateForSeat(game, viewerSeatId) : game;
+      // If viewerSeatId provided and not storyteller, mask; storyteller sees full
+      const snapshot = viewerSeatId
+        ? (game.storytellerSeatId === viewerSeatId ? game : maskGameStateForSeat(game, viewerSeatId))
+        : maskGameStatePublic(game);
       this.sendToConnection(connectionId, {
         type: 'event',
         event: {
@@ -161,7 +164,9 @@ export class WebSocketHandler {
         if (message.type === 'event' && (message as any).event?.payload?.gameState) {
           const game = (message as any).event.payload.gameState;
           const viewerSeatId = this.connectionViewerSeat.get(connectionId);
-          const masked = viewerSeatId ? maskGameStateForSeat(game, viewerSeatId) : game;
+          const masked = viewerSeatId
+            ? (game.storytellerSeatId === viewerSeatId ? game : maskGameStateForSeat(game, viewerSeatId))
+            : maskGameStatePublic(game);
           const cloned = JSON.parse(JSON.stringify(message));
           (cloned as any).event.payload.gameState = masked;
           this.sendToConnection(connectionId, cloned);

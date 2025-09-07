@@ -1,0 +1,51 @@
+{
+  "id": "gnome",
+  "name": "Gnome",
+  "team": "traveller",
+  "ability": "All players start knowing a player of your alignment. You may choose to kill anyone who nominates them.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "traveller",
+    "public-knowledge",
+    "nomination-protection",
+    "optional-kill"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "experimental",
+    "firstNightReminder": "All players learn a player of the Gnome's alignment."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "gnome-announce-alignment-player",
+        "type": "character",
+        "action": "announce-player-of-alignment",
+        "description": "All players start knowing a player of your alignment.",
+        "targets": ["gnome"],
+        "information": {
+          "customMessage": "All players learn a player of the Gnome's alignment."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

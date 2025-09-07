@@ -1,0 +1,49 @@
+{
+  "id": "ferryman",
+  "name": "Ferryman",
+  "team": "fabled",
+  "ability": "On the final day, all dead players regain their vote token.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "fabled",
+    "final-day",
+    "voting",
+    "dead-empowerment"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [
+      {
+        "id": "ferryman-dead-regain-vote",
+        "type": "character",
+        "action": "dead-regain-vote",
+    "label": "Dead regain vote token",
+        "description": "On the final day, all dead players regain their vote token.",
+        "targets": ["ferryman"],
+        "information": {
+          "customMessage": "All dead players regain their vote token."
+        },
+        "order": 1
+      }
+    ],
+    "execution": []
+  }
+}

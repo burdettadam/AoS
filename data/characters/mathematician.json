@@ -1,0 +1,53 @@
+{
+  "id": "mathematician",
+  "name": "Mathematician",
+  "team": "townsfolk",
+  "ability": "Each night, you learn how many players' abilities worked abnormally (since dawn) due to another character's ability.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Number"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "passive"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "Show the finger signal (0, 1, 2, etc.) for the number of players whose ability malfunctioned due to other abilities."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "mathematician-learn-abnormal-count",
+        "type": "character",
+        "action": "learnAbnormalAbilityCount",
+        "description": "Each night, learn how many players' abilities worked abnormally (since dawn) due to another character's ability.",
+        "targets": [
+          "mathematician"
+        ],
+        "information": {
+          "customMessage": "Number of abnormal interactions since dawn: [COUNT]"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

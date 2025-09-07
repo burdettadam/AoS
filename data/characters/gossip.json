@@ -1,0 +1,62 @@
+{
+  "id": "gossip",
+  "name": "Gossip",
+  "team": "townsfolk",
+  "ability": "Each day, you may make a public statement. Tonight, if it was true, a player dies.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "public",
+    "day-active",
+    "conditional-death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Gossip's public statement was true: A player might die."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "gossip-kill-if-statement-true",
+        "type": "character",
+        "action": "kill-player-if-statement-true",
+        "description": "Tonight, if it was true, a player dies.",
+        "targets": ["gossip"],
+        "information": {
+          "customMessage": "If the public statement was true, a player dies."
+        },
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "gossip-make-public-statement",
+        "type": "character",
+        "action": "make-public-statement",
+        "description": "Each day, you may make a public statement.",
+        "targets": ["gossip"],
+        "information": {
+          "customMessage": "Make a public statement."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

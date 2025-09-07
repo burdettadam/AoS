@@ -1,0 +1,50 @@
+{
+  "id": "noble",
+  "name": "Noble",
+  "team": "townsfolk",
+  "ability": "You start knowing 3 players, 1 and only 1 of which is evil.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "evil-detection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Point to 3 players, exactly 1 of which is evil."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "noble-learn-three-one-evil",
+        "type": "character",
+        "action": "learn-three-players-one-evil",
+        "description": "You start knowing 3 players, 1 and only 1 of which is evil.",
+        "targets": ["noble"],
+        "information": {
+          "customMessage": "Learn 3 players, exactly 1 is evil."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

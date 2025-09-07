@@ -1,0 +1,49 @@
+{
+  "id": "barber",
+  "name": "Barber",
+  "team": "outsider",
+  "ability": "If you died today or tonight, the Demon may choose 2 players (not another Demon) to swap characters.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "death-trigger",
+    "character-swap"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "If the Barber died today: Wake the Demon. Show the 'This character selected you' card, then the Barber token. The Demon either shows a 'no' head shake or points to 2 other players. If they chose players: swap the character tokens. Wake each swapped player. Show 'You are' then their new character token."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "barber-demon-swap-if-died",
+        "type": "character",
+        "action": "demon-choose-swap-if-barber-died",
+        "description": "If you died today or tonight, the Demon may choose 2 players to swap characters.",
+        "targets": ["barber"],
+        "information": {
+          "customMessage": "If the Barber died, the Demon chooses 2 players to swap characters."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

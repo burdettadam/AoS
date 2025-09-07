@@ -1,0 +1,52 @@
+{
+  "id": "revolutionary",
+  "name": "Revolutionary",
+  "team": "fabled",
+  "ability": "2 neighboring players are known to be the same alignment. Once per game, 1 of them registers falsely.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "public-knowledge",
+    "neighbors",
+    "false-registration",
+    "once-per-game"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled",
+    "firstNightReminder": "Announce that 2 neighboring players are the same alignment."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "revolutionary-announce-neighbors",
+        "type": "character",
+        "action": "announce-neighbors-same-alignment",
+        "description": "Announce that 2 neighboring players are the same alignment.",
+        "targets": ["revolutionary"],
+        "information": {
+          "customMessage": "Two neighboring players are the same alignment."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

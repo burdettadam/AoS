@@ -1,0 +1,88 @@
+services:
+  # Keycloak Database
+  keycloak-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak_password
+    volumes:
+      - keycloak_data:/var/lib/postgresql/data
+    networks:
+      - botct-network
+
+  # Keycloak Authentication Server
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak_password
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: ["start-dev", "--import-realm", "--spi-theme-static-max-age=-1", "--spi-theme-cache-themes=false", "--spi-theme-cache-templates=false", "--import-realm-strategy=OVERWRITE_EXISTING"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      - keycloak-db
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ../themes:/opt/keycloak/themes:z
+    networks:
+      - botct-network
+
+  # BotCT Server
+  botct-server:
+    build:
+      context: ..
+      dockerfile: docker/server/Dockerfile
+    env_file:
+      - .env.docker
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+    volumes:
+      - ../packages/server:/app/packages/server
+      - ../packages/shared:/app/packages/shared
+      - ../data:/app/data
+      - /app/packages/server/node_modules
+      - /app/packages/shared/node_modules
+    ports:
+      - "3001:3001"
+    networks:
+      - botct-network
+    depends_on:
+      - keycloak
+
+  # BotCT Client (accessible directly on port 5173)
+  botct-client:
+    build:
+      context: ..
+      dockerfile: docker/client/Dockerfile
+    env_file:
+      - .env.docker
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ../packages/client:/app/packages/client
+      - ../packages/shared:/app/packages/shared
+      - /app/packages/client/node_modules
+      - /app/packages/shared/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - botct-network
+    depends_on:
+      - botct-server
+
+volumes:
+  keycloak_data:
+
+networks:
+  botct-network:
+    driver: bridge

@@ -1,0 +1,51 @@
+{
+  "id": "savant",
+  "name": "Savant",
+  "team": "townsfolk",
+  "ability": "Each day, you may visit the Storyteller to learn 2 things in private: 1 is true & 1 is false.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "private",
+    "day-active"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "savant-visit-and-learn",
+        "type": "character",
+        "action": "visitStorytellerLearnTwoStatements",
+        "description": "Each day, may visit the Storyteller to learn 2 things in private: 1 true & 1 false.",
+        "targets": [
+          "savant"
+        ],
+        "information": {
+          "customMessage": "Two statements: [STATEMENT_A] (T/F), [STATEMENT_B] (F/T)"
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

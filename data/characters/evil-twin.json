@@ -1,0 +1,64 @@
+{
+  "id": "evil-twin",
+  "name": "Evil Twin",
+  "team": "minion",
+  "ability": "You & an opposing player know each other. If the good player is executed, evil wins. Good can't win if you both live.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "twin",
+    "win-condition",
+    "setup"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "sects-and-violets",
+    "firstNightReminder": "Wake the Evil Twin and their twin. Confirm that they have noticed each other. Point to the Evil Twin. Show the Evil Twin token to the twin player. Point to the twin. Show the twin's character token to the Evil Twin."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "evil-twin-learn-good-twin",
+        "type": "character",
+        "action": "learnGoodTwinIdentity",
+        "description": "On first night, learn your good twin's identity and they learn yours.",
+        "targets": [
+          "evil-twin"
+        ],
+        "information": {
+          "showPlayer": "[GOOD_TWIN]",
+          "showRoles": true
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "evil-twin-good-executed-evil-wins",
+        "type": "character",
+        "action": "goodTwinExecutedEvilWins",
+        "description": "If the good twin is executed, evil wins.",
+        "targets": [
+          "evil-twin"
+        ],
+        "order": 1
+      }
+    ]
+  }
+}

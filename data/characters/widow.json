@@ -1,0 +1,64 @@
+{
+  "id": "widow",
+  "name": "Widow",
+  "team": "minion",
+  "ability": "On your 1st night, look at the Grimoire & choose a player: they are poisoned. 1 good player knows a Widow is in play.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "grimoire-access",
+    "poison",
+    "good-knowledge"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the Grimoire to the Widow. The Widow points to a player who becomes poisoned. Wake a good player and show the Widow token."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "widow-look-grimoire-choose-poison",
+        "type": "character",
+        "action": "look-at-grimoire-choose-poisoned",
+        "description": "Look at the Grimoire and choose a player: they are poisoned.",
+        "targets": ["widow"],
+        "information": {
+          "showRoles": true,
+          "customMessage": "Look at the Grimoire and choose a player to poison."
+        },
+        "order": 1
+      },
+      {
+        "id": "widow-inform-good-player",
+        "type": "character",
+        "action": "inform-good-player-widow-in-play",
+        "description": "1 good player knows a Widow is in play.",
+        "targets": ["widow"],
+        "information": {
+          "customMessage": "A good player learns that a Widow is in play."
+        },
+        "order": 2
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

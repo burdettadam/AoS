@@ -1,0 +1,53 @@
+{
+  "id": "lord-of-typhon",
+  "name": "Lord of Typhon",
+  "team": "demon",
+  "ability": "Each night*, choose a player: they die. [Evil characters are in a line. You are in the middle. +1 Minion. -? to +? Outsiders]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "setup",
+    "evil-line",
+    "minion-bonus",
+    "outsider-modification"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Lord of Typhon points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "lord-of-typhon-choose-kill",
+        "type": "character",
+        "action": "choose-player-to-die",
+        "description": "Each night, choose a player: they die.",
+        "targets": ["lord-of-typhon"],
+        "information": {
+          "customMessage": "Choose a player to die."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -6,7 +6,8 @@ import { logger } from '../utils/logger';
 interface CentralizedCharacter {
   id: string;
   name: string;
-  category: string;
+  team?: 'townsfolk' | 'outsider' | 'minion' | 'demon' | 'traveller' | 'fabled';
+  category: 'townsfolk' | 'outsider' | 'minion' | 'demon' | 'traveller' | 'fabled';
   edition: string[];
   ability_summary: string;
   ability_description: string;
@@ -68,7 +69,7 @@ class CharacterDatabase {
     return {
       id: char.id,
       name: char.name,
-      team: this.mapCategoryToTeam(char.category),
+      team: this.mapCategoryToTeam(char.team || char.category),
       ability: char.ability_summary || char.ability_description,
       firstNight: this.deriveFirstNightIndex(char),
       otherNights: this.deriveOtherNightsIndex(char),

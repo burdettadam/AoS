@@ -1,0 +1,79 @@
+{
+  "id": "saint",
+  "name": "Saint",
+  "team": "outsider",
+  "ability": "If you die by execution, your team loses.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "execution"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Saint",
+  "imageUrl": null,
+  "howToRun": "If the Saint dies by execution, declare that the game ends and evil wins.\nThe Saint's ability has the strange phrase \"your team loses.\" In Trouble Brewing, this will always mean \"evil wins\" because the Saint is always good. In other editions, it is possible for characters to change alignment. If the evil Saint is executed, good wins.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Do not get executed.\nNo, really. Don't. If you die by execution, the game ends, and your whole team loses. Make sure the good team knows you are the Saint! Tell it in the streets! Tell it from the rooftops! Tell it to everybody! You must be believed to be a good player, or it's curtains. If you have been nominated, cry black and blue that you are the Saint, loudly and publicly... the fate of the game depends on it.\nTo help prove that you are good, you can arrange for other good players to confirm your identity. Kill players sitting between you and an Empath so that the Empath learns your alignment. Convince the Fortune Teller to select you at night to prove you are not the Demon. Find a Ravenkeeper and get them to agree to choose you so they learn who you are. Get a Slayer to attempt to slay you. The Demon will usually not want to kill you at night, so the question of who you really are will be asked by the group at some stage, and having some players back you up could be crucial.\nAlternatively, either stay silent, or bluff as a juicy target for the Demon to attack, such as the Slayer or the Monk. If you die at night, then you remove the possibility of being executed accidentally by the good team. It's only executions that count for your ability.\nFind out which other Outsiders are in play. If there are supposed to be two Outsiders in the game, and the only Outsiders to come out publicly are you and the Recluse, for example, then even though you both look inherently suspicious, there are supposed to be two Outsiders in play, so the good team may believe that you are good for this reason alone. If you're the only one, so much the better! It must be you and a Drunk.",
+  "bluffing": "When bluffing as the Saint, there are a few things you should keep in mind:\nYou would never wake, learn anything, or act during the day, except on your execution, at which point the game is already over.\nBecause of the Saint's lose condition, it is easily one of the best evil bluffs in the game. It is such a risk to execute you that the good team will usually err on the side of caution and leave you alone. This does not mean that it is bulletproof; on the final day, you're at the same risk as everyone else (since if they don't execute the Demon, they lose anyway). You'll also come under a reasonable amount of scrutiny as the game progresses.\nSaint is often an excellent bluff for the Poisoner in particular. Even if the good team truly believe you to be evil, perhaps with information from all three of the Investigator, Empath, and Ravenkeeper, the good team may still be too scared to execute you before the final day, by when you've already done all the damage you need to. You can then either get executed and win for the evil team, or if you think the good team know you're not the Demon, have the Imp attack themself in the night and make you the new Demon.\nIf you are the Imp, you know that your execution causes your team to lose if there's no Scarlet Woman in the game. Because of that, if you're slated to be executed and try desperately to save yourself, the good team may correctly interpret that as a Demon trying to save themselves, at least long enough to kill themself and pass on the responsibilities to a Minion. That is severely limited by the Saint bluff, however - they may read that you want to avoid execution to stop your team from losing, but not know which team that is.\nBluffing as the Saint in a game with no Baron can be tricky since you will likely be conflicting with other Outsiders. Fortunately, your lose condition makes you a larger threat to execute over a Butler or Recluse; use this to your advantage to leverage the execution of a good player.\nYou may be detected as evil at some point during the game. A great counter-argument is that because you are the Saint, you are being targeted by the Storyteller. For example, you could say you are the Fortune Teller's false positive, or that an Empath getting an evil read on you is actually Drunk.\nGood players benefit from bluffing as the Saint as well! Demons are unlikely to target a Saint since they would much rather they be executed. Using this to your advantage can allow you to survive a few days longer as an Empath or Fortune Teller.\nIf you are executed, it will become immediately obvious you are not the Saint when the game doesn't end. Be prepared to have a back up bluff, such as the Recluse, or a powerful Townsfolk who didn't want to die (like the Undertaker or Slayer).\nBeware of Slayer(s)! The Saint is usually a very powerful bluff to keep yourself safe from execution, but if a Slayer is in play, they will very likely want to test you, and would not trigger the Saint's lose condition using their ability. One good way to circumvent this is to have a Minion bluff as the Saint, get slayed, and then have the Imp pass the Demonhood to them after that.\nIf you get nominated, drop any previous bluff and come out as the Saint. Claim that your previous information and character were a ploy to attempt to get the Demon to target you. This will usually give the good team significant pause.\nDon't be afraid to claim to be the Saint, even if there's already one in play. The good team can usually resolve cases of two players claiming to be the same character by executing them both in either order, but this is not possible to do with the Saint.\nClaiming to be an Outsider can obfuscate the presence of the Drunk, or cause the good team to think that a Baron is in play.",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": [
+      "trouble-brewing"
+    ]
+  },
+  "goal": {
+    "actionType": "avoidExecution",
+    "description": "Avoid dying by execution; if executed, good loses",
+    "selection": {
+      "type": "SELF",
+      "criteria": {
+        "allowSelf": true,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "EXECUTION_CONDITION",
+        "target": "GOOD_TEAM",
+        "duration": "IMMEDIATE",
+        "condition": {
+          "type": "EXECUTION_LOSES_GAME"
+        }
+      }
+    ],
+    "frequency": "passive"
+  },
+  "actions": {
+    "voting": [
+      {
+        "id": "saint-warn",
+        "actionType": "warnTownNotToExecute",
+        "label": "Warn town not to execute",
+        "description": "Saint warns that their execution loses the game for good",
+        "selection": {
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "WARN_EXECUTION_RISK",
+            "target": "GROUP",
+            "duration": "IMMEDIATE"
+          }
+        ],
+        "order": 0
+      }
+    ],
+    "firstNight": [],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "execution": []
+  }
+}

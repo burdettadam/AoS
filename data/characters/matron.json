@@ -1,0 +1,50 @@
+{
+  "id": "matron",
+  "name": "Matron",
+  "team": "traveller",
+  "ability": "Each day, you may choose up to 3 sets of 2 players to swap seats. Players may not leave their seats to talk in private.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "day-active",
+    "seating",
+    "social-control"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "matron-choose-swap-seats",
+        "type": "character",
+        "action": "choose-pairs-to-swap-seats",
+        "description": "Each day, you may choose up to 3 sets of 2 players to swap seats.",
+        "targets": ["matron"],
+        "information": {
+          "customMessage": "Choose up to 3 pairs of players to swap seats."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

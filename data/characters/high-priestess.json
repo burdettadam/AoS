@@ -1,0 +1,52 @@
+{
+  "id": "high-priestess",
+  "name": "High Priestess",
+  "team": "townsfolk",
+  "ability": "Each night, learn which player the Storyteller believes you should talk to most.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "social-guidance"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Point to a player the High Priestess should talk to.",
+    "otherNightReminder": "Point to a player the High Priestess should talk to."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "high-priestess-learn-player-to-talk-to",
+        "type": "character",
+        "action": "learnPlayerStorytellerBelievesShouldTalkTo",
+        "description": "Each night, learn which player the Storyteller believes you should talk to most.",
+        "targets": [
+          "high-priestess"
+        ],
+        "information": {
+          "showPlayer": "[PLAYER_TO_TALK_TO]"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

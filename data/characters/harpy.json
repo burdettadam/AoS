@@ -1,0 +1,52 @@
+{
+  "id": "harpy",
+  "name": "Harpy",
+  "team": "minion",
+  "ability": "Each night, choose 2 players: tomorrow, the 1st player is mad that the 2nd is evil, or one or both might die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Mad"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "active",
+    "madness",
+    "conditional-death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Harpy points to two players. Tomorrow, the first is mad that the second is evil."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "harpy-choose-two-players",
+        "type": "character",
+        "action": "choose-two-players-for-mad-or-death",
+        "description": "Each night, choose 2 players: tomorrow, the 1st player is mad that the 2nd is evil, or one or both might die.",
+        "targets": ["harpy"],
+        "information": {
+          "customMessage": "Choose 2 players for mad or death effect."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

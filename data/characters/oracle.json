@@ -1,0 +1,53 @@
+{
+  "id": "oracle",
+  "name": "Oracle",
+  "team": "townsfolk",
+  "ability": "Each night*, you learn how many dead players are evil.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Number"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "Show the finger signal (0, 1, 2, etc.) for the number of dead evil players."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "oracle-learn-dead-evil-count",
+        "type": "character",
+        "action": "learnDeadEvilCount",
+        "description": "Each night*, learn how many dead players are evil.",
+        "targets": [
+          "oracle"
+        ],
+        "information": {
+          "customMessage": "Number of dead evil players: [COUNT]"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -67,12 +67,13 @@ class ScriptCache {
             logger.warn(`⚠️  No characters found for script ${scriptData.name || id} - check character database`);
           }
 
-          const script: LoadedScript = {
+          const script = {
             id: scriptData.id || id,
             name: scriptData.name || id,
             characters: characters as Character[],
-            meta: this.createScriptMetadataFromNewFormat(scriptData, scriptData.id || id)
-          };
+            meta: this.createScriptMetadataFromNewFormat(scriptData, scriptData.id || id),
+            modifiers: Array.isArray(scriptData.modifiers) ? scriptData.modifiers : undefined
+          } as LoadedScript;
 
           this.cache.set(scriptData.id || id, script);
           this.scriptsMetadata.set(scriptData.id || id, { 

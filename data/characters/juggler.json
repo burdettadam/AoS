@@ -1,0 +1,65 @@
+{
+  "id": "juggler",
+  "name": "Juggler",
+  "team": "townsfolk",
+  "ability": "On your first day, publicly guess up to 5 players' characters. That night, you learn how many you got correct.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Number"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "public",
+    "guessing"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "If today was the Juggler's first day: Show the finger signal (0, 1, 2, etc.) for the number of correct guesses."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "juggler-learn-correct-guesses",
+        "type": "character",
+        "action": "learnCorrectGuessCount",
+        "description": "On the night after your first day, learn how many character guesses were correct.",
+        "targets": [
+          "juggler"
+        ],
+        "information": {
+          "customMessage": "Correct guesses: [COUNT]"
+        },
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "juggler-make-guesses",
+        "type": "character",
+        "action": "publiclyGuessUpToFiveCharacters",
+        "description": "On your first day, publicly guess up to 5 players' characters.",
+        "targets": [
+          "juggler"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

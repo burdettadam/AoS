@@ -1,0 +1,51 @@
+{
+  "id": "beggar",
+  "name": "Beggar",
+  "team": "traveller",
+  "ability": "You must use a vote token to vote. If a dead player gives you theirs, you learn their alignment. You are sober & healthy.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "voting-restriction",
+    "alignment-detection",
+    "sober",
+    "healthy"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "beggar-learn-alignment-if-token-given",
+        "type": "character",
+        "action": "learn-alignment-from-dead-token",
+        "description": "If a dead player gives you theirs, you learn their alignment.",
+        "targets": ["beggar"],
+        "information": {
+          "customMessage": "If a dead player gives you their vote token, learn their alignment."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

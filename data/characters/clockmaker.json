@@ -1,0 +1,53 @@
+{
+  "id": "clockmaker",
+  "name": "Clockmaker",
+  "team": "townsfolk",
+  "ability": "You start knowing how many steps from the Demon to its nearest Minion.",
+  "firstNight": "1",
+  "otherNights": null,
+  "reminders": [
+    "Number"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "setup"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "During the first night, count the number of steps (clockwise) from the Demon to their nearest Minion. Show this number to the Clockmaker. Place the Clockmaker's Number reminder token.",
+  "firstNightDescription": "During the first night, count the number of steps (clockwise) from the Demon to their nearest Minion. Show this number to the Clockmaker. Place the Clockmaker's Number reminder token.",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "firstNightReminder": "Show the number of steps between the Demon and their closest Minion."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "clockmaker-first-count",
+        "type": "character",
+        "action": "learnStepsToNearestMinion",
+        "description": "On first night, learn the number of steps from the Demon to its nearest Minion (clockwise).",
+        "targets": [
+          "clockmaker"
+        ],
+        "information": {
+          "customMessage": "You learn the number of steps to the nearest Minion: [NUMBER]"
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

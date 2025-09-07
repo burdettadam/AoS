@@ -1,0 +1,49 @@
+{
+  "id": "boomdandy",
+  "name": "Boomdandy",
+  "team": "minion",
+  "ability": "If you are executed, all but 3 players die. After a 10 to 1 countdown, the player with the most players pointing at them, dies.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "execution-trigger",
+    "mass-death",
+    "pointing-mechanic"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "boomdandy-trigger-mass-death",
+        "type": "character",
+        "action": "trigger-mass-death-if-executed",
+        "description": "If you are executed, all but 3 players die. After a 10 to 1 countdown, the player with the most players pointing at them, dies.",
+        "targets": ["boomdandy"],
+        "information": {
+          "customMessage": "If executed, trigger mass death and pointing mechanic."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

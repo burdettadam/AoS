@@ -1,0 +1,50 @@
+{
+  "id": "cult-leader",
+  "name": "Cult Leader",
+  "team": "townsfolk",
+  "ability": "Each night, you become the alignment of an alive neighbor. If all good players choose to join your cult, your team wins.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "alignment-change",
+    "neighbors",
+    "win-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Cult Leader becomes the alignment of one of their alive neighbors."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "cult-leader-become-neighbor-alignment",
+        "type": "character",
+        "action": "choose-neighbor-alignment",
+        "description": "Become the alignment of an alive neighbor.",
+        "targets": ["cult-leader"],
+        "information": {
+          "customMessage": "Choose an alive neighbor to become their alignment."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "sweetheart",
+  "name": "Sweetheart",
+  "team": "outsider",
+  "ability": "When you die, 1 player is drunk from now on.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "death-trigger",
+    "drunk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "sects-and-violets"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "sweetheart-choose-player-drunk-if-died",
+        "type": "character",
+        "action": "choose-player-drunk-on-death",
+        "description": "When you die, 1 player is drunk from now on.",
+        "targets": ["sweetheart"],
+        "information": {
+          "customMessage": "If died, choose a player to be drunk."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

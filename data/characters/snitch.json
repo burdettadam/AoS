@@ -1,0 +1,51 @@
+{
+  "id": "snitch",
+  "name": "Snitch",
+  "team": "outsider",
+  "ability": "Each Minion gets 3 bluffs.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "minion-benefit",
+    "bluffs"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental",
+    "firstNightReminder": "Give each Minion 3 character tokens as bluffs."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "snitch-give-bluffs-to-minions",
+        "type": "character",
+        "action": "give-bluffs-to-minions",
+        "description": "Each Minion gets 3 bluffs.",
+        "targets": ["snitch"],
+        "information": {
+          "customMessage": "Give each Minion 3 bluffs."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

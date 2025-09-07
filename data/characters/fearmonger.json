@@ -1,0 +1,51 @@
+{
+  "id": "fearmonger",
+  "name": "Fearmonger",
+  "team": "minion",
+  "ability": "Each night, choose a player: if you nominate & execute them, their team loses. All players know if you choose a new player.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "active",
+    "public-announcement",
+    "lose-condition",
+    "nomination-execution"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Fearmonger points to a player. If this is a new player, announce this publicly."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "fearmonger-choose-player",
+        "type": "character",
+        "action": "choose-player-for-lose-condition",
+        "description": "Each night, choose a player: if you nominate & execute them, their team loses.",
+        "targets": ["fearmonger"],
+        "information": {
+          "customMessage": "Choose a player; if nominated and executed, their team loses."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

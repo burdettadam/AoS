@@ -1,0 +1,62 @@
+{
+  "id": "zombuul",
+  "name": "Zombuul",
+  "team": "demon",
+  "ability": "Each night*, if no-one died today, choose a player: they die. The 1st time you die, you live but register as dead.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Dead"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "demon",
+    "conditional-kill",
+    "false-death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If no-one died during the day: The Zombuul points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "zombuul-kill-if-no-day-death",
+        "type": "character",
+        "action": "killIfNoOneDiedToday",
+        "description": "Each night*, if no-one died today, choose a player: they die.",
+        "targets": [
+          "zombuul"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "zombuul-first-execution-fake-death",
+        "type": "character",
+        "action": "firstTimeDiesRegisterAsDead",
+        "description": "The first time Zombuul dies, it lives but registers as dead.",
+        "targets": [
+          "zombuul"
+        ],
+        "order": 1
+      }
+    ]
+  }
+}

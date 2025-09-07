@@ -1,0 +1,54 @@
+{
+  "id": "harlot",
+  "name": "Harlot",
+  "team": "traveller",
+  "ability": "Each night*, choose a living player: if they agree, you learn their character, but you both might die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "active",
+    "information",
+    "mutual-risk",
+    "agreement"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers",
+    "otherNightReminder": "The Harlot points to a living player. Wake that player and show the 'This character selected you' card and the Harlot token. That player either nods or shakes their head. If they nod: show the Harlot that player's character token. Both players might die."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "harlot-choose-player-learn-character",
+        "type": "character",
+        "action": "choose-player-to-learn-character",
+        "description": "Each night, choose a living player: if they agree, you learn their character, but you both might die.",
+        "targets": ["harlot"],
+        "information": {
+          "customMessage": "Choose a player; if they agree, learn their character."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

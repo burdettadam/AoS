@@ -1,0 +1,51 @@
+{
+  "id": "djinn",
+  "name": "Djinn",
+  "team": "fabled",
+  "ability": "Use the Djinn's special rule. All players know what it is.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "special-rule",
+    "public-knowledge",
+    "custom-rule"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled",
+    "firstNightReminder": "Announce the Djinn's special rule to all players."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "djinn-announce-special-rule",
+        "type": "character",
+        "action": "announce-special-rule",
+        "description": "Use the Djinn's special rule. All players know what it is.",
+        "targets": ["djinn"],
+        "information": {
+          "customMessage": "Announce the Djinn's special rule to all players."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

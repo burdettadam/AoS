@@ -1,0 +1,262 @@
+{
+  "id": "trouble-brewing",
+  "name": "Trouble Brewing",
+  "description": "Clouds roll in over Ravenswood Bluff, engulfing this sleepy town and its superstitious inhabitants in foreboding shadow. Freshly-washed clothes dance eerily on lines strung between cottages. Chimneys cough plumes of smoke into the air. Exotic scents waft through cracks in windows and under doors, as hidden cauldrons lay bubbling. An unusually warm Autumn breeze wraps around vine-covered walls and whispers ominously to those brave enough to walk the cobbled streets. Anxious mothers call their children home from play, as thunder begins to clap on the horizon. If you listen more closely, however, noises stranger still can be heard echoing from the neighbouring forest. Under the watchful eye of a looming monastery, silhouetted figures skip from doorway to doorway. Those who can read the signs know there is... Trouble Brewing.",
+  "author": "Blood on the Clocktower",
+  "version": "1.0.0",
+  "characters": [
+    "washerwoman",
+    "librarian",
+    "investigator",
+    "chef",
+    "empath",
+    "fortune-teller",
+    "undertaker",
+    "monk",
+    "ravenkeeper",
+    "virgin",
+    "slayer",
+    "soldier",
+    "mayor",
+    "butler",
+    "drunk",
+    "recluse",
+    "saint",
+    "poisoner",
+    "spy",
+    "scarlet-woman",
+    "baron",
+    "imp"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 15,
+    "optimal": "7-10"
+  },
+  "complexity": "intermediate",
+  "tags": [],
+  "estimatedTime": "",
+  "characterDistribution": {},
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+  },
+  "setup": {
+    "playerCount": {
+      "min": 5,
+      "max": 15,
+      "optimal": "7-10"
+    },
+    "characterDistribution": {
+      "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+      "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+      "7": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+      "8": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+      "9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
+      "10": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+      "11": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+      "12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
+      "13": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 },
+      "14": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 },
+      "15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+    },
+    "specialSetup": [
+      {
+        "condition": "playerCount >= 7",
+        "addCharacters": ["mayor"]
+      }
+    ],
+    "fabled": []
+  },
+  "specialRules": [],
+  "setupNotes": "CHARACTER SELECTION: Choose characters to create a balanced script with interesting interactions. Use character distribution based on player count. SETUP PROCESS: 1) Place character tokens face-down. 2) Add Drunk reminder if Drunk is in play. 3) Give characters to players randomly. 4) Place night order reference. 5) Have players look at their character. 6) Begin first night.",
+  "winConditions": {
+    "townsfolk": {
+      "description": "Execute all Demons",
+      "conditions": ["allDemonsDead"]
+    },
+    "outsiders": {
+      "description": "Survive until the end with the Townsfolk",
+      "conditions": ["townsfolkWin"]
+    },
+    "minions": {
+      "description": "Survive until only 4 players remain",
+      "conditions": ["playerCount <= 4", "demonAlive"]
+    },
+    "demon": {
+      "description": "Survive until you are the only evil player left",
+      "conditions": ["allMinionsDead", "townsfolkEliminated"]
+    }
+  },
+  "phaseRules": {
+    "dayStart": {
+      "triggers": ["firstNightComplete", "nightComplete"],
+      "actions": ["revealDeaths", "startNominations"]
+    },
+    "nightStart": {
+      "triggers": ["executionComplete", "noNominations"],
+      "actions": ["wakeCharacters", "processNightActions"]
+    },
+    "gameEnd": {
+      "triggers": ["winConditionMet", "demonDead", "townsfolkDead"]
+    }
+  },
+  "votingRules": {
+    "nominationProcess": {
+      "order": "clockwise",
+      "timeLimit": 30,
+      "canNominateSelf": false,
+      "canNominateDead": false
+    },
+    "voteProcess": {
+      "voteType": "majority",
+      "tieBreaker": "storytellerChoice",
+      "deadCanVote": false
+    },
+    "executionRules": {
+      "immediate": true,
+      "canExecuteDead": false,
+      "specialCases": {
+        "saint": "gameEndsIfExecuted"
+      }
+    }
+  },
+  "validationRules": {
+    "actionValidation": {
+      "maxActionsPerNight": 1,
+      "cannotTargetSelf": true,
+      "deadCannotAct": true
+    },
+    "stateValidation": {
+      "minAlivePlayers": 3,
+      "maxNominationsPerDay": 3
+    }
+  },
+  
+  
+  "actionResolution": {
+    "simultaneousActions": {
+      "poisoner": 1,
+      "spy": 1,
+      "monk": 2,
+      "imp": 3
+    },
+    "conflictResolution": {
+      "protection_vs_attack": "protection_wins",
+      "poison_vs_ability": "poison_wins"
+    }
+  },
+
+  "informationRules": {
+    "privateInformation": ["character", "alignment", "bluffs"],
+    "publicInformation": ["deaths", "nominations", "votes"],
+    "timing": {
+      "immediate": ["deaths"],
+      "dawn": ["nightResults"]
+    }
+  },
+
+  "deathRules": {
+    "deathSources": ["demon", "execution", "ability"],
+    "deathEffects": {
+      "loseVote": true,
+      "loseAbility": true,
+      "canSpeak": true,
+      "canNominate": false
+    }
+  },
+
+  "communication": {
+    "publicDiscussion": true,
+    "privateWhispers": true,
+    "deadCanTalk": true,
+    "nightTalk": false
+  },
+
+  "randomization": {
+    "characterAssignment": "random",
+    "bluffSelection": "random",
+    "seed": null
+  },
+
+  "errorRecovery": {
+    "invalidNomination": "reject",
+    "invalidVote": "abstain",
+    "disconnectedPlayer": "storyteller_proxy"
+  },
+  "modifiers": [
+    {
+      "type": "requires",
+      "whenCharacter": "recluse",
+      "requireCharacters": ["undertaker"],
+      "note": "If Recluse is in play, consider including Undertaker to keep reads legible for new groups."
+    },
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "baron",
+  "delta": { "outsiders": 2, "townsfolk": -2 },
+      "note": "Standard TB rule: Baron adds 2 Outsiders."
+    },
+    {
+      "type": "mutuallyExclusive",
+      "characters": ["soldier", "saint"],
+      "note": "Example exclusivity to avoid overlapping survivals in some tables."
+    }
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Trouble_Brewing",
+  "howToRun": "Use the official Trouble Brewing night order. Provide starting info to Townsfolk (e.g., Washerwoman/Librarian/Investigator) and set up special markers (e.g., Fortune Teller red herring). Balance the puzzle with one Minion and one Demon appropriate to player count, apply Drunk/Poison effects as needed, and keep reminders accurate throughout the game.",
+  "firstNight": [
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": ["minions"],
+      "information": {
+        "showPlayersByTeam": ["minions", "demons"],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info", 
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": ["demons"],
+      "information": {
+        "showPlayersByTeam": ["minions"],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    },
+    "poisoner",
+    "spy",
+    "washerwoman", 
+    "librarian",
+    "investigator",
+    "chef",
+    "empath",
+    "fortune-teller",
+    "butler"
+  ],
+  "nightOrder": [
+    "poisoner",
+    "monk", 
+    "spy",
+    "scarlet-woman",
+    "imp",
+    "ravenkeeper",
+    "undertaker",
+    "empath",
+    "fortune-teller",
+    "butler"
+  ],
+  "tipsAndTricks": "Encourage early public claims of soft info and coordinate executions to confirm roles via Undertaker/Washes. Use Empath/Washerwoman/Librarian/Investigator footprints to build trust nets. Track deaths closely to spot Imp shenanigans and Minion support.",
+  "bluffing": "Evil should coordinate bluffs that explain night deaths and disrupt info patterns (e.g., claim Soldier/Saint to deter kills, or Fortune Teller with ambiguous results). Lean on Recluse ambiguity, fake Outsiders to confuse balance reads, and time star-pass or Scarlet Woman swaps carefully.",
+  "legacy": null
+}

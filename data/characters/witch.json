@@ -1,0 +1,61 @@
+{
+  "id": "witch",
+  "name": "Witch",
+  "team": "minion",
+  "ability": "Each night, choose a player: if they nominate tomorrow, they die. If only 1 player is alive, you lose this ability.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Cursed"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "active",
+    "nomination-consequence"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Witch points to a player. That player is cursed."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "witch-curse-player",
+        "type": "character",
+        "action": "choosePlayerDieIfNominatesTomorrow",
+        "description": "Each night, choose a player: if they nominate tomorrow, they die. If only 1 player alive, lose ability.",
+        "targets": [
+          "witch"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [
+      {
+        "id": "witch-cursed-dies-if-nominates",
+        "type": "character",
+        "action": "cursedPlayerDiesIfNominates",
+        "description": "If a cursed player nominates, they die.",
+        "targets": [
+          "witch"
+        ],
+        "order": 1
+      }
+    ],
+    "voting": [],
+    "execution": []
+  }
+}

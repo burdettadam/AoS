@@ -1,0 +1,52 @@
+{
+  "id": "artist",
+  "name": "Artist",
+  "team": "townsfolk",
+  "ability": "Once per game, during the day, privately ask the Storyteller any yes/no question.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "private",
+    "day-active",
+    "once-per-game"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "artist-ask-question",
+        "type": "character",
+        "action": "askYesNoQuestionOnce",
+        "description": "Once per game during the day, privately ask the Storyteller any yes/no question.",
+        "targets": [
+          "artist"
+        ],
+        "information": {
+          "customMessage": "Answer: [YES/NO]"
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

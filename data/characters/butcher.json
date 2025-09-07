@@ -1,0 +1,49 @@
+{
+  "id": "butcher",
+  "name": "Butcher",
+  "team": "traveller",
+  "ability": "Each day, after the 1st execution, you may nominate again.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "day-active",
+    "execution-trigger",
+    "nomination"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "butcher-nominate-again",
+        "type": "character",
+        "action": "nominate-again",
+    "label": "Nominate again after execution",
+        "description": "Each day, after the 1st execution, the Butcher may nominate again.",
+        "targets": ["butcher"],
+        "information": {
+          "customMessage": "The Butcher may nominate again."
+        },
+        "order": 2
+      }
+    ]
+  }
+}

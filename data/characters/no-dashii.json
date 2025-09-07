@@ -1,0 +1,64 @@
+{
+  "id": "no-dashii",
+  "name": "No Dashii",
+  "team": "demon",
+  "ability": "Each night*, choose a player: they die. Your 2 Townsfolk neighbors are poisoned.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Poisoned"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "poison",
+    "neighbors"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "sects-and-violets",
+    "firstNightReminder": "The No Dashii's Townsfolk neighbors are poisoned.",
+    "otherNightReminder": "The No Dashii points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "no-dashii-poison-neighbors",
+        "type": "character",
+        "action": "poisonTownsfolkNeighbors",
+        "description": "Your 2 Townsfolk neighbors are poisoned (ongoing).",
+        "targets": [
+          "no-dashii"
+        ],
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "no-dashii-kill",
+        "type": "character",
+        "action": "choosePlayerKill",
+        "description": "Each night*, choose a player: they die.",
+        "targets": [
+          "no-dashii"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

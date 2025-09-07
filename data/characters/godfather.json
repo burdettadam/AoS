@@ -1,0 +1,66 @@
+{
+  "id": "godfather",
+  "name": "Godfather",
+  "team": "minion",
+  "ability": "You start knowing which Outsiders are in play. If 1 died today, choose a player tonight: they die. [-1 or +1 Outsider]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "conditional-kill"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "bad-moon-rising",
+    "firstNightReminder": "Show all Outsider tokens to the Godfather.",
+    "otherNightReminder": "If an Outsider died today: The Godfather points to a player. That player dies."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "godfather-learn-outsiders",
+        "type": "character",
+        "action": "learnOutsidersInPlay",
+        "description": "On first night, learn which Outsiders are in play.",
+        "targets": [
+          "godfather"
+        ],
+        "information": {
+          "customMessage": "Outsiders in play: [OUTSIDERS]"
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "godfather-kill-if-outsider-died",
+        "type": "character",
+        "action": "killIfOutsiderDiedToday",
+        "description": "If an Outsider died today, choose a player tonight: they die.",
+        "targets": [
+          "godfather"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -15,7 +15,7 @@ const RoleRevealPage: React.FC = () => {
       if (!gameId) return;
       try {
         // Ensure WS subscription for live updates
-        connect(gameId as any, seatId);
+  connect(gameId as any, seatId || (typeof localStorage !== 'undefined' ? localStorage.getItem('botc-seat-id') : undefined) || undefined);
         // Fetch latest snapshot to avoid race conditions right after start
         const res = await fetch(`/api/games/${gameId}`);
         if (!res.ok) throw new Error('Failed to load game');

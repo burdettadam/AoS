@@ -1,0 +1,62 @@
+{
+  "id": "cerenovus",
+  "name": "Cerenovus",
+  "team": "minion",
+  "ability": "Each night, choose a player & a good character: they are \"mad\" they are this character tomorrow, or might be executed.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Mad"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "active",
+    "madness",
+    "execution-risk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Cerenovus points to a player, then to a character on the sheet. Wake that player. Show 'This character selected you' card, then the Cerenovus token, then the character token the Cerenovus selected. If the player does not nod, they may be executed."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "cerenovus-mad-character",
+        "type": "character",
+        "action": "choosePlayerAndCharacterMakeMad",
+        "description": "Each night, choose a player & a good character: they are \"mad\" they are this character tomorrow, or might be executed.",
+        "targets": [
+          "cerenovus"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "cerenovus-madness-enforcement",
+        "type": "character",
+        "action": "enforceMadnessOrExecution",
+        "description": "Enforce madness: mad player must act as assigned character or risk execution.",
+        "targets": [
+          "cerenovus"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

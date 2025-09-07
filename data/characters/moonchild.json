@@ -1,0 +1,60 @@
+{
+  "id": "moonchild",
+  "name": "Moonchild",
+  "team": "outsider",
+  "ability": "When you learn that you died, publicly choose 1 alive player. Tonight, if it was a good player, they die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "death-trigger",
+    "public",
+    "conditional-kill"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Moonchild used their ability to choose a player today: If that player is good, they die."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "moonchild-chosen-good-dies",
+        "type": "character",
+        "action": "chosenGoodPlayerDies",
+        "description": "Tonight, if the player you chose when you died was good, they die.",
+        "targets": [
+          "moonchild"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [
+      {
+        "id": "moonchild-choose-when-learn-death",
+        "type": "character",
+        "action": "publiclyChoosePlayerWhenLearnDeath",
+        "description": "When you learn that you died, publicly choose 1 alive player.",
+        "targets": [
+          "moonchild"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

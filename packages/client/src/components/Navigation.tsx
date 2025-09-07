@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useKeycloak } from '../context/KeycloakContext';
 
 const Navigation: React.FC = () => {
+  const { authenticated, logout, userInfo, loading } = useKeycloak();
+
   return (
     <nav className="bg-clocktower-dark border-b border-gray-700">
       <div className="container mx-auto px-4">
@@ -17,6 +20,20 @@ const Navigation: React.FC = () => {
             <Link to="/about" className="text-gray-300 hover:text-white transition-colors">
               About
             </Link>
+            
+            {!loading && authenticated && (
+              <>
+                <span className="text-gray-400">
+                  Welcome, {userInfo?.preferred_username || 'User'}
+                </span>
+                <button
+                  onClick={logout}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,0 +1,49 @@
+{
+  "id": "ogre",
+  "name": "Ogre",
+  "team": "outsider",
+  "ability": "On your 1st night, choose a player (not yourself): you become their alignment (you don't know which) even if drunk or poisoned.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "alignment-change",
+    "active",
+    "unknown-alignment"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "experimental",
+    "firstNightReminder": "The Ogre points to another player. The Ogre becomes that player's alignment."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "ogre-choose-player-change-alignment",
+        "type": "character",
+        "action": "choosePlayerBecomeTheirAlignment",
+        "description": "On your 1st night, choose a player (not yourself): you become their alignment (you don't know which) even if drunk or poisoned.",
+        "targets": [
+          "ogre"
+        ],
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

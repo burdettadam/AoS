@@ -1,0 +1,52 @@
+{
+  "id": "magician",
+  "name": "Magician",
+  "team": "townsfolk",
+  "ability": "The Demon thinks you are a Minion. Minions think you are a Demon.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "false-information",
+    "demon-deception",
+    "minion-deception"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Wake the Demon and Minions. Show them the Magician and a Minion/Demon token respectively."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "magician-show-false-tokens",
+        "type": "character",
+        "action": "show-false-tokens-to-demon-minions",
+        "description": "The Demon thinks you are a Minion. Minions think you are a Demon.",
+        "targets": ["magician"],
+        "information": {
+          "customMessage": "Show Demon a Minion token, show Minions a Demon token."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

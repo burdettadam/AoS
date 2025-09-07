@@ -1,0 +1,81 @@
+{
+  "id": "pacifist",
+  "name": "Pacifist",
+  "team": "townsfolk",
+  "ability": "Executed good players might not die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "passive",
+    "execution-protection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "goal": {
+    "actionType": "preventExecution",
+    "description": "Executed good players might not die",
+    "selection": {
+      "type": "GOOD_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "PREVENT_DEATH",
+        "target": "EXECUTED_GOOD_PLAYER",
+        "duration": "IMMEDIATE",
+        "condition": {
+          "type": "EXECUTION_OCCURRED"
+        }
+      }
+    ],
+    "frequency": "conditional"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "pacifist-might-not-die",
+        "actionType": "preventExecution",
+        "description": "Executed good players might not die.",
+        "selection": {
+          "type": "GOOD_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "PREVENT_DEATH",
+            "target": "EXECUTED_GOOD_PLAYER",
+            "duration": "IMMEDIATE",
+            "condition": {
+              "type": "EXECUTION_OCCURRED"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "GOOD_PLAYER_EXECUTED"
+        },
+        "order": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "id": "grandmother",
+  "name": "Grandmother",
+  "team": "townsfolk",
+  "ability": "You start knowing a good player & their character. If the Demon kills them, you die too.",
+  "firstNight": "1",
+  "otherNights": null,
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "linked-death"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "During the first night, show the Grandmother a good character token and point to the player who has that character. This is their grandchild. If the Demon kills the grandchild, the Grandmother dies too.",
+  "firstNightDescription": "During the first night, show the Grandmother a good character token and point to the player who has that character. This is their grandchild. If the Demon kills the grandchild, the Grandmother dies too.",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "goal": {
+    "actionType": "learnCharacter",
+    "description": "You start knowing a good player & their character. If the Demon kills them, you die too.",
+    "selection": {
+      "type": "GOOD_PLAYER",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "LEARN_CHARACTER",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "information": {
+          "type": "GRANDCHILD_CHARACTER"
+        }
+      },
+      {
+        "type": "LINKED_DEATH",
+        "target": "SELF",
+        "duration": "PERMANENT",
+        "condition": {
+          "type": "GRANDCHILD_KILLED_BY_DEMON"
+        }
+      }
+    ],
+    "frequency": "setup"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "grandmother-learn-grandchild",
+        "actionType": "learnCharacter",
+        "description": "On first night, learn a good player and their character (your grandchild).",
+        "selection": {
+          "type": "GOOD_PLAYER",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "LEARN_CHARACTER",
+            "target": "SELF",
+            "duration": "PERMANENT",
+            "information": {
+              "type": "GRANDCHILD_CHARACTER"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "grandmother-dies-if-grandchild-killed",
+        "actionType": "dieIfGrandchildKilledByDemon",
+        "description": "If the Demon kills the grandchild tonight, the Grandmother dies too.",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "DIE_WITH_GRANDCHILD",
+            "target": "SELF",
+            "duration": "IMMEDIATE",
+            "condition": {
+              "type": "GRANDCHILD_KILLED_BY_DEMON"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "GRANDCHILD_DEATH"
+        },
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

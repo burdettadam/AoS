@@ -1,0 +1,50 @@
+{
+  "id": "hells-librarian",
+  "name": "Hell's Librarian",
+  "team": "fabled",
+  "ability": "Something bad might happen to whoever talks when the Storyteller has asked for silence.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "silence-enforcement",
+    "consequence",
+    "storyteller-control"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "hells-librarian-punish-talker",
+        "type": "character",
+        "action": "punish-talker",
+        "description": "Something bad might happen to whoever talks when the Storyteller has asked for silence.",
+        "targets": ["hells-librarian"],
+        "information": {
+          "customMessage": "Punish the player who talked during silence."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

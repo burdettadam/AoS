@@ -1,0 +1,62 @@
+{
+  "id": "mezepheles",
+  "name": "Mezepheles",
+  "team": "minion",
+  "ability": "You start knowing a secret word. The 1st good player to say this word becomes evil that night.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "secret-word",
+    "alignment-change"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the Mezepheles a secret word.",
+    "otherNightReminder": "If a good player said the secret word today: That player becomes evil."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "mezepheles-learn-word",
+        "type": "character",
+        "action": "learn-secret-word",
+        "description": "You start knowing a secret word.",
+        "targets": ["mezepheles"],
+        "information": {
+          "customMessage": "You learn a secret word."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "mezepheles-make-evil",
+        "type": "character",
+        "action": "make-player-evil",
+        "description": "The 1st good player to say this word becomes evil that night.",
+        "targets": ["mezepheles"],
+        "information": {
+          "customMessage": "If a good player said the secret word today, that player becomes evil."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

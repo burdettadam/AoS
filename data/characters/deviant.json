@@ -1,0 +1,49 @@
+{
+  "id": "deviant",
+  "name": "Deviant",
+  "team": "traveller",
+  "ability": "If you were funny today, you cannot die by exile.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "exile-protection",
+    "humor",
+    "social"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": [
+      {
+        "id": "deviant-cannot-die-by-exile-if-funny",
+        "type": "character",
+        "action": "cannotDieByExileIfFunnyToday",
+        "description": "If you were funny today, you cannot die by exile.",
+        "targets": [
+          "deviant"
+        ],
+        "order": 1
+      }
+    ]
+  }
+}

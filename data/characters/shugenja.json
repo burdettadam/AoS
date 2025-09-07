@@ -1,0 +1,55 @@
+{
+  "id": "shugenja",
+  "name": "Shugenja",
+  "team": "townsfolk",
+  "ability": "You start knowing if your closest evil player is clockwise or anti-clockwise. If equidistant, this info is arbitrary.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Direction"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "direction",
+    "evil-detection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Show the Shugenja a clockwise or anti-clockwise direction token."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "shugenja-learn-direction-to-closest-evil",
+        "type": "character",
+        "action": "learnDirectionToClosestEvil",
+        "description": "You start knowing if your closest evil player is clockwise or anti-clockwise. If equidistant, this info is arbitrary.",
+        "targets": [
+          "shugenja"
+        ],
+        "information": {
+          "customMessage": "Direction to closest evil: [DIRECTION]"
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

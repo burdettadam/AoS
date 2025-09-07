@@ -1,0 +1,48 @@
+{
+  "id": "fibbin",
+  "name": "Fibbin",
+  "team": "fabled",
+  "ability": "Once per game, 1 good player might get incorrect information.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "once-per-game",
+    "false-information",
+    "good-targeting"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "fibbin-give-incorrect-info",
+        "type": "character",
+        "action": "give-incorrect-info",
+        "description": "Once per game, Fibbin causes 1 good player to get incorrect information.",
+        "targets": ["fibbin"],
+        "information": {
+          "customMessage": "A good player gets incorrect information."
+        },
+        "order": 1
+      }
+    ],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

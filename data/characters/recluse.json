@@ -1,0 +1,113 @@
+{
+  "id": "recluse",
+  "name": "Recluse",
+  "team": "outsider",
+  "ability": "You might register as evil & as a Minion or Demon, even if dead.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "misinformation"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Recluse",
+  "imageUrl": null,
+  "howToRun": "Each time the Recluse is targeted by an ability that detects or affects evil characters, choose which character and alignment the Recluse registers as. (Do whatever is appropriate, such as showing an evil character token, nodding, giving finger signals, or allowing an ability to work that would normally only affect evil, Minion, or Demon players.)",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Tell everyone that you are the Recluse as soon as possible! This way, much of the good players' misinformation can be accounted for, such as that from the Chef, Empath or Investigator. Characters that get further information, like the Fortune Teller and Ravenkeeper will know not to choose you. However, if the group knows that you are the Recluse, they may want to execute you anyway.\nAlternatively, stay silent about which character you are until the final day. If you can figure out which other players are Outsiders, or which characters you have been registering falsly to (hopefully not many), then you may be able to convince the group that you are actually an Outsider. Since the good team will often want to kill a Recluse, and this is not of benefit to the team as a whole, then staying alive by any means necessary is a helpful way to win.\nRemember that you are a good player, and are therefore generally a worse choice of execution than any evil player. You also might register as evil even after you're dead - the Undertaker will not get reliable information about you.\nYou will usually register as evil - be suspicious of anyone saying otherwise. If you are sitting next to an Empath who is saying that both their neighbours are good, or if a Fortune Teller says you are not the Demon, they are probably lying, and therefore evil. Similarly, anyone who claims to have information about you being evil can often be trusted.\nDon't get Slayed! The Slayer will usually kill you if they select you, and this will make it look like you are the Demon and a Scarlet Woman is in play. This is not helpful to your team, and should be avoided at all costs. Similarly, avoid getting executed, since an Undertaker will usually learn that you are a Minion or Demon, confusing the good team even further.\nRegistering as evil can sometimes be quite helpful. Players who say that you are evil can often be trusted, and information like the Chef or Empath can be downright useful in helping you detect other evil players... if you can convince the group that you are not actually evil.\nIf the players are incredibly suspicious of you, and very much want to execute you, it is best to accept your fate before the final day happens. You can even vote for yourself to make sure you are executed. If the group thinks you are evil, then dying before the final day at least confirms that you are not the Demon, and will turn the good team's attention to other players. Dying on the second last day is safe. Dying on the last day means game over for you.",
+  "bluffing": "When bluffing as the Recluse, there are a few things you should keep in mind:\nYou would never wake, learn anything, or act during the day.\n\"I'm not evil, I just register that way\" - Since the Recluse registers as evil, it's a great excuse for you to be registering as evil. This can help you avoid heat from characters like the Empath. Fortune Teller and even the Investigator!\nBe as helpful to the good team as possible. Tell them early that you are the Recluse and be proactive about finding other Outsiders, making sure information isn't confused, etc. If they believe you are good, it'll be to their benefit to keep you alive, even if you appear to be messing up their abilities\nUse the Recluse as a backup bluff, or stay quiet about your claim for a while - you can eventually reveal and say you have been hiding to confuse evil players by hiding the existence of your Outsider status, or so that you can check the claims of players gathering information since you would register evil to them.\nAs the Recluse continues to register as evil even when you are dead, you can maintain this bluff from beyond the grave, even when characters like the Undertaker or Ravenkeeper have had a read on you. Insisting that there is still an alive Minion or Demon out there will help sow confusion into the town.\nKnowing that you register as evil will give the good team information to work with; be wary of characters like the Chef, who will want to use you as a focal point for finding other evil players. If you're sitting right next to your Demon, maybe wait and see what people have to say before revealing your bluff.\nClaiming to be an Outsider can obscure the presence of a Drunk, and perhaps imply the existence of a Baron.",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": [
+      "trouble-brewing"
+    ]
+  },
+  "goal": {
+    "actionType": "misregisterAsEvil",
+    "description": "May register as evil and as a Minion or Demon to abilities, sowing confusion",
+    "selection": {
+      "type": "SELF",
+      "criteria": {
+        "allowSelf": true,
+        "allowDead": true
+      }
+    },
+    "effects": [
+      {
+        "type": "MISREGISTER",
+        "target": "SELF",
+        "duration": "WHEN_TARGETED",
+        "misregistration": {
+          "type": "EVIL_MINION_DEMON"
+        }
+      }
+    ],
+    "frequency": "reactive"
+  },
+  "actions": {
+    "day": [
+      {
+        "id": "recluse-reactive-day",
+        "actionType": "registerAsWhenTargeted",
+        "description": "If targeted by detection/affecting abilities, Storyteller chooses how Recluse registers",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "MISREGISTER",
+            "target": "SELF",
+            "duration": "WHEN_TARGETED",
+            "misregistration": {
+              "type": "EVIL_MINION_DEMON"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "WHEN_TARGETED"
+        },
+        "order": 0
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "recluse-reactive-night",
+        "actionType": "registerAsWhenTargeted",
+        "description": "If targeted at night by detection/affecting abilities, Storyteller chooses registration",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": true
+          }
+        },
+        "effects": [
+          {
+            "type": "MISREGISTER",
+            "target": "SELF",
+            "duration": "WHEN_TARGETED",
+            "misregistration": {
+              "type": "EVIL_MINION_DEMON"
+            }
+          }
+        ],
+        "trigger": {
+          "type": "WHEN_TARGETED"
+        },
+        "order": 0
+      }
+    ],
+    "firstNight": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

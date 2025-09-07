@@ -1,0 +1,52 @@
+{
+  "id": "bone-collector",
+  "name": "Bone Collector",
+  "team": "traveller",
+  "ability": "Once per game, at night*, choose a dead player: they regain their ability until dusk.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "active",
+    "once-per-game",
+    "resurrection",
+    "ability-restoration"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers",
+    "otherNightReminder": "If the Bone Collector has not used their ability: The Bone Collector either shows a 'no' head shake or points to a dead player. That player regains their ability until dusk."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "bone-collector-revive-ability",
+        "type": "character",
+        "action": "choose-dead-player-revive-ability",
+        "description": "Once per game, choose a dead player: they regain their ability until dusk.",
+        "targets": ["bone-collector"],
+        "information": {
+          "customMessage": "Choose a dead player to regain their ability until dusk."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

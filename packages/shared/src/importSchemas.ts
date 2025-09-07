@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Alignment, RoleType } from './types';
+import * as Enums from './enums';
 
 // Raw scraped town/edition metadata from the wiki
 export const ScrapedTownSchema = z.object({
@@ -23,10 +23,10 @@ export const ScrapedTownSchema = z.object({
     .record(
       z.string(), // player count as string key e.g., '5'
       z.object({
-        [RoleType.TOWNSFOLK]: z.number().int().nonnegative(),
-        [RoleType.OUTSIDER]: z.number().int().nonnegative(),
-        [RoleType.MINION]: z.number().int().nonnegative(),
-        [RoleType.DEMON]: z.number().int().nonnegative()
+  [Enums.RoleType.TOWNSFOLK]: z.number().int().nonnegative(),
+  [Enums.RoleType.OUTSIDER]: z.number().int().nonnegative(),
+  [Enums.RoleType.MINION]: z.number().int().nonnegative(),
+  [Enums.RoleType.DEMON]: z.number().int().nonnegative()
       })
     )
     .optional()
@@ -62,29 +62,29 @@ export const ScrapedTownsFileSchema = z.object({
 export type ScrapedTownsFile = z.infer<typeof ScrapedTownsFileSchema>;
 
 // Helpers
-export function toAlignment(category: ScrapedCharacter['category']): Alignment {
+export function toAlignment(category: ScrapedCharacter['category']): typeof Enums.Alignment[keyof typeof Enums.Alignment] {
   switch (category) {
     case 'Townsfolk':
     case 'Outsider':
-      return Alignment.GOOD;
+  return Enums.Alignment.GOOD;
     case 'Minion':
     case 'Demon':
-      return Alignment.EVIL;
+  return Enums.Alignment.EVIL;
     default:
-      return Alignment.GOOD; // Travellers and Fabled default to good
+  return Enums.Alignment.GOOD; // Travellers and Fabled default to good
   }
 }
 
-export function toRoleType(category: ScrapedCharacter['category']): RoleType | null {
+export function toRoleType(category: ScrapedCharacter['category']): typeof Enums.RoleType[keyof typeof Enums.RoleType] | null {
   switch (category) {
     case 'Townsfolk':
-      return RoleType.TOWNSFOLK;
+  return Enums.RoleType.TOWNSFOLK;
     case 'Outsider':
-      return RoleType.OUTSIDER;
+  return Enums.RoleType.OUTSIDER;
     case 'Minion':
-      return RoleType.MINION;
+  return Enums.RoleType.MINION;
     case 'Demon':
-      return RoleType.DEMON;
+  return Enums.RoleType.DEMON;
     default:
       return null; // travellers and fabled are not modeled (yet)
   }

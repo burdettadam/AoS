@@ -1,0 +1,116 @@
+{
+  "id": "mayor",
+  "name": "Mayor",
+  "team": "townsfolk",
+  "ability": "If only 3 players live & no execution occurs, your team wins. If you die at night, another player might die instead.",
+  
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "win-condition",
+    "protection"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Mayor",
+  "imageUrl": null,
+  "howToRun": "During the night, if the Mayor would die, you choose if the Mayor actually dies, or if the Mayor remains alive and another character dies instead—put the Demon's DEAD reminder token by that character token instead of the Mayor, and put a shroud on that character token instead of the Mayor.\nAt dawn, declare that the player marked DEAD died at night. (Do not say how they died.)\nAt dusk, if exactly three players are alive and no player was executed today, declare that the game ends and good wins.\nWe recommend you keep the Mayor alive until the final day, since it is most fun for the players that way. On rare occasions, if the group is overwhelmingly convinced early in the game that the Mayor is the Mayor, let the Mayor die so that evil has a chance to win. \n\n\nIn TROUBLE BREWING, the Mayor’s phrase “your team wins” will always mean “good wins” because the Mayor is always good. In other editions, an evil Mayor means “evil wins” instead.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Your power activates on the final day, when just three players are alive. You may not know who the Demon is, but you can definitely win by not executing. Do whatever you can to convince the group that you are the Mayor. Everything. If the good team believes you, they will either not nominate anybody, or will deliberately tie votes so that no execution occurs.\nIt is often best not to reveal that you are the Mayor until late in the game. If you reveal early, the Demon may spend night after night trying to kill you, and the Storyteller may let that attempt succeed.\nYou might want to tell people that you're the Mayor. Winning the game with your ability requires trust from your fellow players, and being open and honest is a fine way to acheive that trust.\nWhen a character that's an unlikely target for the Demon to pick dies at night, such as the Butler, this may be an indication that you were attacked instead. When convincing other players that you are the Mayor, you can use this as evidence.\nOnce the Demon attacks you and somebody else dies, they will know for sure that you are the Mayor. At the very beginning of each morning, if a particular player looks surprised and confused, they are likely to be the Demon!\nIf you intend to use your ability to win the game by not executing, do everything you can to make sure you are not actually the Drunk. Spend the game listening to other players, and verifying that any Outsiders are actually Outsiders. If you think a Drunk is in play, you will need to figure out who it is, because if it is you, and you don't execute on the final day, evil wins. Similarly, if the only other players alive are the Imp and the Poisoner, then you will certainly be poisoned. You will need to make sure that the Poisoner is dead before using your Mayor ability.",
+  "bluffing": "When bluffing as the Mayor, there are a few things you should keep in mind:\nThe Mayor would never wake at night. You would never learn if you were targeted and caused another player to die instead.\nThe Mayor has a good reason to survive at night, which you can use to explain your longevity as other players die. This makes it a great bluff for a Demon in particular.\nCome out to a few players in private early on in the game, so that when you eventually reveal you have some backup that you're not just coming out with this claim out of nowhere.\nThe Mayor is a fantastic fallback if another bluff doesn't work out. Coming out on the final day as the Mayor who was \"in hiding\" can alleviate suspicion that you may have come under if your Fortune Teller information wasn't adding up.\nDeliberately setting up a kill of a character that isn't 'optimal' can be used as evidence for a Mayor being in play. For example, you can target a Recluse, or a Washerwoman who has already given their information; both are normally low priority for the Demon, and so you can argue that this was a redirected kill from your ability.\nAs a good player, bluffing as the Mayor can get the Demon to target you, since they will either suspect you are a more powerful character bluffing as the Mayor to survive, or they just want to confirm the existence of a Mayor overall.\nGood players are more likely to risk winning with the Mayor if they have no better leads. Coordinate with your evil team to keep confusion high so that on the final day, good does not feel like they have a clear path to victory.\nIf you are nominated on the final day, don't despair! Unlike a regular bluff where you must beat the votes against you, a Mayor can call for the town to tie the vote instead, since that will cause no execution, allowing the Mayor ability to activate normally.",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": [
+      "trouble-brewing"
+    ]
+  },
+  "goal": {
+    "actionType": "winWithNoExecution",
+    "description": "Secure a no-execution in final three to win for good; may redirect night kill",
+    "selection": {
+      "type": "ALL_PLAYERS",
+      "criteria": {
+        "allowSelf": true,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "WIN_CONDITION",
+        "target": "GOOD_TEAM",
+        "duration": "IMMEDIATE",
+        "condition": {
+          "type": "NO_EXECUTION_FINAL_THREE"
+        }
+      },
+      {
+        "type": "REDIRECT_ATTACK",
+        "target": "SELF",
+        "duration": "NIGHT",
+        "redirect": {
+          "type": "TO_ANOTHER_PLAYER"
+        }
+      }
+    ],
+    "frequency": "conditional"
+  },
+  "actions": {
+    "day": [
+      {
+        "id": "mayor-advocate-no-exec",
+        "actionType": "promoteNoExecutionAtFinalThree",
+        "description": "If exactly 3 players live, push for no execution to trigger Mayor win",
+        "selection": {
+      "label": "Advocate no execution at final three",
+          "type": "ALL_PLAYERS",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "INFLUENCE_VOTE",
+            "target": "GROUP",
+            "duration": "IMMEDIATE",
+            "condition": {
+              "type": "EXACTLY_THREE_ALIVE"
+            }
+          }
+        ],
+        "order": 0
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "mayor-redirect",
+        "actionType": "redirectNightDeath",
+        "description": "If the Mayor would die at night, keep Mayor alive and another player might die instead",
+        "selection": {
+          "type": "SELF",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "REDIRECT_ATTACK",
+            "target": "SELF",
+            "duration": "NIGHT",
+            "redirect": {
+              "type": "TO_ANOTHER_PLAYER"
+            }
+          }
+        ],
+        "order": 0
+      }
+    ],
+    "firstNight": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

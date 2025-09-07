@@ -1,0 +1,49 @@
+{
+  "id": "buddhist",
+  "name": "Buddhist",
+  "team": "fabled",
+  "ability": "For the first 2 minutes of each day, veteran players may not talk.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "talking-restriction",
+    "veteran-limitation",
+    "time-based"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "buddhist-talking-restriction",
+        "type": "character",
+        "action": "restrictVeteranTalkingFirstTwoMinutes",
+        "description": "For the first 2 minutes of each day, veteran players may not talk.",
+        "targets": [
+          "buddhist"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

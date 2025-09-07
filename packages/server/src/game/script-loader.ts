@@ -1,14 +1,18 @@
-import { Script, RoleDefinition, RoleType, Alignment } from '@botc/shared';
-import { ScriptLoader as SharedScriptLoader, LoadedScript } from '@botc/shared';
+import { Script, RoleDefinition, RoleType, Alignment, LoadedScript, Character, NightOrderEntry, MetaAction, CharacterAction } from '@botc/shared';
+import { ScriptLoader as SharedScriptLoader } from '@botc/shared';
 import { NodeScriptDataSource } from '../data/nodeScriptDataSource';
 import { logger } from '../utils/logger';
+import { ValidationSystem } from './validation-system';
 
 export class ScriptLoader {
   private scripts: Map<string, Script> = new Map();
   private sharedLoader: SharedScriptLoader;
+  private validationSystem: ValidationSystem;
+  private loadedScripts: Map<string, LoadedScript> = new Map();
 
   constructor() {
     this.sharedLoader = new SharedScriptLoader(new NodeScriptDataSource());
+    this.validationSystem = new ValidationSystem();
     this.loadDefaultScripts();
   }
 
@@ -19,8 +23,21 @@ export class ScriptLoader {
     }
 
     try {
-      // Try to load from JSON files first
+      // Load from JSON files with new metadata
       const loadedScript = await this.sharedLoader.loadScript(scriptId);
+      this.loadedScripts.set(scriptId, loadedScript);
+      
+      // Validate the loaded script
+      const validationResult = this.validationSystem.validateScript(loadedScript);
+      
+      if (!validationResult.isValid) {
+        logger.warn(`Script ${scriptId} has validation errors:`);
+        logger.warn(this.validationSystem.generateReport(validationResult));
+      } else {
+        logger.info(`Script ${scriptId} validated successfully`);
+      }
+
+      // Convert to engine script format
       const script = this.convertLoadedScriptToScript(loadedScript);
       this.scripts.set(scriptId, script);
       return script;
@@ -32,12 +49,118 @@ export class ScriptLoader {
     }
   }
 
+  /**
+   * Get the loaded script with full metadata
+   */
+  async getLoadedScript(scriptId: string): Promise<LoadedScript | null> {
+    if (this.loadedScripts.has(scriptId)) {
+      return this.loadedScripts.get(scriptId)!;
+    }
+
+    try {
+      const loadedScript = await this.sharedLoader.loadScript(scriptId);
+      this.loadedScripts.set(scriptId, loadedScript);
+      return loadedScript;
+    } catch (error) {
+      logger.error(`Failed to load script metadata for ${scriptId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Validate a script and return detailed results
+   */
+  async validateScript(scriptId: string): Promise<any> {
+    const loadedScript = await this.getLoadedScript(scriptId);
+    if (!loadedScript) {
+      return { isValid: false, errors: ['Script not found'] };
+    }
+
+    return this.validationSystem.validateScript(loadedScript);
+  }
+
+  /**
+   * Get character action metadata for a specific character
+   */
+  async getCharacterActions(scriptId: string, characterId: string, phase: 'firstNight' | 'otherNights' | 'day'): Promise<CharacterAction[]> {
+    const loadedScript = await this.getLoadedScript(scriptId);
+    if (!loadedScript) return [];
+
+    const character = loadedScript.characters.find(c => c.id === characterId);
+    if (!character?.actions) return [];
+
+  const phaseKey = phase === 'otherNights' ? 'night' : phase;
+  return character.actions[phaseKey] || [];
+  }
+
+  /**
+   * Get night order with resolved actions
+   */
+  async getNightOrder(scriptId: string, isFirstNight: boolean = false): Promise<NightOrderEntry[]> {
+    const loadedScript = await this.getLoadedScript(scriptId);
+    if (!loadedScript) return [];
+
+    const orderField = isFirstNight ? 'firstNight' : 'nightOrder';
+    return loadedScript[orderField] || [];
+  }
+
+  /**
+   * Get all meta actions for a script
+   */
+  async getMetaActions(scriptId: string): Promise<MetaAction[]> {
+    const loadedScript = await this.getLoadedScript(scriptId);
+    if (!loadedScript) return [];
+
+    const metaActions: MetaAction[] = [];
+    
+    // Extract meta actions from first night
+    if (loadedScript.firstNight) {
+      for (const entry of loadedScript.firstNight) {
+        if (typeof entry === 'object' && entry.type === 'meta') {
+          metaActions.push(entry);
+        }
+      }
+    }
+
+    // Extract meta actions from night order
+    if (loadedScript.nightOrder) {
+      for (const entry of loadedScript.nightOrder) {
+        if (typeof entry === 'object' && entry.type === 'meta') {
+          metaActions.push(entry);
+        }
+      }
+    }
+
+    return metaActions;
+  }
+
   listScripts(): Array<{ id: string; name: string; version: string }> {
     return Array.from(this.scripts.values()).map(s => ({ id: s.id, name: s.name, version: s.version }));
   }
 
   private convertLoadedScriptToScript(loadedScript: LoadedScript): Script {
-    const roles: RoleDefinition[] = loadedScript.characters.map(char => ({
+    const roles: RoleDefinition[] = loadedScript.characters.map(char => this.convertCharacterToRole(char));
+
+    return {
+      id: loadedScript.id,
+      name: loadedScript.name,
+      version: loadedScript.meta?.version || '1.0.0',
+      roles,
+      setup: {
+        playerCount: {
+          min: loadedScript.meta?.playerCount?.min || 5,
+          max: loadedScript.meta?.playerCount?.max || 15
+        },
+        distribution: this.calculateDistribution(roles)
+      },
+      firstNight: loadedScript.firstNight,
+      nightOrder: loadedScript.nightOrder,
+      meta: loadedScript.meta
+    };
+  }
+
+  private convertCharacterToRole(char: Character): RoleDefinition {
+    return {
       id: char.id,
       name: char.name,
       alignment: this.mapTeamToAlignment(char.team),
@@ -56,28 +179,14 @@ export class ScriptLoader {
       },
       precedence: char.firstNight || char.otherNights || 999,
       reminderTokens: char.reminders
-    }));
-
-    return {
-      id: loadedScript.id,
-      name: loadedScript.name,
-      version: loadedScript.meta?.version || '1.0.0',
-      roles,
-      setup: {
-        playerCount: {
-          min: loadedScript.meta?.playerCount?.min || 5,
-          max: loadedScript.meta?.playerCount?.max || 15
-        },
-        distribution: this.calculateDistribution(roles)
-      }
     };
   }
 
-  private mapTeamToAlignment(team: string): Alignment {
+  private mapTeamToAlignment(team: string): typeof Alignment[keyof typeof Alignment] {
     return team === 'minion' || team === 'demon' ? Alignment.EVIL : Alignment.GOOD;
   }
 
-  private mapTeamToRoleType(team: string): RoleType {
+  private mapTeamToRoleType(team: string): typeof RoleType[keyof typeof RoleType] {
     switch (team) {
       case 'townsfolk': return RoleType.TOWNSFOLK;
       case 'outsider': return RoleType.OUTSIDER;

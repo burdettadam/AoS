@@ -1,0 +1,66 @@
+{
+  "id": "duchess",
+  "name": "Duchess",
+  "team": "fabled",
+  "ability": "Each day, 3 players may choose to visit you. At night*, each visitor learns how many visitors are evil, but 1 gets false info.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Number"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "day-active",
+    "visiting",
+    "information",
+    "false-information"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled",
+    "otherNightReminder": "Each visitor learns how many visitors are evil, but 1 gets false info."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "duchess-inform-visitors",
+        "type": "character",
+        "action": "inform-visitors-evil-count",
+        "description": "At night, each visitor learns how many visitors are evil, but 1 gets false info.",
+        "targets": ["duchess"],
+        "information": {
+          "customMessage": "Inform each visitor how many evil visitors, but 1 gets false info."
+        },
+        "order": 1
+      }
+    ],
+    "day": [
+      {
+        "id": "duchess-allow-visits",
+        "type": "character",
+        "action": "allow-three-players-visit",
+        "description": "Each day, 3 players may choose to visit you.",
+        "targets": ["duchess"],
+        "information": {
+          "customMessage": "Allow 3 players to visit the Duchess."
+        },
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

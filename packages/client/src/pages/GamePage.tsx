@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
+import { useNavigate } from 'react-router-dom';
+import { usePTT } from '../utils/usePTT';
+import { PTTButton } from '../components/PTTButton';
+import { VideoTile } from '../components/VideoTile';
 
 const GamePage: React.FC = () => {
   const { gameId } = useParams();
-  const { connect, currentGame, seatId, isStoryteller } = useGameStore() as any;
+  const navigate = useNavigate();
+  const { connect, currentGame, seatId, isStoryteller, leaveGame } = useGameStore() as any;
+  const { pttState, startPTT, endPTT, setMode } = usePTT();
 
   useEffect(() => {
     if (!gameId) return;
-  connect(gameId as any, seatId);
+  connect(gameId as any, seatId || (typeof localStorage !== 'undefined' ? localStorage.getItem('botc-seat-id') : undefined) || undefined);
   }, [gameId]);
 
   if (!currentGame) {
@@ -19,24 +25,20 @@ const GamePage: React.FC = () => {
     );
   }
 
-  const getRoleDisplayName = (role: string | undefined) => {
-    if (!role) return 'Unknown';
-    return role.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
-  };
-
-  const getAlignmentColor = (alignment: string | undefined) => {
-    switch (alignment) {
-      case 'good': return 'text-blue-400';
-      case 'evil': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  };
-
   return (
     <div className="max-w-6xl mx-auto">
   <h1 className="text-4xl font-medieval font-bold text-center mb-8">Blood on the Clocktower</h1>
+      <div className="flex justify-end mb-2">
+        <button
+          className="btn-secondary"
+          onClick={async () => {
+            const ok = await leaveGame();
+            if (ok) navigate('/');
+          }}
+        >
+          Leave Game
+        </button>
+      </div>
       
       {/* Game Status */}
       <div className="card p-6 mb-6">
@@ -55,70 +57,50 @@ const GamePage: React.FC = () => {
               <span className="font-semibold ml-2">{currentGame.seats.length}</span>
             </div>
           </div>
-          <div className="text-sm text-gray-400 flex items-center gap-3">
-            <span>Script: {currentGame.scriptId}</span>
-            {isStoryteller && <span className="px-2 py-0.5 rounded bg-yellow-700 text-yellow-200">Storyteller</span>}
+          <div className="flex items-center gap-4">
+            <PTTButton
+              pttState={pttState}
+              onToggleMode={setMode}
+              onStart={startPTT}
+              onEnd={endPTT}
+            />
+            <div className="text-sm text-gray-400 flex items-center gap-3">
+              <span>Script: {currentGame.scriptId}</span>
+              {isStoryteller && <span className="px-2 py-0.5 rounded bg-yellow-700 text-yellow-200">Storyteller</span>}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Seats Grid */}
+      {/* Video Grid */}
       <div className="card p-6">
         <h2 className="text-xl font-semibold mb-4">Players</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {currentGame.seats.map((seat: any, index: number) => (
-            <div 
-              key={seat.id} 
-              className={`p-4 rounded-lg border-2 transition-all ${
-                seat.isAlive 
-                  ? 'bg-clocktower-dark border-gray-700 hover:border-gray-600' 
-                  : 'bg-gray-800 border-gray-800 opacity-50'
-              }`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <div className="text-sm text-gray-400">Seat {index + 1}</div>
-                <div className={`text-xs px-2 py-1 rounded ${
-                  seat.isAlive ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-                }`}>
-                  {seat.isAlive ? 'Alive' : 'Dead'}
-                </div>
-              </div>
-              
-              <div className="space-y-1">
-                <div className="font-medium truncate">
-                  {seat.playerId ? (
-                    <span className="text-white">{seat.playerId.slice(0, 8)}...</span>
-                  ) : (
-                    <span className="text-purple-400">NPC</span>
-                  )}
-                </div>
-                
-                {seat.role && (
-                  <div className="text-sm">
-                    {isStoryteller || (seatId && seat.id === seatId) ? (
-                      <span className={`font-medium ${getAlignmentColor(seat.alignment)}`}>
-                        {getRoleDisplayName(seat.role)}
-                      </span>
-                    ) : (
-                      <span className="text-gray-500">Hidden</span>
-                    )}
-                  </div>
-                )}
-                
-                {seat.statuses && seat.statuses.length > 0 && (
-                  <div className="text-xs text-yellow-400">
-                    {seat.statuses.join(', ')}
-                  </div>
-                )}
-                
-                {seat.votingPower !== 1 && (
-                  <div className="text-xs text-orange-400">
-                    Votes: {seat.votingPower}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+          {currentGame.seats.map((seat: any, index: number) => {
+            // Mock PTT state - in real implementation this would come from WebSocket events
+            const mockPttState = {
+              seatId: seat.id,
+              isMuted: true,
+              isSpeaking: false,
+              volume: 0.8,
+              isDucked: false
+            };
+
+            return (
+              <VideoTile
+                key={seat.id}
+                seatId={seat.id}
+                playerName={seat.playerId ? seat.playerId.slice(0, 8) : `NPC ${index + 1}`}
+                pttState={mockPttState}
+                isStoryteller={isStoryteller && seatId === seat.id}
+                className={`aspect-video ${
+                  seat.isAlive
+                    ? 'ring-2 ring-gray-700 hover:ring-gray-600'
+                    : 'opacity-50'
+                }`}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

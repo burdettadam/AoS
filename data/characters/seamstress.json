@@ -1,0 +1,52 @@
+{
+  "id": "seamstress",
+  "name": "Seamstress",
+  "team": "townsfolk",
+  "ability": "Once per game, at night, choose 2 players (not yourself): you learn if they are the same alignment.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "active",
+    "once-per-game"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "If the Seamstress has not used their ability: the Seamstress either shows a 'no' head shake or points to 2 players. If they point to players: wake those players and show them the 'You are' token, then thumb up for same alignment or thumb down for different alignments."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "seamstress-choose-two-learn-alignment",
+        "type": "character",
+        "action": "chooseTwoLearnSameAlignmentOnce",
+        "description": "Once per game at night, choose 2 players (not self): learn if they are the same alignment.",
+        "targets": [
+          "seamstress"
+        ],
+        "information": {
+          "customMessage": "YES if same alignment, otherwise NO"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "bounty-hunter",
+  "name": "Bounty Hunter",
+  "team": "townsfolk",
+  "ability": "You start knowing 1 evil player. If the player you know dies, you learn another evil player tonight. [1 Townsfolk is evil]",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "information",
+    "setup",
+    "evil-townsfolk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "firstNightReminder": "Point to an evil player.",
+    "otherNightReminder": "If the known evil player died today: Point to another evil player."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "bounty-hunter-learn-evil",
+        "type": "character",
+        "action": "learn-evil-player",
+        "description": "You start knowing 1 evil player.",
+        "targets": ["bounty-hunter"],
+        "information": {
+          "customMessage": "Learn an evil player."
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "bounty-hunter-learn-another-if-died",
+        "type": "character",
+        "action": "learn-another-evil-if-known-died",
+        "description": "If the player you know dies, you learn another evil player tonight.",
+        "targets": ["bounty-hunter"],
+        "information": {
+          "customMessage": "If known evil died, learn another evil player."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

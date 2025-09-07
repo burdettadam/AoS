@@ -1,0 +1,84 @@
+{
+  "id": "baron",
+  "name": "Baron",
+  "team": "minion",
+  "ability": "There are extra Outsiders in play. [+2 Outsiders]",
+  "reminders": [],
+  "setup": true,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "outsider"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Baron",
+  "imageUrl": null,
+  "howToRun": "While setting up the game, remove any two Townsfolk character tokens and add any two Outsider character tokens. (If you add the Drunk, remember to follow its setup instructions as well.) These Outsider tokens go into the bag instead of the Townsfolk tokens.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Your ability is brought into effect before the game even begins. This means that you have absolutely no responsibility other than to help your Demon win! Have fun! Deliberately claim to be in-play Townsfolk to make them look evil! Tell lies! Make good players look evil and evil players look good by muckraking, double bluffing, or creative tomfoolery. You are emboldened to do whatever you want, since you have nothing to lose!\nSince you add Outsiders to the game, and those players will almost always publicly claim to be Outsiders, claiming to be an Outsider as well causes havoc. If a Drunk is in play, only you and a real Outsider have claimed to be Outsiders - in this situation, the good team will know that a Baron is in play, but will think that you are actually an Outsider, since there appear to be 2 more Outsiders than usual. If, however, there is no Drunk in play, then there will appear to be three more Outsiders than usual in the game, and the good team will probably want to execute all three Outsiders, since they know that at least one is evil - and being responsible for the executions of three players (including yourself) is a great way to start any game and give your team the advantage.\nDeliberately double up with an in-play character that you want to undermine. Since it does not matter if you die, claiming to be a Fortune Teller or an Undertaker or even a Mayor when that character is already is in play, causes the good team to look upon you both with suspicion. They may think you are evil, but they will usually be suspicious of the other player as well, and not trust any information they give.\nClaiming that a Baron is in play when there is no Baron in play is a great strategy for the evil team. Claiming to be an Outsider means that the group conversation will turn to figuring out whether or not a Baron is in play. If the good team comes to believe a Baron is indeed in play, then you look like a legitimate Outsider, but the good team will also come to believe that a Drunk is in play, because the Drunk must be the other Outsider. They will not trust their own information.\nBetter yet, if you claim that a Baron is in play when there isn't, and two evil players both claim to be Outsiders, then it will seem like they are the two Outsiders added by the Baron, and will usually not be executed by the good team. Since good wants to keep good players alive, even good players that are \"confirmed\" as Outsiders are better off alive than dead.\nThrow suspicion onto the Outsiders. If you can make the good team think that the Outsiders you added are evil, they will chase their tails looking for signs of a Poisoner or Scarlet Woman!\nBe a patsy. If you are executed, the Demon is not. Don't be afraid to die this way, since it gives the Demon a day of safety. Furthermore, if you can look so execution-worthy that characters like the Slayer or Ravenkeeper use their ability on you, then at least they are not using it on the Demon. Even if you nominate the Virgin, you might look evil, but it prevents the Demon from doing so.\nIf you are not bluffing as an Outsider, heap as much suspicion on the actual Outsiders as possible. They will usually be trusted by the good team, since it's obvious that a Baron is in play, and will need to be killed if you are to win.\nOne option is getting your Demon to kill you early on - players who die early at night are usually considered good, and you can use this position of trust to go around and talk to players, gathering information and feeding it back to the evil team, while also spreading misinformation. Whilst any Minion can use this strategy, of course, the Baron is particularly suited, since your devastating ability has already been used.\nYou don't always have to be the fall guy. The last thing you want is for you to look evil and have the Imp to kill themselves and have you as their only escape route!",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": [
+      "trouble-brewing"
+    ]
+  },
+  "goal": {
+    "actionType": "addOutsiders",
+    "description": "Increase Outsiders in play to disrupt good information",
+    "selection": {
+      "type": "SETUP",
+      "criteria": {
+        "allowSelf": false,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "MODIFY_SETUP",
+        "target": "GAME",
+        "duration": "PERMANENT",
+        "modification": {
+          "type": "ADD_OUTSIDERS",
+          "count": 2
+        }
+      }
+    ],
+    "frequency": "setup"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "baron-setup",
+        "actionType": "modifySetupAddOutsiders",
+        "label": "Modify setup add outsiders",
+        "description": "During setup, replace two Townsfolk with two Outsiders",
+        "selection": {
+          "type": "SETUP",
+          "criteria": {
+            "allowSelf": false,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "MODIFY_SETUP",
+            "target": "GAME",
+            "duration": "PERMANENT",
+            "modification": {
+              "type": "ADD_OUTSIDERS",
+              "count": 2
+            }
+          }
+        ],
+        "order": 0
+      }
+    ],
+  "night": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

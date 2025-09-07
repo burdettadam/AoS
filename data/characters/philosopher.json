@@ -1,0 +1,51 @@
+{
+  "id": "philosopher",
+  "name": "Philosopher",
+  "team": "townsfolk",
+  "ability": "Once per game, at night, choose a good character: gain that ability. If this character is in play, they are drunk.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "Drunk"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "ability-gain",
+    "active",
+    "once-per-game"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "If the Philosopher has not used their ability: the Philosopher either shows a 'no' head shake, or points to a character on their sheet. If they chose a character: If that character is in play, that player becomes drunk. The Philosopher gains that character's ability."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "philosopher-gain-ability",
+        "type": "character",
+        "action": "chooseGoodCharacterGainAbilityOnce",
+        "description": "Once per game at night, choose a good character: gain that ability. If this character is in play, they are drunk.",
+        "targets": [
+          "philosopher"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

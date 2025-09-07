@@ -1,0 +1,50 @@
+{
+  "id": "bishop",
+  "name": "Bishop",
+  "team": "traveller",
+  "ability": "Only the Storyteller can nominate. At least 1 opposing player must be nominated each day.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "nomination-control",
+    "storyteller-power",
+    "forced-nomination"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [
+      {
+        "id": "bishop-storyteller-nominates",
+        "type": "character",
+        "action": "storyteller-nominates-only",
+        "description": "Only the Storyteller can nominate. At least 1 opposing player must be nominated each day.",
+        "targets": ["bishop"],
+        "information": {
+          "customMessage": "Only Storyteller nominates, at least 1 opposing player."
+        },
+        "order": 1
+      }
+    ],
+    "voting": [],
+    "execution": []
+  }
+}

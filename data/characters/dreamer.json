@@ -1,0 +1,67 @@
+{
+  "id": "dreamer",
+  "name": "Dreamer",
+  "team": "townsfolk",
+  "ability": "Each night, choose a player (not yourself or Travellers): you learn 1 good and 1 evil character, 1 of which is correct.",
+  "firstNight": "1",
+  "otherNights": "2",
+  "reminders": [
+    "Character"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "information",
+    "active"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "Each night, the Dreamer points to a player (not themselves or Travellers). Show the Dreamer 1 good character token and 1 evil character token - one of these is the character of the chosen player, the other is not.",
+  "firstNightDescription": "The Dreamer points to a player (not themselves or Travellers). Show the Dreamer 1 good character token and 1 evil character token - one of these is the character of the chosen player, the other is not.",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "sects-and-violets",
+    "otherNightReminder": "The Dreamer points to a player. Show 1 good and 1 evil character token; one of these is correct."
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "dreamer-choose-first",
+        "type": "character",
+        "action": "choosePlayerLearnOneGoodOneEvil",
+        "description": "Choose a player (not self/Travellers): learn 1 good and 1 evil character, one is correct.",
+        "targets": [
+          "dreamer"
+        ],
+        "information": {
+          "customMessage": "Shown characters: [GOOD_CHARACTER], [EVIL_CHARACTER] (one is correct)"
+        },
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "dreamer-choose-night",
+        "type": "character",
+        "action": "choosePlayerLearnOneGoodOneEvil",
+        "description": "Each night, choose a player (not self/Travellers): learn 1 good and 1 evil character, one is correct.",
+        "targets": [
+          "dreamer"
+        ],
+        "information": {
+          "customMessage": "Shown characters: [GOOD_CHARACTER], [EVIL_CHARACTER] (one is correct)"
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

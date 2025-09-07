@@ -1,0 +1,47 @@
+{
+  "id": "mutant",
+  "name": "Mutant",
+  "team": "outsider",
+  "ability": "If you are \"mad\" about being an Outsider, you might be executed.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "sects-and-violets"
+  ],
+  "tags": [
+    "madness",
+    "execution-risk"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "outsider",
+    "originalSource": "sects-and-violets"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [
+      {
+        "id": "mutant-madness-risk",
+        "type": "character",
+        "action": "madnessAboutOutsiderExecutionRisk",
+        "description": "If you are \"mad\" about being an Outsider, you might be executed.",
+        "targets": [
+          "mutant"
+        ],
+        "order": 1
+      }
+    ],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

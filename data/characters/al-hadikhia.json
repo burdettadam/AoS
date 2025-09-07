@@ -1,0 +1,51 @@
+{
+  "id": "al-hadikhia",
+  "name": "Al-Hadikhia",
+  "team": "demon",
+  "ability": "Each night*, you may choose 3 players (all players learn who): each silently chooses to live or die, but if all live, all die.",
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "public-choice",
+    "player-choice",
+    "paradox"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "experimental",
+    "otherNightReminder": "Al-Hadikhia may choose 3 players. If chosen, announce them publicly. Each chosen player silently chooses to live or die. If all choose to live, all die instead."
+  },
+  "actions": {
+    "firstNight": [],
+  "night": [
+      {
+        "id": "al-hadikhia-choose-3-players",
+        "type": "character",
+        "action": "choose-3-players",
+    "label": "Choose 3 players",
+        "description": "Each night, Al-Hadikhia may choose 3 players: each silently chooses to live or die, but if all live, all die.",
+        "targets": ["al-hadikhia"],
+        "information": {
+          "customMessage": "Al-Hadikhia chooses 3 players. Each chosen player chooses to live or die."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

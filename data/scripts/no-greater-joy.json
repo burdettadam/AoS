@@ -1,0 +1,64 @@
+{
+  "id": "no-greater-joy",
+  "name": "No Greater Joy",
+  "description": "A Teensyville script perfect for 5-6 players. Focuses on core mechanics with clear information and straightforward gameplay.",
+  "author": "Community Created - Teensyville",
+  "version": "1.0.0",
+  "characters": [
+    "chef",
+    "empath",
+    "fortune-teller",
+    "ravenkeeper",
+    "monk",
+    "soldier",
+    "recluse",
+    "drunk",
+    "poisoner",
+    "baron",
+    "imp"
+  ],
+  "playerCount": {
+    "min": 5,
+    "max": 6,
+    "optimal": "5-6"
+  },
+  "complexity": "beginner",
+  "tags": [
+    "community",
+    "custom",
+    "teensyville",
+    "beginner",
+    "small-group"
+  ],
+  "estimatedTime": "30-45 minutes",
+  "characterDistribution": {
+    "townsfolk": 6,
+    "outsiders": 2,
+    "minions": 2,
+    "demons": 1
+  },
+  "composition": {
+    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
+    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 }
+  },
+  "specialRules": [
+    "Teensyville format (5-6 players)",
+    "Beginner-friendly characters",
+    "Clear information roles",
+    "Straightforward interactions"
+  ],
+  "setupNotes": "Standard Teensyville setup. Remove characters as needed based on exact player count. Recommended as a first script for new players.",
+  "winConditions": {
+    "good": "Execute the Demon",
+    "evil": "Equal or outnumber good players"
+  },
+  "wikiUrl": null,
+  "howToRun": "Positive-leaning protections and benevolent twists. Ensure protection stacking is ruled. Celebrate reveals to keep pace fun.",
+  "firstNight": [
+    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
+    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+  ],
+  "tipsAndTricks": "Good: Chain protections around confirmed players. Evil: Bypass protection indirectly (poison, misdirection).",
+  "bluffing": "Claim soft utility roles that explain patience and survivals.",
+  "legacy": null
+}

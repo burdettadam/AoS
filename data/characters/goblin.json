@@ -1,0 +1,62 @@
+{
+  "id": "goblin",
+  "name": "Goblin",
+  "team": "minion",
+  "ability": "If you publicly claim to be the Goblin when nominated & are executed that day, your team wins.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "public-claim",
+    "nomination-trigger",
+    "execution-trigger",
+    "win-condition"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "minion",
+    "originalSource": "experimental"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [
+      {
+        "id": "goblin-claim-if-nominated",
+        "type": "character",
+        "action": "publicly-claim-goblin-if-nominated",
+        "description": "If you publicly claim to be the Goblin when nominated & are executed that day, your team wins.",
+        "targets": ["goblin"],
+        "information": {
+          "customMessage": "If nominated, publicly claim to be Goblin."
+        },
+        "order": 1
+      }
+    ],
+    "voting": [],
+    "execution": [
+      {
+        "id": "goblin-win-if-claimed-and-executed",
+        "type": "character",
+        "action": "win-if-claimed-and-executed",
+        "description": "If you publicly claim to be the Goblin when nominated & are executed that day, your team wins.",
+        "targets": ["goblin"],
+        "information": {
+          "customMessage": "If claimed and executed, your team wins."
+        },
+        "order": 1
+      }
+    ]
+  }
+}

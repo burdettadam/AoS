@@ -1,0 +1,50 @@
+{
+  "id": "po",
+  "name": "Po",
+  "team": "demon",
+  "ability": "Each night*, you may choose a player: they die. If your last choice was no-one, choose 3 players tonight.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "variable-kill",
+    "escalation"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "If the Po chose no-one the previous night: The Po chooses 3 players tonight. Otherwise: The Po either chooses no-one, or chooses a player. Chosen players die."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "po-kill-or-setup",
+        "type": "character",
+        "action": "chooseOneOrNoneThenNextNightThree",
+        "description": "Each night*, may choose a player to die. If last choice was no-one, choose 3 players tonight.",
+        "targets": [
+          "po"
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

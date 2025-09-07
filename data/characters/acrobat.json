@@ -1,0 +1,51 @@
+{
+  "id": "acrobat",
+  "name": "Acrobat",
+  "team": "townsfolk",
+  "ability": "Each night*, choose a player: if they are or become drunk or poisoned tonight, you die.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "active",
+    "self-risk",
+    "drunk",
+    "poisoned"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "The Acrobat points to a player. If that player is or becomes drunk or poisoned tonight, the Acrobat dies."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "acrobat-choose-player",
+        "type": "character",
+        "action": "choose-player-to-watch",
+        "description": "Each night, choose a player: if they are or become drunk or poisoned tonight, you die.",
+        "targets": ["acrobat"],
+        "information": {
+          "customMessage": "Choose a player to watch for drunk or poisoned."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

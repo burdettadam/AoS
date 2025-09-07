@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { useNavigate, useParams } from 'react-router-dom';
-import { GamePhase } from '@botc/shared';
+import * as Enums from '@botc/shared';
 
 interface Character {
   id: string;
@@ -121,9 +121,9 @@ const SetupPage: React.FC = () => {
   // Load/setup on mount: if already in SETUP, just load state; otherwise try to enter setup from lobby
   useEffect(() => {
     const init = async () => {
-      if (currentGame?.phase === GamePhase.SETUP) {
+  if (currentGame?.phase === Enums.GamePhase.SETUP) {
         await loadSetupState();
-      } else if (currentGame?.phase === GamePhase.LOBBY) {
+  } else if (currentGame?.phase === Enums.GamePhase.LOBBY) {
         await handleEnterSetup();
       } else {
         // Unknown or stale; try loading state to refresh phase from server

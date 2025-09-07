@@ -1,0 +1,39 @@
+{
+  "id": "doomsayer",
+  "name": "Doomsayer",
+  "team": "fabled",
+  "ability": "If 4 or more players live, each living player may publicly choose (once per game) that a player of their own alignment dies.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "fabled"
+  ],
+  "tags": [
+    "fabled",
+    "public-choice",
+    "alignment-kill",
+    "once-per-game",
+    "player-count-dependent"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "fabled",
+    "originalSource": "fabled"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

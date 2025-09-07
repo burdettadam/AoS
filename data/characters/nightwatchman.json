@@ -1,0 +1,50 @@
+{
+  "id": "nightwatchman",
+  "name": "Nightwatchman",
+  "team": "townsfolk",
+  "ability": "Once per game, at night, choose a player: they learn you are the Nightwatchman.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "experimental"
+  ],
+  "tags": [
+    "active",
+    "once-per-game",
+    "identity-reveal"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": "experimental",
+    "otherNightReminder": "If the Nightwatchman has not used their ability: The Nightwatchman either shows a 'no' head shake or points to a player. Wake that player and show the Nightwatchman token, then point to the Nightwatchman."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "nightwatchman-choose-player-reveal",
+        "type": "character",
+        "action": "choose-player-reveal-identity",
+        "description": "Once per game, choose a player: they learn you are the Nightwatchman.",
+        "targets": ["nightwatchman"],
+        "information": {
+          "customMessage": "Choose a player to reveal your identity to."
+        },
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

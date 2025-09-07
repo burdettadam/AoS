@@ -1,0 +1,108 @@
+{
+  "id": "poisoner",
+  "name": "Poisoner",
+  "team": "minion",
+  "ability": "Poisons one player each night, nullifying their ability and possibly causing false information.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [
+    "POISONED"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "Ravenswood_data"
+  ],
+  "tags": [
+    "misinformation",
+    "disruption"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Poisoner",
+  "imageUrl": null,
+  "howToRun": "Each night, wake the Poisoner. They point at any player. The chosen player becomes poisoned—put the POISONED reminder token by the chosen player's character token. Put the Poisoner to sleep. (This poisoned player wakes and acts normally. They have no ability, but they think they do. If their ability would give them information, you can give false information to them if you wish. See “Drunkenness and Poisoning” in the rulebook.)\nEach dusk, the poisoned player becomes healthy—remove their POISONED reminder.",
+  "firstNightDescription": "",
+  "tipsAndTricks": "Identifying targets for poison is vital. Characters who get information over several nights like the Fortune Teller or Undertaker are great choices if you can find them. You can also make your choice based on the player; players who are strong leaders and rallying the good team or players who are quiet and trying not to attract attention are good options.\nUndermine players who trust each other by poisoning the characters getting key info in that clique. If a group is rallying around an Undertaker, you can turn the entire group on someone innocent by poisoning them at the right time.\nCo-ordinate with your Demon so that you are not selecting the same players - unless they are a character like the Ravenkeeper, you'll just be wasting your poison for the day!\nTargeting characters like the Virgin, Slayer or Mayor can be excellent, but only if they use their ability while they are poisoned. You'll need to convince them to use their ability, or time it right so that they are compromised at the moment they choose to activate.\nIt's risky, but you can poison your own Demon, and use the lack of death for that night to bluff as the Monk or Soldier. (You should probably warn your Demon you're going to do this!)\nIf everyone is on board with the idea, try poisoning the Scarlet Woman. If the Imp chooses to kill themselves, the Scarlet Woman will become the new Demon... unless you poison them first! That way, you or a third Minion can become the new Imp and keep the Scarlet Woman in play. Just don't get your Imp killed while the Scarlet Woman is still poisoned!\nYou will usually be more efficient as a Poisoner by selecting multiple targets around the town rather than focusing on one player for the entire game. You only really need to poison the Fortune Teller on the night they're checking your Demon, for example - then you're free to mess with other characters. This method of poisoning is also more difficult to detect than sticking to one player.\nOn the other hand, if you only poison one player, that player might end up looking like the Drunk, perhaps hiding the real Drunk, or making it look like a Baron is in play.\nOn the first night, if you don't know who to poison, poison a player sitting next to the Demon. You know which player is the Demon, and on the off chance that an Empath is sitting next to the Demon, you'll be giving some very damaging information to the good team.\nMake use of your Spy! They know who the best targets are and can guide you in the right direction.",
+  "bluffing": "",
+  "legacy": {
+    "category": "Minion",
+    "originalSource": "Ravenswood_data"
+  },
+  "goal": {
+    "actionType": "poisonPlayer",
+    "description": "Disable or corrupt abilities of chosen player each night",
+    "selection": {
+      "type": "ANY_PLAYER",
+      "criteria": {
+        "allowSelf": true,
+        "allowDead": false
+      }
+    },
+    "effects": [
+      {
+        "type": "POISON",
+        "target": "SELECTED",
+        "duration": "NIGHT",
+        "disruption": {
+          "type": "ABILITY_CORRUPTION"
+        }
+      }
+    ],
+    "frequency": "each-night"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "poisoner-poison",
+        "actionType": "poisonPlayer",
+        "description": "Choose a player to poison tonight",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "POISON",
+            "target": "SELECTED",
+            "duration": "NIGHT",
+            "disruption": {
+              "type": "ABILITY_CORRUPTION"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "otherNights": [
+      {
+        "id": "poisoner-poison-night",
+        "actionType": "poisonPlayer",
+        "description": "Choose a player to poison tonight",
+        "selection": {
+          "type": "ANY_PLAYER",
+          "criteria": {
+            "allowSelf": true,
+            "allowDead": false
+          }
+        },
+        "effects": [
+          {
+            "type": "POISON",
+            "target": "SELECTED",
+            "duration": "NIGHT",
+            "disruption": {
+              "type": "ABILITY_CORRUPTION"
+            }
+          }
+        ],
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

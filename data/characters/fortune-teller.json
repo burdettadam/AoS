@@ -1,0 +1,92 @@
+{
+  "id": "fortune-teller",
+  "name": "Fortune Teller",
+  "team": "townsfolk",
+  "ability": "Each night, choose 2 players: you learn if either is a Demon. There is a good player that registers as a Demon to you.",
+  "reminders": [
+    "Number"
+  ],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "trouble-brewing"
+  ],
+  "tags": [
+    "information",
+    "active"
+  ],
+  "wikiUrl": "https://wiki.bloodontheclocktower.com/Fortune_Teller",
+  "imageUrl": null,
+  "howToRun": "While preparing the first night, put the Fortune Teller's RED HERRING reminder token by any good character token, marking that player as the Red Herring.\nEach night, wake the Fortune Teller. The Fortune Teller points at any two players. If either chosen player is a Demon or the Red Herring, nod your head yes. Otherwise, shake your head no. Put the Fortune Teller to sleep.\nIn smaller games, making the Fortune Teller their own Red Herring is sometimes advised, as the Fortune Teller gets more information that way.",
+  "firstNightDescription": "While preparing the first night, put the Fortune Teller's RED HERRING reminder token by any good character token, marking that player as the Red Herring.",
+  "tipsAndTricks": "Getting a 'no' is often more useful than getting a 'yes'. A 'no' means that neither of the two players is the Demon, which narrows down the number of players you have to inspect.\nYou only learn about Demons. Just because you got a 'no' on somebody doesn't mean that they're good. They could still be a Minion.\nIf you have a pair of players who you got a 'yes' on, and a pair of players you got a 'no' on, try picking one player from each pair. If you get another 'yes', you know that the player you got a 'yes' on both times is the player you're getting a read on; otherwise, it's the player in your initial 'yes' pair that you didn't pick this time that you should look to.\nIf you have gotten a 'yes' on players you are suspicious of, getting confirmation of which player is causing your ability to react can give you a clear goal, especially if that player is still alive at the end of the game.\nYou only have a limited number of nights to gather information. Spending a lot of it focusing on one or two people may give you less to work with in the end game. For this reason, it's usually most efficient to start the game casting a wide net and learn about as many pairs as possible. Then, after you have some general information, start focusing on the players you are most suspicious of.\nRemember that the Imp can kill themselves and cause a Minion to become the Demon, and if they're executed, the Scarlet Woman might become the Demon. Even if you got a 'no' on someone earlier in the game doesn't mean they aren't the Demon now. If you think the Demon died, try picking someone you think is a Minion that you previously got a 'no' on and see if your information has changed.\nYour false positive is chosen at the beginning of the game and does not move, and you will not receive a false read from more than one player because of your ability. Remember your false register can be anyone, including you, and a 'yes' is not a definite confirmation of a Demon.\nYou can choose yourself as one of the two players. Since you know you are not the Demon, this enables you to get a read on one specific player. Beware though, the Storyteller can make you your own false positive, so this may not always be effective.\nBe aware of the Recluse, who may register as the Demon to you. This is not the same as the Red Herring.\nClaiming to be a character that the Demon would not want to kill, such as the Saint, Soldier, or Ravenkeeper can help you survive longer, allowing you some much needed time to gain useful information.",
+  "bluffing": "When bluffing as the Fortune Teller, there are a few things you should keep in mind:\nYou wake every night, including the first night, and should have information for each night you are alive. You would have pointed at two players and the Storyteller would have either nodded or shaken their head. When you reveal that you are the Fortune Teller, the good team will expect you to have a detailed explanation of every night's activities. Be prepared. Have what you are going to tell them ready.\nYou can lie that \"these two players are not the Demon\" to exonerate your fellow evil players.\nThe Fortune Teller can sometimes get wildly confusing information. The Recluse may register as the Demon. The Demon itself can change players to someone who was previously a Minion, even if no Scarlet Woman is in play. The 'Red Herring' can register as the Demon, making a good player look suspicious. Worry less about the exact content of your information, and the number of 'yes' results you claim to have received, and more about acting with conviction.\nHaving noted the above point, your bluff is still increased dramatically if the information you reveal to the group is consistent. If you tell players over and over again that certain players are not the Demon, they will tend to keep those players alive. If you tell players over and over again that certain players are possibly the Demon, they will tend to kill them, but may come for you next when the game doesn't end afterwards.\nIf a good player is being particularly troublesome, focusing all your attention on them by claiming that they are registering as the Demon to you can quickly get them killed. You can always claim that they must have been your 'Red Herring' after the fact. This strategy can be particularly devastating if you need to get a player executed, but can not do so by normal means. In particular, you can get a Saint executed or a Mayor or Soldier killed, or at least convince the good team not to trust them. Even sowing distrust about an Undertaker, Empath, or similar character can be enough to make their information questionable.\nRemember that Fortune Tellers may choose dead players, and may even choose themselves. Telling the group that a dead player is the Demon implies that all their information was dubious, and also (in single Minion games) that only one remaining player is evil. This misinformation, whilst seemingly innocent, can sway the game in your direction due to the extra mistrust among the living players. It is particularly effective if you make a Ravenkeeper appear to be the Demon that killed themselves at night time.\nIf you are the Imp, you can come out publicly as the Fortune Teller and strategically die at night to make your information sound more legitimate.\nIf you are the Scarlet Woman, you can publicly accuse your actual Demon and lead the charge for their execution. This gives characters like the Undertaker a positive read of 'Demon', solidifying your bluff.\nIf you know of a Recluse, claim to have gotten a 'yes' on them. If you are or have spoken to a Spy, you can claim to have a 'yes' on the Recluse before they can claim their character, which makes your 'yes' look even more believable.",
+  "legacy": {
+    "category": "townsfolk",
+    "originalSource": [
+      "trouble-brewing"
+    ],
+    "otherNightReminder": "The Fortune Teller points to two players. Show the finger signal (0, 1, or 2) for how many of those players are Demons."
+  },
+  "goal": {
+    "actionType": "detectDemon",
+    "description": "Detects whether either of two players is the Demon (with 1 red herring)",
+    "selection": {
+      "type": "TWO_PLAYERS",
+      "criteria": { "allowSelf": true, "allowDead": true }
+    },
+    "effects": [{
+      "type": "LEARN_INFORMATION",
+      "target": "SELF",
+      "duration": "IMMEDIATE"
+    }],
+    "frequency": "each-night"
+  },
+  "actions": {
+    "firstNight": [
+      {
+        "id": "fortune-red-herring",
+        "type": "meta",
+        "actionType": "assignRedHerring",
+        "label": "Assign red herring",
+        "selection": {
+          "type": "GOOD_PLAYER",
+          "criteria": { "excludeDemon": true, "excludeMinions": true }
+        },
+        "effects": [{
+          "type": "ASSIGN_STATUS",
+          "target": "TARGET",
+          "duration": "GAME",
+          "statusEffect": "RED_HERRING"
+        }],
+        "description": "Storyteller assigns a red herring good player",
+        "order": 0
+      }
+    ],
+    "night": [
+      {
+        "id": "fortune-choose",
+        "actionType": "detectDemon",
+        "label": "Detect demon",
+        "selection": {
+          "type": "TWO_PLAYERS",
+          "criteria": { "allowSelf": true, "allowDead": true }
+        },
+        "effects": [{
+          "type": "LEARN_INFORMATION",
+          "target": "SELF",
+          "duration": "IMMEDIATE",
+          "information": {
+            "customMessage": "YES if either is Demon or Red Herring, otherwise NO"
+          }
+        }],
+        "description": "Each night, choose 2 players and learn if either is a Demon (or red herring)",
+        "order": 1
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}

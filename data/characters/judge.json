@@ -1,0 +1,50 @@
+{
+  "id": "judge",
+  "name": "Judge",
+  "team": "traveller",
+  "ability": "Once per game, if another player nominated, you may choose to force the current execution to pass or fail.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "travellers"
+  ],
+  "tags": [
+    "traveller",
+    "once-per-game",
+    "execution-control",
+    "nomination-trigger"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "traveller",
+    "originalSource": "travellers"
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [],
+    "day": [],
+    "nominations": [],
+    "voting": [
+      {
+        "id": "judge-force-execution-pass-fail",
+        "type": "character",
+        "action": "force-execution-pass-or-fail",
+        "description": "Once per game, if another player nominated, you may choose to force the current execution to pass or fail.",
+        "targets": ["judge"],
+        "information": {
+          "customMessage": "If another nominated, choose to force execution to pass or fail."
+        },
+        "order": 1
+      }
+    ],
+    "execution": []
+  }
+}

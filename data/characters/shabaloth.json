@@ -1,0 +1,60 @@
+{
+  "id": "shabaloth",
+  "name": "Shabaloth",
+  "team": "demon",
+  "ability": "Each night*, choose 2 players: they die. A dead player regains their ability until dusk tomorrow & is then healthy.",
+  "firstNight": null,
+  "otherNights": null,
+  "reminders": [],
+  "setup": false,
+  "special": null,
+  "editions": [
+    "bad-moon-rising"
+  ],
+  "tags": [
+    "demon",
+    "active",
+    "multiple-kill",
+    "resurrection"
+  ],
+  "wikiUrl": null,
+  "imageUrl": null,
+  "howToRun": "",
+  "firstNightDescription": "",
+  "tipsAndTricks": "",
+  "bluffing": "",
+  "legacy": {
+    "category": "demon",
+    "originalSource": "bad-moon-rising",
+    "otherNightReminder": "The Shabaloth points to two players. Those players die. Choose a dead player, they regain their ability until dusk and are no longer dead."
+  },
+  "actions": {
+    "firstNight": [],
+    "otherNights": [
+      {
+        "id": "shabaloth-kill-two",
+        "type": "character",
+        "action": "chooseTwoKill",
+        "description": "Each night*, choose 2 players: they die.",
+        "targets": [
+          "shabaloth"
+        ],
+        "order": 1
+      },
+      {
+        "id": "shabaloth-revive-dead",
+        "type": "character",
+        "action": "chooseDeadRegainAbilityUntilDusk",
+        "description": "Choose a dead player, they regain their ability until dusk and are no longer dead.",
+        "targets": [
+          "shabaloth"
+        ],
+        "order": 2
+      }
+    ],
+    "day": [],
+    "nominations": [],
+    "voting": [],
+    "execution": []
+  }
+}
