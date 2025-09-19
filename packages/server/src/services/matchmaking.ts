@@ -15,9 +15,9 @@ export class MatchmakingService {
     this.onUpdate = cb;
   }
 
-  async createGame(scriptId?: string): Promise<GameId> {
+  async createGame(scriptId?: string, options?: { isPublic?: boolean }): Promise<GameId> {
     try {
-      const gameId = await this.gameEngine.createGame(scriptId);
+      const gameId = await this.gameEngine.createGame(scriptId, options);
       logger.info(`Matchmaking created game: ${gameId}`);
       const game = this.gameEngine.getGame(gameId);
       if (game && this.onUpdate) {
@@ -84,16 +84,20 @@ export class MatchmakingService {
     }
   }
 
-  proposeScript(gameId: GameId, proposer: string, scriptId: string): boolean {
-    return this.gameEngine.proposeScript(gameId, proposer as any, scriptId);
+  proposeScript(gameId: GameId, proposer: string, scriptId: string, active: boolean = true): boolean {
+    return !!this.gameEngine.proposeScript(gameId, proposer as any, scriptId, active);
   }
 
-  voteOnScript(gameId: GameId, voterSeat: string, proposalId: string, vote: boolean): boolean {
+  voteOnScript(gameId: GameId, voterSeat: string, proposalId: string, vote: boolean | null | undefined): boolean {
     return this.gameEngine.voteOnScript(gameId, voterSeat as any, proposalId, vote);
   }
 
   getActiveGames(): GameState[] {
     return this.gameEngine.getActiveGames();
+  }
+
+  getPublicGames(): GameState[] {
+    return this.gameEngine.getPublicGames();
   }
 
   getGame(gameId: GameId): GameState | undefined {

@@ -2,13 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { useKeycloak } from '../context/KeycloakContext';
 import { useNavigate } from 'react-router-dom';
 
+interface PublicGame {
+  id: string;
+  gameName?: string;
+  scriptId: string;
+  phase: string;
+  seats: Array<{ playerId?: string; isNPC: boolean; position: number }>;
+  createdAt: string;
+}
+
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { userInfo, authenticated, loading } = useKeycloak();
   const [joinId, setJoinId] = useState('');
   const [gameName, setGameName] = useState('');
+  const [isPublic, setIsPublic] = useState(true);
   const [playerName, setPlayerName] = useState<string>(localStorage.getItem('botc-player-name') || '');
+  const [publicGames, setPublicGames] = useState<PublicGame[]>([]);
+  const [loadingGames, setLoadingGames] = useState(false);
+
+  // Generate a unique game name with timestamp
+  const generateGameName = () => {
+    const adjectives = ['Mystical', 'Ancient', 'Shadowy', 'Whispering', 'Haunted', 'Moonlit', 'Cursed', 'Enchanted', 'Dark', 'Forgotten'];
+    const nouns = ['Clocktower', 'Village', 'Manor', 'Castle', 'Tavern', 'Cathedral', 'Mansion', 'Fortress', 'Chapel', 'Abbey'];
+    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const noun = nouns[Math.floor(Math.random() * nouns.length)];
+    const timestamp = new Date().toLocaleTimeString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    return `${adjective} ${noun} (${timestamp})`;
+  };
+
+  // Generate a default player name
+  const generatePlayerName = () => {
+    const names = ['Traveler', 'Wanderer', 'Seeker', 'Guardian', 'Shadow', 'Mystic', 'Oracle', 'Sage'];
+    const name = names[Math.floor(Math.random() * names.length)];
+    const number = Math.floor(Math.random() * 1000);
+    return `${name}${number}`;
+  };
+
+  // Auto-populate game name if empty when component loads
+  useEffect(() => {
+    if (!gameName) {
+      setGameName(generateGameName());
+    }
+  }, []);
 
   // Update playerName from Keycloak profile if available and not already set
   useEffect(() => {
@@ -33,7 +74,14 @@ const HomePage: React.FC = () => {
         }
       }
     }
-  }, [authenticated, userInfo]);
+    
+    // Ensure we always have a player name for the Create Game button to work
+    if (authenticated && (!playerName || !playerName.trim())) {
+      const defaultName = generatePlayerName();
+      setPlayerName(defaultName);
+      localStorage.setItem('botc-player-name', defaultName);
+    }
+  }, [authenticated, userInfo, playerName]);
 
   // Keep localStorage in sync with input
   useEffect(() => {
@@ -42,13 +90,42 @@ const HomePage: React.FC = () => {
     }
   }, [playerName]);
 
+  // Fetch public games when authenticated
+  const fetchPublicGames = async () => {
+    if (!authenticated) return;
+    
+    try {
+      setLoadingGames(true);
+      const response = await fetch('/api/games/public');
+      if (response.ok) {
+        const games = await response.json();
+        setPublicGames(games);
+      }
+    } catch (error) {
+      console.error('Failed to fetch public games:', error);
+    } finally {
+      setLoadingGames(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPublicGames();
+  }, [authenticated]);
+
   const handleCreateGame = async () => {
     if (!playerName.trim()) return; // guard
+    
+    // Auto-generate game name if empty
+    const finalGameName = gameName.trim() || generateGameName();
+    
     try {
       const response = await fetch('/api/games', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameName: gameName.trim() || undefined })
+        body: JSON.stringify({ 
+          gameName: finalGameName,
+          isPublic 
+        })
       });
   const data = await response.json();
       // Navigate to lobby
@@ -62,6 +139,11 @@ const HomePage: React.FC = () => {
     if (!playerName.trim()) return;
     if (!joinId) return;
     navigate(`/lobby/${joinId}`);
+  };
+
+  const handleJoinPublicGame = (gameId: string) => {
+    if (!playerName.trim()) return;
+    navigate(`/lobby/${gameId}`);
   };
 
   if (loading) {
@@ -112,21 +194,61 @@ const HomePage: React.FC = () => {
           <p className="text-gray-300 mb-6">
             Start a new game of Blood on the Clocktower with AI-powered characters
           </p>
-          <div className="mb-4 text-left">
-            <label className="block text-sm mb-2">Game Name</label>
-            <input
-              value={gameName}
-              onChange={(e) => setGameName(e.target.value)}
-              type="text"
-              placeholder="e.g., Friday Night in Ravenswood"
-              className="w-full px-4 py-2 bg-clocktower-dark border border-gray-600 rounded-lg focus:border-clocktower-accent focus:outline-none"
-            />
-            <p className="text-xs text-gray-400 mt-1">Shown in the lobby for everyone.</p>
+          <div className="space-y-4 text-left">
+            <div>
+              <label className="block text-sm mb-2">Game Name</label>
+              <div className="flex gap-2">
+                <input
+                  value={gameName}
+                  onChange={(e) => setGameName(e.target.value)}
+                  type="text"
+                  placeholder="e.g., Friday Night in Ravenswood"
+                  className="flex-1 px-4 py-2 bg-clocktower-dark border border-gray-600 rounded-lg focus:border-clocktower-accent focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setGameName(generateGameName())}
+                  className="px-3 py-2 bg-clocktower-dark border border-gray-600 rounded-lg hover:border-clocktower-accent transition-colors text-sm"
+                  title="Generate random name"
+                >
+                  🎲
+                </button>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">Shown in the lobby for everyone.</p>
+            </div>
+            <div>
+              <label className="block text-sm mb-2">Game Privacy</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    checked={isPublic}
+                    onChange={() => setIsPublic(true)}
+                    className="mr-2 text-clocktower-accent focus:ring-clocktower-accent"
+                  />
+                  <span>Public - Anyone can find and join</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    checked={!isPublic}
+                    onChange={() => setIsPublic(false)}
+                    className="mr-2 text-clocktower-accent focus:ring-clocktower-accent"
+                  />
+                  <span>Private - Join by invite only</span>
+                </label>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">
+                {isPublic 
+                  ? "Your game will appear in the public games list for others to join." 
+                  : "Only people with the game ID can join this game."}
+              </p>
+            </div>
           </div>
           <button 
             onClick={handleCreateGame}
             disabled={!playerName.trim()}
-            className={`w-full py-3 text-lg btn-primary ${!playerName.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full py-3 text-lg btn-primary mt-4 ${!playerName.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Create Game
           </button>
@@ -155,6 +277,73 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Public Games List */}
+      {authenticated && (
+        <div className="card p-8 mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold">Join Public Games</h2>
+            <button
+              onClick={fetchPublicGames}
+              disabled={loadingGames}
+              className="btn-secondary px-4 py-2 text-sm"
+            >
+              {loadingGames ? 'Refreshing...' : 'Refresh'}
+            </button>
+          </div>
+          <p className="text-gray-300 mb-6">
+            Jump into any of these public games - no invitation needed!
+          </p>
+          
+          {loadingGames ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-clocktower-accent mx-auto mb-2"></div>
+              <p className="text-gray-400">Loading public games...</p>
+            </div>
+          ) : publicGames.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-400">No public games available right now.</p>
+              <p className="text-sm text-gray-500 mt-2">Be the first to create one!</p>
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              {publicGames.map((game) => {
+                const playerCount = game.seats.filter(seat => seat.playerId && !seat.isNPC).length;
+                const maxPlayers = game.seats.length || 15; // Default max if no seats setup yet
+                
+                return (
+                  <div key={game.id} className="bg-clocktower-dark rounded-lg p-4 border border-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg">
+                          {game.gameName || `Game ${game.id.substring(0, 8)}`}
+                        </h3>
+                        <div className="flex items-center space-x-4 text-sm text-gray-400 mt-1">
+                          <span>Script: {game.scriptId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+                          <span>Players: {playerCount}/{maxPlayers}</span>
+                          <span>Phase: {game.phase}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Created: {new Date(game.createdAt).toLocaleDateString()} at {new Date(game.createdAt).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div className="ml-4">
+                        <button
+                          onClick={() => handleJoinPublicGame(game.id)}
+                          disabled={!playerName.trim()}
+                          className={`btn-primary px-6 py-2 ${!playerName.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          Join
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="card p-8">
         <h2 className="text-2xl font-semibold mb-6">Features</h2>

@@ -1,0 +1,48 @@
+intent: "User can log in and see their dashboard header"
+personas: [guest, user]
+routes: ["http://localhost:3000/", "/login", "/dashboard"]
+setup:
+start: ["npm run dev"]
+seed: ["node scripts/seed-user.js --email test@example.com --password P@ssw0rd!"]
+viewport: 1280x800
+elements:
+- id: loginButton
+locator: { by: role, value: "button[name=Login]" }
+- id: emailField
+locator: { by: testid, value: "email-input" }
+- id: passwordField
+locator: { by: testid, value: "password-input" }
+- id: submitLogin
+locator: { by: role, value: "button[name=Sign in]" }
+- id: dashHeader
+locator: { by: role, value: "heading[name=Dashboard]" }
+actions:
+- use: loginButton
+do: click
+- use: emailField
+do: type
+value: "test@example.com"
+- use: passwordField
+do: type
+value: "P@ssw0rd!"
+- use: submitLogin
+do: click
+expect: loggedIn
+assertions:
+- id: loggedIn
+type: visible
+target: dashHeader
+acceptance:
+functional: [loggedIn]
+visual:
+shots:
+- name: dashboard.png
+tolerance: 0.01
+accessibility:
+- "Ensure a single h1 with accessible name 'Dashboard' exists"
+nonfunctional:
+- "No console errors"
+flake_controls:
+wait: networkidle
+retries: 1
+notes: "Confirm auth runs on localhost:3000; update selectors if branding differs

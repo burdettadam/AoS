@@ -12,6 +12,8 @@ export const GameStateSchema = z.object({
   seed: z.string(),
   // Human-friendly name for the game (set by host)
   gameName: z.string().optional(),
+  // Whether this game is visible in public game lists (default: true)
+  isPublic: z.boolean().default(true),
   scriptId: z.string(),
   seats: z.array(SeatSchema),
   abilities: z.array(AbilitySchema),
@@ -26,11 +28,11 @@ export const GameStateSchema = z.object({
   scriptProposals: z.array(z.object({
     id: z.string().uuid(),
     scriptId: z.string(),
-    proposedBy: SeatIdSchema,
-  // Legacy yes/no votes (kept for compatibility)
-  votes: z.record(z.boolean()).default({}),
-  // New difficulty votes per seat
-  difficultyVotes: z.record(z.enum(['beginner','intermediate','advanced'])).default({}),
+    proposers: z.array(SeatIdSchema).default([]),
+    // Legacy yes/no votes (kept for compatibility)
+    votes: z.record(z.boolean()).default({}),
+    // New difficulty votes per seat
+    difficultyVotes: z.record(z.enum(['beginner','intermediate','advanced'])).default({}),
     createdAt: z.date()
   })).default([]),
   // Optional list of role IDs selected by the storyteller for this game

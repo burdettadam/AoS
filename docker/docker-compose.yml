@@ -32,7 +32,7 @@ services:
       - keycloak-db
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
-      - ../themes:/opt/keycloak/themes:z
+      - ./keycloak/themes:/opt/keycloak/themes:z
     networks:
       - botct-network
 

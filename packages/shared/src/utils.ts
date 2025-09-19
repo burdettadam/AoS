@@ -80,7 +80,7 @@ export function maskGameStateForSeat(gameState: GameState, seatId: SeatId): Part
     return {
       id: p.id,
       scriptId: p.scriptId,
-      proposedBy: p.proposedBy,
+      proposers: p.proposers || (p.proposedBy ? [p.proposedBy] : []),
       votes: {},
       difficultyVotes: {},
       createdAt: p.createdAt,
@@ -126,7 +126,7 @@ export function maskGameStatePublic(gameState: GameState): Partial<GameState> {
     return {
       id: p.id,
       scriptId: p.scriptId,
-      proposedBy: p.proposedBy,
+      proposers: p.proposers || (p.proposedBy ? [p.proposedBy] : []),
       votes: {},
       difficultyVotes: {},
       createdAt: p.createdAt,

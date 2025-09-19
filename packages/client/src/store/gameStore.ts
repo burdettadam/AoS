@@ -111,7 +111,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
           // If server sent a full game state snapshot, prefer it
           const snapshot = (message.event.payload as any)?.gameState as GameState | undefined;
           if (snapshot) {
-            set({ currentGame: snapshot });
+            const seatId = get().seatId;
+            set({ currentGame: snapshot, isStoryteller: !!seatId && snapshot.storytellerSeatId === seatId });
             return;
           }
 
@@ -122,6 +123,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
             case 'game_created':
               // These are expected to come with snapshots; ignore otherwise for now
               break;
+            case 'storyteller_changed': {
+              const payload = message.event.payload as { storytellerSeatId?: string };
+              set((state) => {
+                if (!state.currentGame) return state;
+                const updated = { ...state.currentGame, storytellerSeatId: payload.storytellerSeatId } as GameState;
+                const seatId = state.seatId;
+                return {
+                  currentGame: updated,
+                  isStoryteller: !!seatId && payload.storytellerSeatId === seatId
+                };
+              });
+              break;
+            }
             default:
               break;
           }
@@ -166,7 +180,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   setCurrentGame: (game: GameState) => {
-    set({ currentGame: game });
+    const seatId = get().seatId;
+    set({ currentGame: game, isStoryteller: !!seatId && game.storytellerSeatId === seatId });
   },
   
   setSeat: (seatId: string, isStoryteller?: boolean) => {

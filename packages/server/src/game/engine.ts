@@ -29,7 +29,7 @@ export class GameEngine {
     this.validationSystem = new ValidationSystem();
   }
 
-  async createGame(scriptId: string = 'trouble-brewing'): Promise<GameId> {
+  async createGame(scriptId: string = 'trouble-brewing', options?: { isPublic?: boolean }): Promise<GameId> {
     const gameId = randomUUID() as GameId;
     const seed = this.generateSeed();
     
@@ -39,6 +39,7 @@ export class GameEngine {
       day: 0,
       seed,
       scriptId,
+      isPublic: options?.isPublic ?? true,
       seats: [],
       abilities: [],
   storytellerSeatId: undefined as any,
@@ -182,18 +183,40 @@ export class GameEngine {
     return { ok: true };
   }
 
-  proposeScript(gameId: GameId, proposer: SeatId, scriptId: string): boolean {
+  proposeScript(gameId: GameId, proposer: SeatId, scriptId: string, active: boolean = true): string | null {
     const game = this.games.get(gameId);
-    if (!game || game.phase !== GamePhase.LOBBY) return false;
-    const proposal = {
-      id: randomUUID(),
-      scriptId,
-      proposedBy: proposer,
-  votes: {},
-  difficultyVotes: {},
-      createdAt: new Date()
-    };
-  (game as any).scriptProposals.push(proposal as any);
+    if (!game || game.phase !== GamePhase.LOBBY) return null;
+    const proposals = ((game as any).scriptProposals ??= [] as any[]);
+    let proposal = proposals.find((p: any) => p.scriptId === scriptId);
+
+    if (active) {
+      if (!proposal) {
+        proposal = {
+          id: randomUUID(),
+          scriptId,
+          proposers: [proposer],
+          votes: {},
+          difficultyVotes: {},
+          createdAt: new Date()
+        };
+        proposals.push(proposal);
+      } else {
+        proposal.proposers = Array.isArray(proposal.proposers) ? proposal.proposers : [proposal.proposedBy].filter(Boolean);
+        if (!proposal.proposers.includes(proposer)) {
+          proposal.proposers.push(proposer);
+        }
+      }
+      (proposal.votes as Record<string, boolean>)[proposer] = true;
+    } else {
+      if (!proposal) {
+        return null;
+      }
+      proposal.proposers = Array.isArray(proposal.proposers) ? proposal.proposers : [proposal.proposedBy].filter(Boolean);
+      proposal.proposers = proposal.proposers.filter((seat: SeatId) => seat !== proposer);
+      if (proposal.votes) delete proposal.votes[proposer as any];
+      if (proposal.difficultyVotes) delete proposal.difficultyVotes[proposer as any];
+    }
+
     game.updatedAt = new Date();
     this.addEvent(gameId, {
       id: randomUUID(),
@@ -201,17 +224,31 @@ export class GameEngine {
       type: 'script_proposed' as any,
       timestamp: new Date(),
       actorId: proposer,
-      payload: { proposal }
+      payload: { scriptId, proposalId: proposal?.id, active }
     });
-    return true;
+
+    if (proposal) {
+      this.evaluateScriptSelection(game, proposal);
+      this.pruneProposalIfEmpty(game, proposal);
+      return proposal.id;
+    }
+    return null;
   }
 
-  voteOnScript(gameId: GameId, voterSeat: SeatId, proposalId: string, vote: boolean): boolean {
+  voteOnScript(gameId: GameId, voterSeat: SeatId, proposalId: string, vote: boolean | null | undefined): boolean {
     const game = this.games.get(gameId);
     if (!game || game.phase !== GamePhase.LOBBY) return false;
-  const proposal = (game as any).scriptProposals.find((p: any) => p.id === proposalId);
+    const proposals = (game as any).scriptProposals ?? [];
+    const proposal = proposals.find((p: any) => p.id === proposalId);
     if (!proposal) return false;
-    (proposal.votes as any)[voterSeat] = vote;
+
+    proposal.votes = proposal.votes || {};
+    if (vote === null || vote === undefined) {
+      delete proposal.votes[voterSeat as any];
+    } else {
+      (proposal.votes as Record<string, boolean>)[voterSeat as any] = !!vote;
+    }
+
     game.updatedAt = new Date();
     this.addEvent(gameId, {
       id: randomUUID(),
@@ -221,21 +258,42 @@ export class GameEngine {
       actorId: voterSeat,
       payload: { proposalId, vote }
     });
-    // Simple rule: if >50% of occupied seats vote yes, select script
-    const total = game.seats.length;
-    const yes = Object.values(proposal.votes).filter(Boolean).length;
-    if (yes > total / 2) {
-      game.scriptId = proposal.scriptId;
-      this.addEvent(gameId, {
-        id: randomUUID(),
-        gameId,
-        type: 'script_selected' as any,
-        timestamp: new Date(),
-        actorId: voterSeat,
-        payload: { scriptId: proposal.scriptId }
-      });
-    }
+
+    this.evaluateScriptSelection(game, proposal);
+    this.pruneProposalIfEmpty(game, proposal);
+
     return true;
+  }
+
+  private evaluateScriptSelection(game: GameState, proposal: any) {
+    if (!proposal || !proposal.votes) return;
+    const yes = Object.values(proposal.votes).filter(Boolean).length;
+    const total = game.seats.length;
+    if (yes > total / 2) {
+      if (game.scriptId !== proposal.scriptId) {
+        game.scriptId = proposal.scriptId;
+        this.addEvent(game.id, {
+          id: randomUUID(),
+          gameId: game.id,
+          type: 'script_selected' as any,
+          timestamp: new Date(),
+          payload: { scriptId: proposal.scriptId }
+        });
+      }
+    }
+  }
+
+  private pruneProposalIfEmpty(game: GameState, proposal: any) {
+    const votesCount = proposal?.votes ? Object.keys(proposal.votes).length : 0;
+    const difficultyCount = proposal?.difficultyVotes ? Object.keys(proposal.difficultyVotes).length : 0;
+    const proposerCount = Array.isArray(proposal?.proposers) ? proposal.proposers.length : (proposal?.proposedBy ? 1 : 0);
+    if (proposerCount === 0 && votesCount === 0 && difficultyCount === 0) {
+      const proposals = (game as any).scriptProposals as any[];
+      const idx = proposals.findIndex((p: any) => p.id === proposal.id);
+      if (idx >= 0) {
+        proposals.splice(idx, 1);
+      }
+    }
   }
 
   // Difficulty vote (storyteller-only visibility) does not auto-select; it aggregates preferences
@@ -660,6 +718,13 @@ export class GameEngine {
   // Get all active games
   getActiveGames(): GameState[] {
     return Array.from(this.games.values());
+  }
+
+  // Get only public games that can be joined
+  getPublicGames(): GameState[] {
+    return Array.from(this.games.values()).filter(game => 
+      game.isPublic && game.phase === GamePhase.LOBBY
+    );
   }
 
   // Cleanup finished games

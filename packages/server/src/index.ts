@@ -70,6 +70,11 @@ async function start() {
       return matchmaking.getActiveGames();
     });
 
+    // Get only public games (for join game listings)
+    fastify.get('/api/games/public', async () => {
+      return matchmaking.getPublicGames();
+    });
+
     // List available scripts
     fastify.get('/api/scripts', async () => {
       return gameEngine.listScripts();
@@ -150,8 +155,8 @@ async function start() {
       }
     });    fastify.post('/api/games', async (request, reply) => {
       try {
-        const { gameName } = ((request.body as any) || {});
-        const gameId = await matchmaking.createGame();
+        const { gameName, isPublic } = ((request.body as any) || {});
+        const gameId = await matchmaking.createGame(undefined, { isPublic: isPublic !== false }); // default to public
         if (typeof gameName === 'string' && gameName.trim()) {
           const game = gameEngine.getGame(gameId);
           if (game) {
@@ -420,15 +425,15 @@ async function start() {
     // Script proposal endpoints (simple)
     fastify.post('/api/games/:gameId/scripts/propose', async (request, reply) => {
       const { gameId } = request.params as { gameId: string };
-      const { proposerSeatId, scriptId } = (request.body as any) || {};
+      const { proposerSeatId, scriptId, active } = (request.body as any) || {};
       if (!proposerSeatId || !scriptId) {
         reply.code(400); return { error: 'proposerSeatId and scriptId required' };
       }
-      const ok = matchmaking.proposeScript(gameId as any, proposerSeatId, scriptId);
+      const ok = matchmaking.proposeScript(gameId as any, proposerSeatId, scriptId, active !== false);
       if (!ok) { reply.code(400); return { error: 'Failed to propose script' }; }
       const game = gameEngine.getGame(gameId as any)!;
       if (game && matchmaking['onUpdate']) {
-        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'script_proposed', payload: { scriptId } });
+        matchmaking['onUpdate']!({ gameId: game.id, game, eventType: 'script_proposed', payload: { scriptId, active: active !== false } });
       }
       return { ok: true };
     });
@@ -438,7 +443,7 @@ async function start() {
       const { voterSeatId, proposalId, vote, difficulty } = (request.body as any) || {};
       if (!voterSeatId || !proposalId) { reply.code(400); return { error: 'voterSeatId and proposalId required' }; }
       let ok = true;
-      if (typeof vote === 'boolean') {
+      if (typeof vote === 'boolean' || vote === null) {
         ok = matchmaking.voteOnScript(gameId as any, voterSeatId, proposalId, vote);
       }
       if (ok && difficulty) {

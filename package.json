@@ -22,11 +22,12 @@
     "lint": "eslint packages --ext .ts,.tsx,.js,.jsx",
     "setup": "npm install && npm run setup:packages && npm run build:shared",
     "setup:packages": "cd packages/shared && npm install && cd ../server && npm install && cd ../client && npm install",
-    "data:standardize": "node standardize-characters.js",
-    "data:standardize:scripts": "node standardize-scripts.js",
-    "data:ensure:actions": "node ensure-actions.js",
-    "data:validate": "node validate-data.js",
-    "data:lint": "node lint-data.js"
+    "scripts:build": "tsc -p tsconfig.scripts.json",
+    "data:standardize": "ts-node scripts/standardize-characters.ts",
+    "data:standardize:scripts": "ts-node scripts/standardize-scripts.ts",
+    "data:ensure:actions": "ts-node scripts/ensure-actions.ts",
+    "data:validate": "ts-node scripts/validate-data.ts",
+    "data:lint": "ts-node scripts/lint-data.ts"
   },
   "bin": {
     "botct-resolve": "./resolve-lineup.js"
@@ -35,14 +36,19 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@types/cheerio": "^1.0.0",
     "@types/express": "^5.0.3",
+    "@types/node": "^24.5.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "concurrently": "^8.2.0",
     "eslint": "^8.45.0",
+    "playwright": "^1.55.0",
     "rollup-plugin-typescript2": "^0.36.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.1.6"
   },
   "keywords": [

@@ -13,6 +13,8 @@ exports.GameStateSchema = zod_1.z.object({
     seed: zod_1.z.string(),
     // Human-friendly name for the game (set by host)
     gameName: zod_1.z.string().optional(),
+    // Whether this game is visible in public game lists (default: true)
+    isPublic: zod_1.z.boolean().default(true),
     scriptId: zod_1.z.string(),
     seats: zod_1.z.array(game_state_types_1.SeatSchema),
     abilities: zod_1.z.array(game_state_types_1.AbilitySchema),
@@ -27,7 +29,7 @@ exports.GameStateSchema = zod_1.z.object({
     scriptProposals: zod_1.z.array(zod_1.z.object({
         id: zod_1.z.string().uuid(),
         scriptId: zod_1.z.string(),
-        proposedBy: core_types_1.SeatIdSchema,
+    proposers: zod_1.z.array(core_types_1.SeatIdSchema).default([]),
         // Legacy yes/no votes (kept for compatibility)
         votes: zod_1.z.record(zod_1.z.boolean()).default({}),
         // New difficulty votes per seat
