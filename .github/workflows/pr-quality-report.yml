@@ -1,0 +1,184 @@
+name: PR Code Quality Report
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  statuses: write
+
+jobs:
+  quality-report:
+    name: Generate Quality Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install jq for JSON processing
+        run: sudo apt-get install -y jq
+
+      - name: Generate comprehensive quality report
+        run: |
+          chmod +x ./scripts/generate-quality-report.sh
+          ./scripts/generate-quality-report.sh
+        continue-on-error: true
+
+      - name: Create quality report comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Read the summary report
+            let summaryContent = '';
+            try {
+              summaryContent = fs.readFileSync('quality-reports/summary.md', 'utf8');
+            } catch (error) {
+              summaryContent = '⚠️ Quality report generation failed. Check workflow logs.';
+            }
+
+            // Read ESLint results for detailed info
+            let eslintDetails = '';
+            try {
+              const eslintReport = JSON.parse(fs.readFileSync('quality-reports/eslint-report.json', 'utf8'));
+              const totalFiles = eslintReport.length;
+              const filesWithIssues = eslintReport.filter(file => file.messages.length > 0).length;
+
+              eslintDetails = `
+            ## 🔍 ESLint Detailed Results
+            - **Files analyzed:** ${totalFiles}
+            - **Files with issues:** ${filesWithIssues}
+            - **Clean files:** ${totalFiles - filesWithIssues}
+            `;
+
+              // Add top issues if any
+              const allMessages = eslintReport.flatMap(file =>
+                file.messages.map(msg => ({
+                  ...msg,
+                  filePath: file.filePath
+                }))
+              );
+
+              if (allMessages.length > 0) {
+                const errorCount = allMessages.filter(msg => msg.severity === 2).length;
+                const warningCount = allMessages.filter(msg => msg.severity === 1).length;
+
+                eslintDetails += `
+            ### Issue Breakdown
+            - **🚨 Errors:** ${errorCount}
+            - **⚠️ Warnings:** ${warningCount}
+            `;
+              }
+            } catch (error) {
+              eslintDetails = '\n⚠️ Could not parse ESLint results.';
+            }
+
+            const comment = `
+            # 📊 Code Quality Report
+
+            ${summaryContent}
+
+            ${eslintDetails}
+
+            ---
+
+            📁 **Full reports available in workflow artifacts**
+            🔄 **Report generated on:** ${new Date().toISOString()}
+            💡 **Tip:** Download the \`quality-reports\` artifact for detailed analysis
+            `;
+
+            // Find existing comment to update
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(comment =>
+              comment.body.includes('# 📊 Code Quality Report')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: comment
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+      - name: Upload quality reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: quality-reports
+          path: quality-reports/
+          retention-days: 30
+
+      - name: Create check run with results
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+
+            let conclusion = 'success';
+            let summary = 'Code quality check passed ✅';
+
+            try {
+              const eslintReport = JSON.parse(fs.readFileSync('quality-reports/eslint-report.json', 'utf8'));
+              const errors = eslintReport.flatMap(file => file.messages.filter(msg => msg.severity === 2));
+
+              if (errors.length > 0) {
+                conclusion = 'failure';
+                summary = `Code quality issues found: ${errors.length} errors ❌`;
+              } else {
+                const warnings = eslintReport.flatMap(file => file.messages.filter(msg => msg.severity === 1));
+                if (warnings.length > 0) {
+                  conclusion = 'neutral';
+                  summary = `Code quality check completed with ${warnings.length} warnings ⚠️`;
+                }
+              }
+            } catch (error) {
+              conclusion = 'neutral';
+              summary = 'Code quality report generated with issues ⚠️';
+            }
+
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Code Quality Report',
+              head_sha: context.sha,
+              conclusion: conclusion,
+              output: {
+                title: 'Code Quality Analysis',
+                summary: summary,
+                text: 'Detailed quality reports are available in the PR comments and workflow artifacts.'
+              }
+            });
