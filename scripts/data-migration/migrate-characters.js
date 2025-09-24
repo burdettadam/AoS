@@ -5,13 +5,13 @@
  * and create a centralized character database
  */
 
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
-const DATA_DIR = path.join(__dirname, 'data');
-const CHARACTERS_DIR = path.join(DATA_DIR, 'characters');
-const SCRIPTS_DIR = path.join(DATA_DIR, 'scripts');
-const LEGACY_DIR = path.join(DATA_DIR, 'legacy');
+const DATA_DIR = path.join(__dirname, "data");
+const CHARACTERS_DIR = path.join(DATA_DIR, "characters");
+const SCRIPTS_DIR = path.join(DATA_DIR, "scripts");
+const LEGACY_DIR = path.join(DATA_DIR, "legacy");
 
 class CharacterMigrator {
   constructor() {
@@ -21,7 +21,7 @@ class CharacterMigrator {
   }
 
   async migrate() {
-    console.log('🔄 Starting character database migration...\n');
+    console.log("🔄 Starting character database migration...\n");
 
     try {
       // Ensure directories exist
@@ -39,18 +39,17 @@ class CharacterMigrator {
       // Move old files to legacy
       await this.moveToLegacy();
 
-      console.log('✅ Migration completed successfully!');
+      console.log("✅ Migration completed successfully!");
       console.log(`📊 Statistics:`);
       console.log(`   - ${this.characters.size} unique characters`);
       console.log(`   - ${this.scriptCharacters.size} scripts migrated`);
-      
+
       if (this.errors.length > 0) {
         console.log(`⚠️  ${this.errors.length} warnings/errors:`);
-        this.errors.forEach(error => console.log(`   - ${error}`));
+        this.errors.forEach((error) => console.log(`   - ${error}`));
       }
-
     } catch (error) {
-      console.error('❌ Migration failed:', error);
+      console.error("❌ Migration failed:", error);
       process.exit(1);
     }
   }
@@ -62,15 +61,19 @@ class CharacterMigrator {
   }
 
   async extractCharacters() {
-    console.log('📂 Scanning script directories...');
+    console.log("📂 Scanning script directories...");
 
     const entries = await fs.readdir(DATA_DIR, { withFileTypes: true });
     const scriptDirs = entries
-      .filter(entry => entry.isDirectory() && !['characters', 'scripts', 'legacy'].includes(entry.name))
-      .map(entry => entry.name);
+      .filter(
+        (entry) =>
+          entry.isDirectory() &&
+          !["characters", "scripts", "legacy"].includes(entry.name),
+      )
+      .map((entry) => entry.name);
 
     for (const scriptId of scriptDirs) {
-      if (scriptId === 'custom-scripts') {
+      if (scriptId === "custom-scripts") {
         await this.processCustomScripts();
       } else {
         await this.processScript(scriptId);
@@ -80,22 +83,25 @@ class CharacterMigrator {
 
   async processScript(scriptId) {
     const scriptPath = path.join(DATA_DIR, scriptId);
-    const charactersFile = path.join(scriptPath, 'characters.json');
+    const charactersFile = path.join(scriptPath, "characters.json");
 
     console.log(`📜 Processing ${scriptId}...`);
 
     try {
-      const exists = await fs.access(charactersFile).then(() => true).catch(() => false);
+      const exists = await fs
+        .access(charactersFile)
+        .then(() => true)
+        .catch(() => false);
       if (!exists) {
         console.log(`   ⏭️  No characters.json found, skipping`);
         return;
       }
 
-      const data = await fs.readFile(charactersFile, 'utf8');
+      const data = await fs.readFile(charactersFile, "utf8");
       const parsed = JSON.parse(data);
 
       let characters = [];
-      
+
       // Handle different formats
       if (Array.isArray(parsed)) {
         characters = parsed;
@@ -110,7 +116,9 @@ class CharacterMigrator {
 
       for (const char of characters) {
         if (!char.id) {
-          this.errors.push(`${scriptId}: Character missing ID: ${JSON.stringify(char)}`);
+          this.errors.push(
+            `${scriptId}: Character missing ID: ${JSON.stringify(char)}`,
+          );
           continue;
         }
 
@@ -119,7 +127,7 @@ class CharacterMigrator {
         // Check if we already have this character
         if (this.characters.has(char.id)) {
           const existing = this.characters.get(char.id);
-          
+
           // Add this script to the character's editions if not already present
           if (!existing.editions.includes(scriptId)) {
             existing.editions.push(scriptId);
@@ -135,40 +143,56 @@ class CharacterMigrator {
 
       this.scriptCharacters.set(scriptId, characterIds);
       console.log(`   ✅ Found ${characterIds.length} characters`);
-
     } catch (error) {
       this.errors.push(`${scriptId}: Failed to process - ${error.message}`);
     }
   }
 
   async processCustomScripts() {
-    console.log('📜 Processing custom scripts...');
-    
-    const customScriptsPath = path.join(DATA_DIR, 'custom-scripts');
-    const entries = await fs.readdir(customScriptsPath, { withFileTypes: true });
-    const customScriptDirs = entries.filter(entry => entry.isDirectory()).map(entry => entry.name);
+    console.log("📜 Processing custom scripts...");
+
+    const customScriptsPath = path.join(DATA_DIR, "custom-scripts");
+    const entries = await fs.readdir(customScriptsPath, {
+      withFileTypes: true,
+    });
+    const customScriptDirs = entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
 
     for (const customScriptId of customScriptDirs) {
       const scriptPath = path.join(customScriptsPath, customScriptId);
-      const charactersFile = path.join(scriptPath, 'characters.json');
-      const townFile = path.join(scriptPath, 'town.json');
+      const charactersFile = path.join(scriptPath, "characters.json");
+      const townFile = path.join(scriptPath, "town.json");
 
       try {
         // Read characters (array of IDs)
         let characterIds = [];
-        if (await fs.access(charactersFile).then(() => true).catch(() => false)) {
-          const charactersData = await fs.readFile(charactersFile, 'utf8');
+        if (
+          await fs
+            .access(charactersFile)
+            .then(() => true)
+            .catch(() => false)
+        ) {
+          const charactersData = await fs.readFile(charactersFile, "utf8");
           characterIds = JSON.parse(charactersData);
         }
 
         // Read town metadata
         let metadata = {};
-        if (await fs.access(townFile).then(() => true).catch(() => false)) {
-          const townData = await fs.readFile(townFile, 'utf8');
+        if (
+          await fs
+            .access(townFile)
+            .then(() => true)
+            .catch(() => false)
+        ) {
+          const townData = await fs.readFile(townFile, "utf8");
           metadata = JSON.parse(townData);
-          
+
           // If town.json has character_list, use that instead
-          if (metadata.character_list && Array.isArray(metadata.character_list)) {
+          if (
+            metadata.character_list &&
+            Array.isArray(metadata.character_list)
+          ) {
             characterIds = metadata.character_list;
           }
         }
@@ -183,39 +207,55 @@ class CharacterMigrator {
 
         const fullScriptId = `custom-scripts/${customScriptId}`;
         this.scriptCharacters.set(fullScriptId, characterIds);
-        console.log(`   ✅ Processed ${fullScriptId} with ${characterIds.length} characters`);
-
+        console.log(
+          `   ✅ Processed ${fullScriptId} with ${characterIds.length} characters`,
+        );
       } catch (error) {
-        this.errors.push(`custom-scripts/${customScriptId}: Failed to process - ${error.message}`);
+        this.errors.push(
+          `custom-scripts/${customScriptId}: Failed to process - ${error.message}`,
+        );
       }
     }
   }
 
   async findMissingCharacter(charId) {
     // Search through legacy directories for character definitions
-    const legacyPath = path.join(DATA_DIR, 'legacy');
+    const legacyPath = path.join(DATA_DIR, "legacy");
     const entries = await fs.readdir(legacyPath, { withFileTypes: true });
-    const legacyDirs = entries.filter(entry => entry.isDirectory()).map(entry => entry.name);
+    const legacyDirs = entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
 
     for (const legacyDir of legacyDirs) {
-      const charactersFile = path.join(legacyPath, legacyDir, 'characters.json');
-      if (await fs.access(charactersFile).then(() => true).catch(() => false)) {
+      const charactersFile = path.join(
+        legacyPath,
+        legacyDir,
+        "characters.json",
+      );
+      if (
+        await fs
+          .access(charactersFile)
+          .then(() => true)
+          .catch(() => false)
+      ) {
         try {
-          const data = await fs.readFile(charactersFile, 'utf8');
+          const data = await fs.readFile(charactersFile, "utf8");
           const parsed = JSON.parse(data);
           let characters = [];
-          
+
           if (Array.isArray(parsed)) {
             characters = parsed;
           } else if (parsed.characters && Array.isArray(parsed.characters)) {
             characters = parsed.characters;
           }
 
-          const foundChar = characters.find(char => char.id === charId);
+          const foundChar = characters.find((char) => char.id === charId);
           if (foundChar) {
             const normalized = this.normalizeCharacter(foundChar, legacyDir);
             this.characters.set(charId, normalized);
-            console.log(`   🔍 Found missing character ${charId} in ${legacyDir}`);
+            console.log(
+              `   🔍 Found missing character ${charId} in ${legacyDir}`,
+            );
             return;
           }
         } catch (error) {
@@ -223,7 +263,7 @@ class CharacterMigrator {
         }
       }
     }
-    
+
     this.errors.push(`Character ${charId} not found in any script`);
   }
 
@@ -232,9 +272,18 @@ class CharacterMigrator {
       id: char.id,
       name: char.name || this.formatName(char.id),
       team: this.normalizeTeam(char.category || char.team),
-      ability: char.ability_summary || char.abilitySummary || char.ability || char.ability_description || 'Unknown ability',
-      firstNight: this.parseNightOrder(char.first_night_action || char.firstNightAction),
-      otherNights: this.parseNightOrder(char.other_nights_action || char.otherNightsAction),
+      ability:
+        char.ability_summary ||
+        char.abilitySummary ||
+        char.ability ||
+        char.ability_description ||
+        "Unknown ability",
+      firstNight: this.parseNightOrder(
+        char.first_night_action || char.firstNightAction,
+      ),
+      otherNights: this.parseNightOrder(
+        char.other_nights_action || char.otherNightsAction,
+      ),
       reminders: char.tokens_used || char.tokensUsed || char.reminders || [],
       setup: char.setup || false,
       special: char.special || null,
@@ -246,38 +295,40 @@ class CharacterMigrator {
       legacy: {
         category: char.category,
         originalSource: sourceScript,
-        firstNightReminder: char.first_night_reminder || char.firstNightReminder,
-        otherNightReminder: char.other_night_reminder || char.otherNightReminder
-      }
+        firstNightReminder:
+          char.first_night_reminder || char.firstNightReminder,
+        otherNightReminder:
+          char.other_night_reminder || char.otherNightReminder,
+      },
     };
   }
 
   normalizeTeam(category) {
-    if (!category) return 'townsfolk';
-    
+    if (!category) return "townsfolk";
+
     const normalized = category.toLowerCase();
     switch (normalized) {
-      case 'townsfolk':
-      case 'townfolk':
-        return 'townsfolk';
-      case 'outsider':
-      case 'outsiders':
-        return 'outsider';
-      case 'minion':
-      case 'minions':
-        return 'minion';
-      case 'demon':
-      case 'demons':
-        return 'demon';
-      case 'traveller':
-      case 'travellers':
-      case 'traveler':
-      case 'travelers':
-        return 'traveller';
-      case 'fabled':
-        return 'fabled';
+      case "townsfolk":
+      case "townfolk":
+        return "townsfolk";
+      case "outsider":
+      case "outsiders":
+        return "outsider";
+      case "minion":
+      case "minions":
+        return "minion";
+      case "demon":
+      case "demons":
+        return "demon";
+      case "traveller":
+      case "travellers":
+      case "traveler":
+      case "travelers":
+        return "traveller";
+      case "fabled":
+        return "fabled";
       default:
-        return 'townsfolk';
+        return "townsfolk";
     }
   }
 
@@ -289,18 +340,19 @@ class CharacterMigrator {
   }
 
   formatName(id) {
-    return id.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    return id
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   }
 
   async writeCharacterFiles() {
-    console.log('💾 Writing character files...');
+    console.log("💾 Writing character files...");
 
     for (const [id, character] of this.characters) {
       const filename = `${id}.json`;
       const filepath = path.join(CHARACTERS_DIR, filename);
-      
+
       await fs.writeFile(filepath, JSON.stringify(character, null, 2));
     }
 
@@ -308,47 +360,51 @@ class CharacterMigrator {
   }
 
   async writeScriptFiles() {
-    console.log('📝 Writing script reference files...');
+    console.log("📝 Writing script reference files...");
 
     for (const [scriptId, characterIds] of this.scriptCharacters) {
       // Load existing town.json for metadata
-      const townFile = path.join(DATA_DIR, scriptId, 'town.json');
+      const townFile = path.join(DATA_DIR, scriptId, "town.json");
       let metadata = {};
-      
+
       try {
-        const townData = await fs.readFile(townFile, 'utf8');
+        const townData = await fs.readFile(townFile, "utf8");
         metadata = JSON.parse(townData);
       } catch (error) {
-        this.errors.push(`${scriptId}: Could not load town.json - ${error.message}`);
+        this.errors.push(
+          `${scriptId}: Could not load town.json - ${error.message}`,
+        );
       }
 
       const scriptData = {
         id: scriptId,
         name: metadata.name || this.formatName(scriptId),
-        description: metadata.description || '',
-        author: metadata.author || 'Blood on the Clocktower',
-        version: metadata.version || '1.0.0',
+        description: metadata.description || "",
+        author: metadata.author || "Blood on the Clocktower",
+        version: metadata.version || "1.0.0",
         characters: characterIds,
-        playerCount: metadata.player_count || metadata.playerCount || {
-          min: 5,
-          max: 15
-        },
-        complexity: metadata.complexity || 'intermediate',
+        playerCount: metadata.player_count ||
+          metadata.playerCount || {
+            min: 5,
+            max: 15,
+          },
+        complexity: metadata.complexity || "intermediate",
         tags: metadata.tags || [],
         estimatedTime: metadata.estimated_time || metadata.estimatedTime,
-        characterDistribution: metadata.character_distribution || metadata.characterDistribution,
+        characterDistribution:
+          metadata.character_distribution || metadata.characterDistribution,
         specialRules: metadata.special_rules || metadata.specialRules,
         setupNotes: metadata.setup_notes || metadata.setupNotes,
-        winConditions: metadata.win_conditions || metadata.winConditions
+        winConditions: metadata.win_conditions || metadata.winConditions,
       };
 
       const filename = `${scriptId}.json`;
       const filepath = path.join(SCRIPTS_DIR, filename);
-      
+
       // Ensure directory exists
       const dir = path.dirname(filepath);
       await fs.mkdir(dir, { recursive: true });
-      
+
       await fs.writeFile(filepath, JSON.stringify(scriptData, null, 2));
     }
 
@@ -356,12 +412,12 @@ class CharacterMigrator {
   }
 
   async moveToLegacy() {
-    console.log('📦 Moving original files to legacy...');
+    console.log("📦 Moving original files to legacy...");
 
     for (const scriptId of this.scriptCharacters.keys()) {
       const sourcePath = path.join(DATA_DIR, scriptId);
       const targetPath = path.join(LEGACY_DIR, scriptId);
-      
+
       try {
         // Copy the directory to legacy
         await this.copyDirectory(sourcePath, targetPath);
