@@ -7,6 +7,7 @@ This document outlines the migration from script-specific character definitions 
 ## Architecture Changes
 
 ### Before (Legacy System)
+
 ```
 data/
 ├── trouble-brewing/
@@ -19,6 +20,7 @@ data/
 ```
 
 ### After (Centralized System)
+
 ```
 data/
 ├── characters/           # 🆕 Centralized character database
@@ -37,6 +39,7 @@ data/
 ## Character Database Structure
 
 ### Individual Character Files (`data/characters/*.json`)
+
 ```json
 {
   "id": "washerwoman",
@@ -56,6 +59,7 @@ data/
 ```
 
 ### Script Reference Files (`data/scripts/*.json`)
+
 ```json
 {
   "id": "trouble-brewing",
@@ -63,7 +67,7 @@ data/
   "description": "The original Blood on the Clocktower script...",
   "characters": [
     "washerwoman",
-    "librarian", 
+    "librarian",
     "investigator",
     "chef",
     "empath",
@@ -81,17 +85,20 @@ data/
 ## Migration Process
 
 ### 1. Character Extraction
+
 - Extract all unique characters from script-specific files
 - Normalize character data structure
 - Create individual files in `data/characters/`
 - Handle conflicting definitions (prefer main edition versions)
 
 ### 2. Script References
+
 - Create new script files that reference character IDs
 - Include script metadata (player counts, complexity, etc.)
 - Maintain backward compatibility with old format
 
 ### 3. System Updates
+
 - Update `CharacterDatabase` service to load centralized characters
 - Enhance `ScriptCache` to support both old and new formats
 - Graceful fallback to legacy system when needed
@@ -99,19 +106,22 @@ data/
 ## Implementation Status
 
 ### ✅ Completed
+
 - [x] Centralized character database service
-- [x] Updated script cache to support both formats  
+- [x] Updated script cache to support both formats
 - [x] Sample character files (washerwoman, empath, grandmother, sailor, clockmaker, dreamer, imp)
 - [x] Sample script files (trouble-brewing, bad-moon-rising, sects-and-violets)
 - [x] Backward compatibility with legacy format
 - [x] Build system verification
 
 ### 🔄 In Progress
+
 - [ ] Complete character extraction from all scripts
 - [ ] Validate all character data consistency
 - [ ] Performance testing with large character database
 
 ### 📋 Next Steps
+
 1. **Complete Migration**: Extract all characters from remaining scripts
 2. **Data Validation**: Ensure character definitions are consistent
 3. **Performance Optimization**: Cache character lookups for faster script loading
@@ -120,21 +130,25 @@ data/
 ## Benefits
 
 ### 🎯 Single Source of Truth
+
 - Characters defined once, referenced everywhere
 - Consistent character data across all scripts
 - Easier maintenance and updates
 
 ### 🚀 Performance
+
 - Faster script loading (character data shared)
 - Reduced memory usage (no duplicate character objects)
 - Efficient character lookups by ID
 
-### 🔧 Maintainability  
+### 🔧 Maintainability
+
 - Clear separation between character definitions and script compositions
 - Easier to add new characters or modify existing ones
 - Better data validation and consistency checks
 
 ### 🔄 Flexibility
+
 - Support for custom scripts with mixed character sets
 - Easy character sharing between different script variations
 - Future-proof architecture for character updates
@@ -142,24 +156,35 @@ data/
 ## Usage Examples
 
 ### Loading Characters in Script Cache
+
 ```typescript
 // New centralized approach
-const characters = characterDatabase.getCharacters(['washerwoman', 'empath', 'imp']);
+const characters = characterDatabase.getCharacters([
+  "washerwoman",
+  "empath",
+  "imp",
+]);
 
 // Legacy fallback still supported
 const legacyCharacters = await this.loadLegacyCharacters(scriptPath);
 ```
 
 ### Character Database Operations
+
 ```typescript
 // Get specific character
-const washerwoman = characterDatabase.getCharacter('washerwoman');
+const washerwoman = characterDatabase.getCharacter("washerwoman");
 
 // Get all characters from an edition
-const troubleBrewingChars = characterDatabase.getCharactersByEdition('trouble-brewing');
+const troubleBrewingChars =
+  characterDatabase.getCharactersByEdition("trouble-brewing");
 
 // Get multiple characters by IDs
-const scriptChars = characterDatabase.getCharacters(['washerwoman', 'empath', 'imp']);
+const scriptChars = characterDatabase.getCharacters([
+  "washerwoman",
+  "empath",
+  "imp",
+]);
 ```
 
 ## Migration Commands
@@ -178,6 +203,7 @@ node validate-characters.js
 ## Backward Compatibility
 
 The system maintains full backward compatibility:
+
 - Legacy character files continue to work
 - New centralized database is loaded when available
 - Graceful fallback for missing character definitions

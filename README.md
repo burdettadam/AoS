@@ -3,6 +3,9 @@
 > **A sophisticated real-time social deduction game platform with AI integration**
 
 [![CI/CD Pipeline](https://github.com/burdettadam/botct/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/burdettadam/botct/actions)
+[![Quality Report](https://github.com/burdettadam/botct/actions/workflows/pr-quality-report.yml/badge.svg)](https://github.com/burdettadam/botct/actions)
+[![Code Quality](https://api.codeclimate.com/v1/badges/REPO_ID/maintainability)](https://codeclimate.com/github/burdettadam/botct/maintainability)
+[![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=burdettadam_botct&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=burdettadam_botct)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
@@ -10,6 +13,20 @@
 **🎮 [Try the Live Demo](http://botct-demo.vercel.app)** | **📋 Quick Start:** `npm run docker:up` → Open `http://localhost:5173`
 
 A platform-agnostic, AI-assisted implementation of **Blood on the Clocktower** (BotC) with an authoritative rules engine, nightly fairness scoring, and LLM-driven character dialogue.
+
+## 📚 Quick Links
+
+**For Contributors:**
+
+- **[🚀 Get Started Contributing](docs/development/DEVELOPMENT.md)** - Complete setup guide
+- **[🔄 Pull Request Process](docs/processes/PULL_REQUEST_GUIDE.md)** - Step-by-step PR workflow
+- **[📊 Code Quality Standards](docs/processes/CODE_QUALITY.md)** - Quality metrics and tools
+
+**Documentation:**
+
+- **[📋 Complete Documentation Index](docs/README.md)** - Find any document quickly
+- **[🏗️ Architecture Guide](docs/architecture/design.md)** - System design and patterns
+- **[🧪 Testing Guide](docs/development/TESTING.md)** - Testing strategy and best practices
 
 ## 🎯 Features
 
@@ -257,12 +274,37 @@ npm run quality:check
 
 ## 🤝 Contributing
 
-This project follows the architecture outlined in `design.md`. Key principles:
+We welcome contributions! This project follows professional development practices with comprehensive documentation and automated quality checks.
+
+**Key Principles:**
 
 - **Authoritative server**: All game logic runs server-side
 - **Type safety**: Shared schemas with Zod validation
 - **Real-time**: WebSocket events for game updates
 - **Modular**: Clean separation between game engine, UI, and AI
+
+**Getting Started:**
+
+1. **[📖 Read the Development Setup](docs/development/DEVELOPMENT.md)** - Complete environment setup
+2. **[🔄 Follow the PR Process](docs/processes/PULL_REQUEST_GUIDE.md)** - Step-by-step workflow
+3. **[📊 Meet Quality Standards](docs/processes/CODE_QUALITY.md)** - Quality metrics and tools
+4. **[🏗️ Understand the Architecture](docs/architecture/design.md)** - System design patterns
+
+**Quick Start for Contributors:**
+
+```bash
+# Set up development environment
+npm run setup
+npm run dev
+
+# Run quality checks before PR
+npm run quality:check
+
+# Generate detailed quality report
+npm run quality:report
+```
+
+**📚 Complete documentation available in [`docs/`](docs/README.md)**
 
 ## 📝 License
 

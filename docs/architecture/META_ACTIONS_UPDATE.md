@@ -3,6 +3,7 @@
 ## Changes Made
 
 ### Schema Updates (`schemas/script.schema.json`)
+
 - Updated `firstNight` field to support both strings (character IDs) and meta action objects
 - Updated `nightOrder` field to support both strings and meta action objects
 - Added comprehensive meta action schema with:
@@ -15,7 +16,9 @@
   - `order`: Numeric order for sorting
 
 ### Information Schema
+
 The `information` object supports:
+
 - `showPlayersByTeam`: Array of team types ("townsfolk", "outsiders", "minions", "demons")
 - `showPlayers`: Array of specific player names/IDs (for future use)
 - `showRoles`: Boolean indicating if character types are revealed
@@ -25,17 +28,20 @@ The `information` object supports:
 ### Scripts Updated
 
 #### Core Scripts
+
 1. **trouble-brewing.json** - Updated with structured meta actions
 2. **bad-moon-rising.json** - Updated with structured meta actions and corrected night orders
 3. **sects-and-violets.json** - Updated with structured meta actions and corrected night orders
 
 #### Custom Scripts
+
 1. **catfishing.json** - Added structured first night order
 2. **mad-as-a-hatter.json** - Added structured first night with custom madness setup meta action
 
 ### Standard Meta Actions Implemented
 
 #### minion-info
+
 ```json
 {
   "id": "minion-info",
@@ -52,9 +58,10 @@ The `information` object supports:
 ```
 
 #### demon-info
+
 ```json
 {
-  "id": "demon-info", 
+  "id": "demon-info",
   "type": "meta",
   "action": "showTeamAndBluffsToDemon",
   "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
@@ -80,15 +87,15 @@ The `information` object supports:
 
 ```typescript
 function executeMetaAction(action: MetaAction, gameState: GameState) {
-  switch(action.action) {
+  switch (action.action) {
     case "showTeamToMinions":
       const minions = gameState.getPlayersByTeam("minions");
       const demons = gameState.getPlayersByTeam("demons");
-      minions.forEach(minion => {
-        minion.showPlayers([...minions.filter(m => m !== minion), ...demons]);
+      minions.forEach((minion) => {
+        minion.showPlayers([...minions.filter((m) => m !== minion), ...demons]);
       });
       break;
-      
+
     case "showTeamAndBluffsToDemon":
       const demon = gameState.getPlayersByTeam("demons")[0];
       const minionList = gameState.getPlayersByTeam("minions");

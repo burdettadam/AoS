@@ -3,6 +3,7 @@
 ## Overview
 
 Successfully implemented the requested features that allow users to:
+
 1. **See a list of public games they can join when logged in**
 2. **Configure a game they are creating to be private**
 
@@ -11,28 +12,33 @@ Successfully implemented the requested features that allow users to:
 ### 1. Data Model Updates
 
 **File: `packages/shared/src/game-state.ts`**
+
 - Added `isPublic: z.boolean().default(true)` field to GameState schema
 - Updated both TypeScript and compiled JavaScript versions
 
 ### 2. Backend API Changes
 
 **File: `packages/server/src/game/engine.ts`**
+
 - Updated `createGame()` method to accept `options?: { isPublic?: boolean }` parameter
 - Added `getPublicGames()` method that filters games by `isPublic: true` and `phase: LOBBY`
 
-**File: `packages/server/src/services/matchmaking.ts`** 
+**File: `packages/server/src/services/matchmaking.ts`**
+
 - Updated `createGame()` method to pass through privacy options
 - Added `getPublicGames()` method to expose filtered public games
 
 **File: `packages/server/src/index.ts`**
+
 - Added new endpoint: `GET /api/games/public` - returns only public games in lobby phase
 - Updated `POST /api/games` to accept `isPublic` parameter (defaults to true)
 
 ### 3. Frontend UI Changes
 
 **File: `packages/client/src/pages/HomePage.tsx`**
+
 - Added privacy toggle radio buttons to game creation form:
-  - "Public - Anyone can find and join" 
+  - "Public - Anyone can find and join"
   - "Private - Join by invite only"
 - Added explanatory help text that updates based on selection
 - Added new "Join Public Games" section that displays:
@@ -47,15 +53,17 @@ Successfully implemented the requested features that allow users to:
 ### 4. Testing
 
 **File: `tests/smoke-test-public-games.sh`**
+
 - Created comprehensive smoke test script that verifies:
   - Public games can be created and appear in public games list
-  - Private games can be created and do NOT appear in public games list  
+  - Private games can be created and do NOT appear in public games list
   - API endpoints return correct data
   - Game privacy settings work as expected
 
 ## Features Delivered
 
 ### ✅ Public Games List
+
 - Authenticated users see a "Join Public Games" section on the homepage
 - Shows game name, script type, player count, phase, and creation time
 - Refresh button to get latest games
@@ -63,13 +71,15 @@ Successfully implemented the requested features that allow users to:
 - Empty state when no public games available
 
 ### ✅ Privacy Settings
+
 - Game creation form includes privacy toggle with clear labels
 - Public games (default): "Anyone can find and join"
-- Private games: "Join by invite only" 
+- Private games: "Join by invite only"
 - Help text explains the difference
 - Privacy setting is sent to backend and stored in game state
 
 ### ✅ API Implementation
+
 - `GET /api/games/public` - Returns only public games in lobby phase
 - `POST /api/games` - Accepts `isPublic` parameter (defaults to true)
 - Games have `isPublic` field in database schema
@@ -78,6 +88,7 @@ Successfully implemented the requested features that allow users to:
 ## Testing Results
 
 The smoke test verifies all functionality:
+
 ```bash
 🧪 Public Games Feature Smoke Tests
 ==================================
@@ -102,6 +113,7 @@ The smoke test verifies all functionality:
 ## Future Enhancements
 
 Potential improvements that could be added:
+
 - Game search/filtering in public games list
 - Game categories or tags
 - Player skill level matching

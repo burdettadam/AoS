@@ -34,21 +34,25 @@ Implements the core mechanics for character abilities:
 ## Benefits of the New System
 
 ### 1. **Reduced Tight Coupling**
+
 - No more hard-coded strings scattered throughout the codebase
 - Centralized definitions prevent typos and inconsistencies
 - Type-safe action types and effects
 
 ### 2. **Improved Extensibility**
+
 - Easy to add new actions without modifying core engine code
 - Pluggable action handlers
 - Standardized effect and selection system
 
 ### 3. **Better Maintainability**
+
 - Single source of truth for all game mechanics
 - Consistent naming conventions
 - Self-documenting code with enum values
 
 ### 4. **Enhanced Type Safety**
+
 - Compile-time validation of action types
 - Type-safe effect specifications
 - Better IDE support and autocomplete
@@ -56,17 +60,20 @@ Implements the core mechanics for character abilities:
 ## Implementation Status
 
 ### ✅ Completed
+
 - Core definitions and enums
 - Action registry architecture
 - Standard action handlers
 - Type-safe schemas
 
 ### 🔄 In Progress
+
 - Integration with existing action system
 - Backward compatibility layer
 - Character data migration
 
 ### 📋 TODO
+
 - Complete refactor of existing switch statements
 - Update all character JSON files to use new enums
 - Add comprehensive validation rules
@@ -75,16 +82,19 @@ Implements the core mechanics for character abilities:
 ## Migration Strategy
 
 ### Phase 1: Foundation (✅ Complete)
+
 - Create new definitions and registry system
 - Establish type-safe schemas
 - Build standard action handlers
 
 ### Phase 2: Integration
+
 - Update action system to use registry
 - Add backward compatibility for existing data
 - Gradually migrate character definitions
 
 ### Phase 3: Full Migration
+
 - Convert all character data to use new enums
 - Remove legacy string-based action handling
 - Add comprehensive validation
@@ -92,17 +102,19 @@ Implements the core mechanics for character abilities:
 ## Example Usage
 
 ### Before (Hard-coded strings)
+
 ```typescript
 switch (action.action) {
-  case 'learnEvilPairsCount':
+  case "learnEvilPairsCount":
     return this.executeChefAction(action, context, game, actingSeat);
-  case 'killPlayer':
+  case "killPlayer":
     return this.executeKillAction(action, context, game, actingSeat);
   // ... many more cases
 }
 ```
 
 ### After (Parameterized system)
+
 ```typescript
 const handler = globalActionRegistry.getCharacterActionHandler(action.action);
 if (handler) {
@@ -111,22 +123,25 @@ if (handler) {
 ```
 
 ### Character Definition Example
+
 ```json
 {
   "id": "chef",
   "actions": {
-    "firstNight": [{
-      "id": "chef-info",
-      "action": "learnEvilPairsCount",
-      "selection": {
-        "minTargets": 0,
-        "maxTargets": 0
-      },
-      "effects": [],
-      "information": {
-        "customMessage": "You see [COUNT] pairs of neighbouring evil players"
+    "firstNight": [
+      {
+        "id": "chef-info",
+        "action": "learnEvilPairsCount",
+        "selection": {
+          "minTargets": 0,
+          "maxTargets": 0
+        },
+        "effects": [],
+        "information": {
+          "customMessage": "You see [COUNT] pairs of neighbouring evil players"
+        }
       }
-    }]
+    ]
   }
 }
 ```

@@ -52,6 +52,7 @@ npm run build
 ### Starting Development
 
 1. **First time setup**:
+
    ```bash
    npm run setup
    ```
@@ -74,15 +75,18 @@ When you modify code in `packages/shared/`:
 ### Troubleshooting
 
 **"Cannot find module '@botc/shared'"**
+
 - Run `npm run build:shared` to ensure the shared package is built
 - Check that `packages/shared/dist/` contains the built files
 
 **"exports is not defined" in browser**
+
 - This usually means the client is trying to use CommonJS modules
 - Ensure the client is importing from the ESM build (`dist/esm/`)
 - Check that `packages/shared/package.json` has correct `exports` field
 
 **TypeScript errors in development**
+
 - Ensure type declarations are built: `cd packages/shared && npm run build:types`
 - Check that TypeScript paths in client/server `tsconfig.json` point to built types
 
@@ -95,7 +99,7 @@ The shared package uses the modern `exports` field for conditional exports:
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js", 
+      "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts"
     }
   }
@@ -103,6 +107,7 @@ The shared package uses the modern `exports` field for conditional exports:
 ```
 
 This ensures:
+
 - Node.js applications get CommonJS modules
 - Bundlers like Vite get ES modules
 - TypeScript gets proper type declarations

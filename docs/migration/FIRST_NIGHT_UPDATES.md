@@ -7,18 +7,21 @@ This document summarizes the updates made to scripts and characters with detaile
 ### Major Official Scripts
 
 #### Trouble Brewing (`trouble-brewing.json`)
+
 - **Enhanced firstNight**: Added detailed step-by-step first night order with specific character actions
 - **Added otherNights**: Complete other nights order for all characters
 - **Added nightOrder**: Array of character IDs in proper night order
 - **Enhanced setupNotes**: Detailed character selection and setup process
 
 #### Bad Moon Rising (`bad-moon-rising.json`)
+
 - **Enhanced firstNight**: BMR-specific first night order including protection mechanics
 - **Added otherNights**: Complex night order with multiple deaths and protections
 - **Added nightOrder**: Array for BMR night sequence
 - **Enhanced setupNotes**: Focus on protection balance and death resolution
 
 #### Sects & Violets (`sects-and-violets.json`)
+
 - **Enhanced firstNight**: SV-specific order with information roles and Demon effects
 - **Added otherNights**: Information-heavy night sequence with transformations
 - **Added nightOrder**: Array for SV night sequence
@@ -27,12 +30,14 @@ This document summarizes the updates made to scripts and characters with detaile
 ### Custom Scripts
 
 #### Ravenswood_data (`Ravenswood_data.json`)
+
 - **Enhanced firstNight**: Simplified beginner-friendly first night order
 - **Added otherNights**: Basic night sequence for minimal setup
 - **Added nightOrder**: Simple night order array
 - **Enhanced setupNotes**: Beginner-focused setup instructions
 
 #### Greatest Hits (`greatest-hits.json`)
+
 - **Enhanced firstNight**: Cross-edition first night order with precedence rules
 - **Added otherNights**: Mixed edition night sequence guidelines
 - **Added nightOrder**: Cross-edition character precedence
@@ -43,17 +48,20 @@ This document summarizes the updates made to scripts and characters with detaile
 ### Information Gathering Characters
 
 #### Clockmaker (`clockmaker.json`)
+
 - **Added firstNight**: "1" (first priority)
 - **Enhanced howToRun**: Step-by-step first night instructions
 - **Added firstNightDescription**: Clear description of counting steps between Demon and Minion
 
 #### Dreamer (`dreamer.json`)
+
 - **Added firstNight**: "1" (acts on first night)
 - **Added otherNights**: "2" (continues other nights)
 - **Enhanced howToRun**: Instructions for showing good/evil character tokens
 - **Added firstNightDescription**: Clear description of character selection process
 
 #### Grandmother (`grandmother.json`)
+
 - **Added firstNight**: "1" (first night action)
 - **Enhanced howToRun**: Instructions for selecting grandchild
 - **Added firstNightDescription**: Clear description of grandchild selection
@@ -61,6 +69,7 @@ This document summarizes the updates made to scripts and characters with detaile
 ## Schema Updates
 
 ### Script Schema (`script.schema.json`)
+
 - **Added otherNights**: String field for other nights instructions
 - **Added nightOrder**: Array field for character night order
 
@@ -75,6 +84,7 @@ This document summarizes the updates made to scripts and characters with detaile
 ## Files Modified
 
 ### Scripts
+
 - `data/scripts/trouble-brewing.json`
 - `data/scripts/bad-moon-rising.json`
 - `data/scripts/sects-and-violets.json`
@@ -82,11 +92,13 @@ This document summarizes the updates made to scripts and characters with detaile
 - `data/scripts/greatest-hits.json`
 
 ### Characters
+
 - `data/characters/clockmaker.json`
 - `data/characters/dreamer.json`
 - `data/characters/grandmother.json`
 
 ### Schemas
+
 - `schemas/script.schema.json`
 
 ## Based On
