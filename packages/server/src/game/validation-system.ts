@@ -403,8 +403,8 @@ export class ValidationSystem {
 
     if (unimplementedActions.length > 0) {
       result.recommendations.push(
-        'Consider implementing these action types in the engine: ' +
-        [...new Set(unimplementedActions.map(ua => ua.split("'")[1]))].join(', ')
+        `Consider implementing these action types in the engine: ${ 
+        [...new Set(unimplementedActions.map(ua => ua.split("'")[1]))].join(', ')}`
       );
     }
   }

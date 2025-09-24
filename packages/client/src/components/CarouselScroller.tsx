@@ -39,7 +39,7 @@ export function CarouselScroller<T>({
       return;
     }
     const total = items.length;
-    let target = ((next % total) + total) % total; // wrap
+    const target = ((next % total) + total) % total; // wrap
     console.log('Calculated target index:', target);
     
     // Set flag to prevent slideChanged from interfering

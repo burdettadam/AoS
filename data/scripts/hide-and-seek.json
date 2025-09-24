@@ -76,11 +76,36 @@
     "demons": 11
   },
   "composition": {
-    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
-    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
-    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+    "5": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "6": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "7-9": {
+      "townsfolk": "p-3",
+      "outsiders": 0,
+      "minions": 2,
+      "demons": 1
+    },
+    "10-12": {
+      "townsfolk": "p-4",
+      "outsiders": 1,
+      "minions": 2,
+      "demons": 1
+    },
+    "13-15": {
+      "townsfolk": "p-5",
+      "outsiders": 2,
+      "minions": 2,
+      "demons": 1
+    }
   },
   "specialRules": [
     "Emphasis on stealth and concealment",
@@ -100,8 +125,16 @@
       "type": "meta",
       "action": "showTeamToMinions",
       "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
-      "targets": ["minions"],
-      "information": { "showPlayersByTeam": ["minions", "demons"], "showRoles": false },
+      "targets": [
+        "minions"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions",
+          "demons"
+        ],
+        "showRoles": false
+      },
       "order": 1
     },
     {
@@ -109,12 +142,40 @@
       "type": "meta",
       "action": "showTeamAndBluffsToDemon",
       "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
-      "targets": ["demons"],
-      "information": { "showPlayersByTeam": ["minions"], "showRoles": false, "giveBluffs": 3 },
+      "targets": [
+        "demons"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions"
+        ],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
       "order": 2
     }
   ],
   "tipsAndTricks": "Good: Force reveals via checks/votes; corner hidden players with structure. Evil: Rotate hiding to muddy selection-based info.",
   "bluffing": "Claim roles that justify being hard to target without sounding invulnerable.",
-  "legacy": null
+  "legacy": null,
+  "modifiers": [
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "baron",
+      "delta": {
+        "outsiders": 2,
+        "townsfolk": -2
+      },
+      "note": "Baron adds 2 Outsiders and removes 2 Townsfolk."
+    },
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "godfather",
+      "delta": {
+        "outsiders": 1,
+        "townsfolk": -1
+      },
+      "note": "Godfather adds 1 Outsider and removes 1 Townsfolk."
+    }
+  ]
 }

@@ -1,0 +1,128 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": "off",
+    "prefer-const": "warn",
+    "no-var": "error",
+    "object-shorthand": "warn",
+    "prefer-template": "warn",
+    "no-empty": "warn",
+    // Code complexity rules
+    "complexity": ["warn", { "max": 10 }],
+    "max-depth": ["warn", 4],
+    "max-lines": [
+      "warn",
+      { "max": 300, "skipBlankLines": true, "skipComments": true }
+    ],
+    "max-lines-per-function": [
+      "warn",
+      { "max": 50, "skipBlankLines": true, "skipComments": true }
+    ],
+    "max-params": ["warn", 4],
+    "max-statements": ["warn", 20],
+    "max-nested-callbacks": ["warn", 3],
+    // Code quality rules
+    "prefer-arrow-callback": "warn",
+    "no-duplicate-imports": "error",
+    "no-useless-return": "warn",
+    "no-else-return": "warn",
+    "no-lonely-if": "warn",
+    "no-magic-numbers": [
+      "warn",
+      { "ignore": [-1, 0, 1, 2], "ignoreArrayIndexes": true }
+    ],
+    "prefer-destructuring": ["warn", { "object": true, "array": false }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "argsIgnorePattern": "^_" }
+        ],
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/explicit-function-return-type": [
+          "warn",
+          { "allowExpressions": true }
+        ],
+        "@typescript-eslint/prefer-readonly": "warn",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+        "@typescript-eslint/prefer-nullish-coalescing": "warn",
+        "@typescript-eslint/prefer-optional-chain": "warn",
+        "@typescript-eslint/no-unused-expressions": "warn",
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/prefer-reduce-type-parameter": "warn",
+        "no-unused-vars": "off",
+        "no-undef": "off"
+      }
+    },
+    {
+      "files": ["packages/client/**/*.tsx", "packages/client/**/*.ts"],
+      "env": {
+        "browser": true,
+        "node": false
+      },
+      "plugins": ["react", "react-hooks"],
+      "settings": {
+        "react": {
+          "version": "detect"
+        }
+      },
+      "rules": {
+        "react/prop-types": "off",
+        "react/react-in-jsx-scope": "off",
+        // React complexity rules
+        "react/jsx-max-depth": ["warn", { "max": 5 }],
+        "react/jsx-max-props-per-line": ["warn", { "maximum": 3 }],
+        "react/jsx-no-duplicate-props": "error",
+        "react/jsx-boolean-value": ["warn", "never"],
+        "react/jsx-curly-brace-presence": ["warn", "never"],
+        "react/jsx-fragments": ["warn", "syntax"],
+        "react/self-closing-comp": "warn",
+        "react/jsx-sort-props": ["warn", { "ignoreCase": true }],
+        // React Hooks rules
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        // Performance rules
+        "react/jsx-no-bind": ["warn", { "allowArrowFunctions": true }],
+        "react/jsx-key": "error"
+      }
+    },
+    {
+      "files": ["packages/server/**/*.ts"],
+      "env": {
+        "node": true,
+        "browser": false
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "tests/**/*"],
+      "env": {
+        "jest": true
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "build/",
+    ".next/",
+    "coverage/",
+    "*.min.js"
+  ]
+}

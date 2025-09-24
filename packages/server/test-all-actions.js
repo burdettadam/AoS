@@ -75,7 +75,7 @@ async function test() {
     console.log('\n=== Action System Migration Status ===');
     console.log('Parameterized actions (new system):', parametrizedActions);
     console.log('Legacy actions (old system):', legacyActions);
-    console.log('Migration progress:', Math.round((parametrizedActions / totalActions) * 100) + '%');
+    console.log('Migration progress:', `${Math.round((parametrizedActions / totalActions) * 100)  }%`);
     
     console.log('\n=== Selection System Analysis ===');
     console.log('Actions with structured selections:', selectionStats.withSelections);

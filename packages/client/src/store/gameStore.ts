@@ -88,7 +88,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     set({ connecting: true, gameId });
 
-  const wsUrl = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
+  const wsUrl = `${(location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host  }/ws`;
   const websocket = new WebSocket(wsUrl);
     
   websocket.onopen = () => {

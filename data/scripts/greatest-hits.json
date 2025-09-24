@@ -54,9 +54,24 @@
     "demons": 3
   },
   "composition": {
-    "8-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
-    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
-    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+    "8-9": {
+      "townsfolk": "p-3",
+      "outsiders": 0,
+      "minions": 2,
+      "demons": 1
+    },
+    "10-12": {
+      "townsfolk": "p-4",
+      "outsiders": 1,
+      "minions": 2,
+      "demons": 1
+    },
+    "13-15": {
+      "townsfolk": "p-5",
+      "outsiders": 2,
+      "minions": 2,
+      "demons": 1
+    }
   },
   "specialRules": [
     "Characters from all three official editions",
@@ -72,18 +87,50 @@
   "wikiUrl": null,
   "howToRun": "Mix of iconic roles across editions—keep a clean night sheet and avoid stacking too many distortion sources at once. Pace days to let the table synthesize cross-edition info patterns.",
   "firstNight": [
-    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
-    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": [
+        "minions"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions",
+          "demons"
+        ],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info",
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": [
+        "demons"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions"
+        ],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    }
   ],
   "nightOrder": [
     "minion-info",
     "demon-info",
     "drunk",
     "grandmother",
-    "clockmaker", 
+    "clockmaker",
     "washerwoman",
     "librarian",
-    "investigator", 
+    "investigator",
     "chef",
     "empath",
     "fortune-teller",
@@ -92,5 +139,26 @@
   "otherNights": "Follow standard night orders for each character based on their original edition. Resolve conflicts by character precedence: TB characters first, then BMR, then SV. Maintain consistent ordering throughout the game.",
   "tipsAndTricks": "Good: Look for consistent footprints that transcend editions; verify with Undertaker/Seamstress style checks. Evil: Borrow believable bluffs from any edition and keep lies simple and repeatable.",
   "bluffing": "Pick well-known roles and deliver a steady narrative; reference common edition patterns to sound credible.",
-  "legacy": null
+  "legacy": null,
+  "modifiers": [
+    {
+      "type": "requires",
+      "whenCharacter": "recluse",
+      "requireCharacters": [
+        "undertaker",
+        "empath",
+        "fortune-teller"
+      ],
+      "note": "Recluse benefits from characters that can detect or confirm alignment changes."
+    },
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "baron",
+      "delta": {
+        "outsiders": 2,
+        "townsfolk": -2
+      },
+      "note": "Baron adds 2 Outsiders and removes 2 Townsfolk."
+    }
+  ]
 }

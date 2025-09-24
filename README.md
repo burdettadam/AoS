@@ -1,4 +1,13 @@
-# Blood on the Clocktower Digital
+# 🎭 Blood on the Clocktower Digital
+
+> **A sophisticated real-time social deduction game platform with AI integration**
+
+[![CI/CD Pipeline](https://github.com/burdettadam/botct/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/burdettadam/botct/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
+
+**🎮 [Try the Live Demo](http://botct-demo.vercel.app)** | **📋 Quick Start:** `npm run docker:up` → Open `http://localhost:5173`
 
 A platform-agnostic, AI-assisted implementation of **Blood on the Clocktower** (BotC) with an authoritative rules engine, nightly fairness scoring, and LLM-driven character dialogue.
 
@@ -171,6 +180,20 @@ The system uses a declarative script format. See `packages/server/src/game/scrip
 - M1: Full Trouble Brewing, voice chat, advanced AI
 - M2: Script editor, Neo4j scoring, mobile apps
 - M3: Additional scripts, leagues, cosmetics
+
+## 🆕 Redesigned Game Setup Page (Sept 2025)
+
+The `/setup/:gameId` route now reuses core lobby components for a unified experience:
+
+- Reuses `CharacterGrid` and `PreviewPanel` from the lobby for consistency.
+- New panels under `client/src/components/setup/`:
+   - `GameSetupInfoPanel` – shows dynamic role distribution (auto-applies script modifiers) and script basics.
+   - `DetailedNightOrderPanel` – renders the script-provided `nightOrder` or falls back to character listing.
+   - `GameStatisticsPanel` – summarizes difficulty, heuristic script issues, and validation feedback (modifier requirements, exclusivity, distribution mismatches).
+- Regular (non-storyteller) players now see a read-only waiting view with disabled interaction while setup is in progress.
+- Utility logic for distribution + validation lives in `client/src/utils/setupUtils.ts`.
+
+These changes prepare the UI for future advanced validation, fairness scoring previews, and live modifier toggles.
 
 ## 🤝 Contributing
 

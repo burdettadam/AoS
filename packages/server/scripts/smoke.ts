@@ -1,7 +1,7 @@
 import { GameEngine } from '../src/game/engine';
 import { GamePhase } from '@botc/shared';
 
-const uuid = () => '00000000-0000-4000-8000-00000000000' + Math.floor(Math.random() * 10);
+const uuid = () => `00000000-0000-4000-8000-00000000000${  Math.floor(Math.random() * 10)}`;
 
 async function main() {
   const engine = new GameEngine();

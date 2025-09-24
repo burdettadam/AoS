@@ -65,7 +65,7 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({ children }) 
         };
         // Try to detect silent-check file existence cheaply
         fetch('/silent-check-sso.html', { method: 'HEAD' })
-          .then(r => { if (r.ok) (options as any).silentCheckSsoRedirectUri = window.location.origin + '/silent-check-sso.html'; })
+          .then(r => { if (r.ok) (options as any).silentCheckSsoRedirectUri = `${window.location.origin  }/silent-check-sso.html`; })
           .catch(() => {} )
           .finally(async () => {
             let authenticated = false;

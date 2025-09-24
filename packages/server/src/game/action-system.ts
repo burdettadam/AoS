@@ -310,7 +310,7 @@ export class ActionSystem {
     information[demon.id] = {
       message: 'You learn who your minions are and receive bluff characters',
       minions: minions.map(m => ({ seatId: m.id, role: action.information?.showRoles ? m.role : undefined })),
-      bluffs: bluffs
+      bluffs
     };
 
     return {

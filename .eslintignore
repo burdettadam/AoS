@@ -1,0 +1,10 @@
+# Build directories
+**/dist/**
+**/build/**
+**/node_modules/**
+**/*.d.ts
+**/*.min.js
+**/coverage/**
+
+# Keep source files only
+!packages/*/src/**

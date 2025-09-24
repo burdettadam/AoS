@@ -124,7 +124,7 @@ export class RulesEngine {
 
   private calculateDistribution(playerCount: number, script: Script): Record<typeof RoleType[keyof typeof RoleType], number> {
     // Standard Trouble Brewing distribution based on official rules
-  let distribution: Record<typeof RoleType[keyof typeof RoleType], number> = {
+  const distribution: Record<typeof RoleType[keyof typeof RoleType], number> = {
       [RoleType.TOWNSFOLK]: 0,
       [RoleType.OUTSIDER]: 0,
       [RoleType.MINION]: 0,

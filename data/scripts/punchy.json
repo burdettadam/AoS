@@ -87,11 +87,36 @@
     "demons": 11
   },
   "composition": {
-    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
-    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
-    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+    "5": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "6": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "7-9": {
+      "townsfolk": "p-3",
+      "outsiders": 0,
+      "minions": 2,
+      "demons": 1
+    },
+    "10-12": {
+      "townsfolk": "p-4",
+      "outsiders": 1,
+      "minions": 2,
+      "demons": 1
+    },
+    "13-15": {
+      "townsfolk": "p-5",
+      "outsiders": 2,
+      "minions": 2,
+      "demons": 1
+    }
   },
   "specialRules": [
     "Focus on confrontational and aggressive abilities",
@@ -106,10 +131,62 @@
   "wikiUrl": null,
   "howToRun": "Lean into direct conflict and clear stakes. Keep kill/protect timing crisp. Clarify once-per-game triggers and announcement windows to avoid arguments. Track forced movement or control effects carefully so executions and night deaths tell a cohesive story.",
   "firstNight": [
-    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
-    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": [
+        "minions"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions",
+          "demons"
+        ],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info",
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": [
+        "demons"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions"
+        ],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    }
   ],
   "tipsAndTricks": "Good: Force evil to commit—demand claims, set duel-style challenges, and use protection to bait Demon choices. Chain-verify claims via Undertaker/Professor style checks. Evil: Manufacture public grudges and push hasty executions; sell a protective cover story to justify survivals and redirect heat.",
   "bluffing": "Adopt assertive table presence. Bluff as protective or duel-trigger roles to control cadence. When pressure mounts, pivot to Soldier/Saint style bluffs to explain survivals and discourage challenges.",
-  "legacy": null
+  "legacy": null,
+  "modifiers": [
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "baron",
+      "delta": {
+        "outsiders": 2,
+        "townsfolk": -2
+      },
+      "note": "Baron adds 2 Outsiders and removes 2 Townsfolk."
+    },
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "godfather",
+      "delta": {
+        "outsiders": 1,
+        "townsfolk": -1
+      },
+      "note": "Godfather adds 1 Outsider and removes 1 Townsfolk."
+    }
+  ]
 }

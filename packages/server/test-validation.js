@@ -23,7 +23,7 @@ async function test() {
     console.log('\n=== Slayer Warnings ===');
     console.log('Slayer warnings count:', slayerWarnings.length);
     slayerWarnings.forEach(warning => {
-      console.log('- ' + warning);
+      console.log(`- ${  warning}`);
     });
     
     // Generate full report

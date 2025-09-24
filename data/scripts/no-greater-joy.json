@@ -38,8 +38,18 @@
     "demons": 1
   },
   "composition": {
-    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 }
+    "5": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "6": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    }
   },
   "specialRules": [
     "Teensyville format (5-6 players)",
@@ -55,10 +65,84 @@
   "wikiUrl": null,
   "howToRun": "Positive-leaning protections and benevolent twists. Ensure protection stacking is ruled. Celebrate reveals to keep pace fun.",
   "firstNight": [
-    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
-    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": [
+        "minions"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions",
+          "demons"
+        ],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info",
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": [
+        "demons"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions"
+        ],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    }
   ],
   "tipsAndTricks": "Good: Chain protections around confirmed players. Evil: Bypass protection indirectly (poison, misdirection).",
   "bluffing": "Claim soft utility roles that explain patience and survivals.",
-  "legacy": null
+  "legacy": null,
+  "modifiers": [
+    {
+      "type": "mutuallyExclusive",
+      "characters": [
+        "soldier",
+        "saint"
+      ],
+      "note": "Soldier and Saint provide overlapping survival abilities."
+    },
+    {
+      "type": "requires",
+      "whenCharacter": "recluse",
+      "requireCharacters": [
+        "undertaker",
+        "empath",
+        "fortune-teller"
+      ],
+      "note": "Recluse benefits from characters that can detect or confirm alignment changes."
+    },
+    {
+      "type": "requires",
+      "whenCharacter": "drunk",
+      "requireCharacters": [
+        "chef",
+        "empath",
+        "fortune-teller",
+        "investigator",
+        "librarian",
+        "washerwoman"
+      ],
+      "note": "Drunk needs Townsfolk with abilities to malfunction."
+    },
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "baron",
+      "delta": {
+        "outsiders": 2,
+        "townsfolk": -2
+      },
+      "note": "Baron adds 2 Outsiders and removes 2 Townsfolk."
+    }
+  ]
 }

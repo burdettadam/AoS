@@ -4,7 +4,7 @@ import { JournalService } from '../src/services/journal.service';
 
 // Utility to create fake UUIDs for deterministic tests
 let uuidCounter = 0;
-const uuid = () => '00000000-0000-4000-8000-' + String(uuidCounter++).padStart(12, '0');
+const uuid = () => `00000000-0000-4000-8000-${  String(uuidCounter++).padStart(12, '0')}`;
 
 describe('Trouble Brewing: basic gameplay flow', () => {
   it('can setup, assign roles, and run a nomination→vote→execution cycle', async () => {

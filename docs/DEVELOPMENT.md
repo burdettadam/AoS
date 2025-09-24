@@ -66,6 +66,10 @@ Navigate to any package directory (`packages/shared`, `packages/server`, `packag
 - **React Router**: Page routing
 - **Tailwind CSS**: Utility-first styling
 
+#### Visual Ring / Legend Consistency
+
+Character team ring classes and script modifier ring decorations are centralized in `packages/client/src/constants/visual.ts`. When adding a new team type or modifier type, update this file. The lobby legend and character grid consume these constants directly to avoid color mismatches. Do not hard-code ring color classes elsewhere.
+
 ### Shared
 - **Types**: All game-related TypeScript interfaces
 - **Schemas**: Zod schemas for runtime validation

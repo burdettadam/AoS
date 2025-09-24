@@ -30,6 +30,7 @@ export class ScriptLoader {
         name: this.formatScriptName(scriptName),
         characters,
         meta,
+        modifiers: metaData?.modifiers,
         // Include structured night order data from metadata
         firstNight: metaData?.firstNight,
         nightOrder: metaData?.nightOrder,

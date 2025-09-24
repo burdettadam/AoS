@@ -27,7 +27,9 @@
     "data:standardize:scripts": "ts-node scripts/standardize-scripts.ts",
     "data:ensure:actions": "ts-node scripts/ensure-actions.ts",
     "data:validate": "ts-node scripts/validate-data.ts",
-    "data:lint": "ts-node scripts/lint-data.ts"
+    "data:lint": "ts-node scripts/lint-data.ts",
+    "analyze:complexity": "./scripts/analyze-code-simple.sh",
+    "quality:full": "./scripts/analyze-code-simple.sh"
   },
   "bin": {
     "botct-resolve": "./resolve-lineup.js"
@@ -49,7 +51,9 @@
     "playwright": "^1.55.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "plato": "^1.7.0",
+    "vite-bundle-analyzer": "^0.7.0"
   },
   "keywords": [
     "blood-on-the-clocktower",

@@ -383,7 +383,7 @@ export function handleShowTeamAndBluffsToDemon(
     recipient: demon.id,
     message: `Your evil team: ${evilTeam.join(', ')}. Suggested bluffs: ${bluffs.join(', ')}`,
     team: evilTeam,
-    bluffs: bluffs
+    bluffs
   }));
 
   return {

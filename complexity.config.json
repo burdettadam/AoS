@@ -1,0 +1,28 @@
+{
+  "thresholds": {
+    "complexity": 10,
+    "lines": 300,
+    "parameters": 4,
+    "statements": 20
+  },
+  "output": {
+    "directory": "complexity-report",
+    "format": ["html", "json"]
+  },
+  "exclude": [
+    "node_modules/**/*",
+    "dist/**/*",
+    "build/**/*",
+    "coverage/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ],
+  "analysis": {
+    "includeComplexity": true,
+    "includeLOC": true,
+    "includeHalstead": true,
+    "includeMaintainability": true
+  }
+}

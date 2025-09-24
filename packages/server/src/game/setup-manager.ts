@@ -297,7 +297,7 @@ export class SetupManager {
    */
   private calculateRequiredDistribution(playerCount: number, setupState: SetupState): Record<string, number> {
     // Start with base distribution (composition override if provided)
-    let distribution = setupState.distributionOverride
+    const distribution = setupState.distributionOverride
       ? { ...setupState.distributionOverride }
       : this.getBaseDistribution(playerCount);
 

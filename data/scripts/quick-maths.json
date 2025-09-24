@@ -87,11 +87,36 @@
     "demons": 11
   },
   "composition": {
-    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
-    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
-    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+    "5": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "6": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "7-9": {
+      "townsfolk": "p-3",
+      "outsiders": 0,
+      "minions": 2,
+      "demons": 1
+    },
+    "10-12": {
+      "townsfolk": "p-4",
+      "outsiders": 1,
+      "minions": 2,
+      "demons": 1
+    },
+    "13-15": {
+      "townsfolk": "p-5",
+      "outsiders": 2,
+      "minions": 2,
+      "demons": 1
+    }
   },
   "specialRules": [
     "Focus on rapid calculation and quick thinking",
@@ -106,10 +131,62 @@
   "wikiUrl": null,
   "howToRun": "Use standard night order. Expect heavy info webs and poison/drunk interactions. Announce pacing up front and keep days brisk. Nudge players to state numbers/results clearly so the table can compute deltas over time. Track ongoing modifiers (poison, madness, red herrings) meticulously.",
   "firstNight": [
-    {"id":"minion-info","type":"meta","action":"showTeamToMinions","description":"Wake all Minions together. Show them who the other Minions are and who the Demon is","targets":["minions"],"information":{"showPlayersByTeam":["minions","demons"],"showRoles":false},"order":1},
-    {"id":"demon-info","type":"meta","action":"showTeamAndBluffsToDemon","description":"Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs","targets":["demons"],"information":{"showPlayersByTeam":["minions"],"showRoles":false,"giveBluffs":3},"order":2}
+    {
+      "id": "minion-info",
+      "type": "meta",
+      "action": "showTeamToMinions",
+      "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
+      "targets": [
+        "minions"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions",
+          "demons"
+        ],
+        "showRoles": false
+      },
+      "order": 1
+    },
+    {
+      "id": "demon-info",
+      "type": "meta",
+      "action": "showTeamAndBluffsToDemon",
+      "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
+      "targets": [
+        "demons"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions"
+        ],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
+      "order": 2
+    }
   ],
   "tipsAndTricks": "Good: Cross-reference counts nightly; compare today’s changes to yesterday’s to spot consistent liars or poison paths. Test for Vortox early by seeking contradictions. Save confirmers (Seamstress/Juggler) for pivotal days. Evil: Introduce small, plausible arithmetic errors; keep lies consistent. Poison high-impact nodes (hubs of info) over loud talkers. Time Demon swaps/changes around public checkpoints to scramble baselines.",
   "bluffing": "Claim roles that generate compact results (single numbers or yes/no) to sound precise. Offer spreadsheets or structured logs to appear credible. If caught in contradictions, attribute to Vortox/poison or a mis-copied note and realign your story; consistency over perfection wins trust.",
-  "legacy": null
+  "legacy": null,
+  "modifiers": [
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "baron",
+      "delta": {
+        "outsiders": 2,
+        "townsfolk": -2
+      },
+      "note": "Baron adds 2 Outsiders and removes 2 Townsfolk."
+    },
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "godfather",
+      "delta": {
+        "outsiders": 1,
+        "townsfolk": -1
+      },
+      "note": "Godfather adds 1 Outsider and removes 1 Townsfolk."
+    }
+  ]
 }

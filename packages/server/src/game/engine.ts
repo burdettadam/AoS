@@ -864,7 +864,7 @@ export class GameEngine {
   if ((game as any).currentVote && !(game as any).currentVote.finished) return { ok: false, error: 'Vote already in progress' };
 
   (game as any).currentNomination.closed = true as any;
-  ;(game as any).currentVote = { nominationId: (game as any).currentNomination.id, startedAt: new Date(), votes: [], tally: { yes: 0, no: 0 }, finished: false } as any;
+  (game as any).currentVote = { nominationId: (game as any).currentNomination.id, startedAt: new Date(), votes: [], tally: { yes: 0, no: 0 }, finished: false } as any;
     game.updatedAt = new Date();
     this.addEvent(gameId, { id: randomUUID(), gameId, type: 'vote_cast', timestamp: new Date(), payload: { started: true } });
     return { ok: true };

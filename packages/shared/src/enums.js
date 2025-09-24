@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleType = exports.Alignment = exports.GamePhase = void 0;
 // Game State Enums
-var GamePhase;
+let GamePhase;
 (function (GamePhase) {
     GamePhase["LOBBY"] = "lobby";
     GamePhase["SETUP"] = "setup";
@@ -13,12 +13,12 @@ var GamePhase;
     GamePhase["EXECUTION"] = "execution";
     GamePhase["END"] = "end";
 })(GamePhase || (exports.GamePhase = GamePhase = {}));
-var Alignment;
+let Alignment;
 (function (Alignment) {
     Alignment["GOOD"] = "good";
     Alignment["EVIL"] = "evil";
 })(Alignment || (exports.Alignment = Alignment = {}));
-var RoleType;
+let RoleType;
 (function (RoleType) {
     RoleType["TOWNSFOLK"] = "townsfolk";
     RoleType["OUTSIDER"] = "outsider";

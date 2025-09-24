@@ -43,7 +43,7 @@ function buildRoleDefinition(input: {
   const rd: RoleDefinition = {
     id: input.id,
     name: input.name,
-    alignment: alignment,
+    alignment,
     type: roleType,
     ability: {
       id: `${input.id}-ability`,

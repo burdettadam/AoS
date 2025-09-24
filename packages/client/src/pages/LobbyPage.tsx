@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
-import type { GameState, LoadedScript } from '@botc/shared';
 import * as Enums from '@botc/shared';
 import { PTTButton } from '../components/PTTButton';
 import { usePTT } from '../utils/usePTT';
@@ -12,42 +11,41 @@ import { PreviewPanel } from '../components/lobby/PreviewPanel';
 import { ModifiersPanel } from '../components/lobby/ModifiersPanel';
 import { NightOrderPanel } from '../components/lobby/NightOrderPanel';
 import { BottomBar } from '../components/lobby/BottomBar';
+import ScriptCarousel from '../components/lobby/ScriptCarousel';
+import CharacterGrid from '../components/lobby/CharacterGrid';
+import ScriptVotingPanel from '../components/lobby/ScriptVotingPanel';
+import { useGameConnection, useScriptSelection } from '../hooks/useGameState';
+import { useScriptProposals } from '../hooks/useScriptProposals';
+import { TEAM_RING_CLASSES, MODIFIER_RING_DECORATION } from '../constants/visual';
 
 const LobbyPage: React.FC = () => {
-  const { gameId } = useParams();
   const navigate = useNavigate();
+  const { connected, currentGame, leaveGame } = useGameStore();
+  const { gameId, loading, error, seatId, isStoryteller } = useGameConnection();
   const {
-    connect,
-    connected,
-    currentGame,
-    setSeat,
-    seatId,
-    isStoryteller,
+    selectedScriptId,
+    setSelectedScriptId,
+    selectedScript,
     availableScripts,
-  // scriptsLoading,
-    loadScripts,
-  leaveGame,
-  } = useGameStore();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [playerId] = useState(() => {
-    const nameKey = 'botc-player-name';
-    const name = (localStorage.getItem(nameKey) || '').trim();
-    return name;
-  });
+    storytellerSelectedScripts,
+    storytellerScriptObjects,
+    scriptUsedName,
+    toggleStorytellerScript,
+  } = useScriptSelection();
+  const {
+    scriptProposalsData,
+    proposalByScriptId,
+    togglePlayerProposal,
+    submitProposalVote,
+  } = useScriptProposals();
   const playerCount = useMemo(() => {
     if (!currentGame?.seats) return 0;
     return currentGame.seats.filter((seat: any) => seat.id !== currentGame.storytellerSeatId).length;
   }, [currentGame?.seats, currentGame?.storytellerSeatId]);
-  const [selectedScriptId, setSelectedScriptId] = useState<string>('');
+  
   const [hoverCharacter, setHoverCharacter] = useState<any | null>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const topScriptsContainerRef = useRef<HTMLDivElement | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<any | null>(null);
   const topScriptButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const storytellerScriptsRef = useRef<HTMLDivElement | null>(null);
-  const characterScrollerRef = useRef<HTMLDivElement | null>(null);
-  const proposalsScrollerRef = useRef<HTMLDivElement | null>(null);
-  // Removed: charactersScrollRef (unused)
   
   // PTT functionality
   const { 
@@ -57,54 +55,48 @@ const LobbyPage: React.FC = () => {
     setMode
   } = usePTT();
   
-  // Team ring colors for character icons
-  const teamRing: Record<string, string> = {
-    townsfolk: 'ring-green-500/60',
-    outsider: 'ring-blue-400/60',
-    minion: 'ring-purple-500/60',
-    demon: 'ring-red-500/70',
-    traveller: 'ring-amber-400/60',
-    fabled: 'ring-sky-400/60',
-  };
+  // Team ring colors for character icons (centralized)
+  const teamRing = TEAM_RING_CLASSES;
 
-  // Removed: scrollCharacters (no longer used)
-  
-  // Get available scripts from game state, fallback to empty array
-  const storytellerSelectedScripts = currentGame?.availableScriptIds || [];
-  
-  // Helper function to update available scripts on server
-  const updateAvailableScripts = async (scriptIds: string[]) => {
-    if (!gameId || !seatId) return;
-    try {
-      await fetch(`/api/games/${gameId}/scripts/available`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ storytellerSeatId: seatId, scriptIds })
-      });
-    } catch (error) {
-      console.error('Failed to update available scripts:', error);
-    }
-  };
-
-  
-  // For storytellers: all scripts available for selection
-  // For players: only scripts the storyteller has approved
-  const visibleScripts = useMemo(() => {
-    if (isStoryteller) {
-      return availableScripts;
-    }
-    return availableScripts.filter(script => storytellerSelectedScripts.includes(script.id));
-  }, [availableScripts, isStoryteller, storytellerSelectedScripts]);
-
-  const selectedScript = useMemo(() => {
-    // Prefer manual selection; otherwise fall back to the game's current script
-    const manual = visibleScripts.find((s: LoadedScript) => s.id === selectedScriptId);
-    if (manual) return manual;
-    if (currentGame?.scriptId) {
-      return visibleScripts.find((s: LoadedScript) => s.id === currentGame.scriptId);
-    }
-  return undefined;
-  }, [visibleScripts, selectedScriptId, currentGame?.scriptId]);
+  // Build mapping of modifier types affecting characters for ring overlays
+  const modifierTypesByCharacterId = useMemo(() => {
+    const mapping: Record<string, string[]> = {};
+    (selectedScript?.modifiers || []).forEach((m: any) => {
+      switch (m.type) {
+        case 'requires':
+          if (m.whenCharacter) {
+            (mapping[m.whenCharacter] ||= []).push('requires');
+          }
+          (m.requireCharacters || []).forEach((cid: string) => {
+            (mapping[cid] ||= []).push('requires');
+          });
+          break;
+        case 'adjustCounts':
+          if (m.whenCharacter) {
+            (mapping[m.whenCharacter] ||= []).push('adjustCounts');
+          }
+          break;
+        case 'mutuallyExclusive':
+          (m.characters || []).forEach((cid: string) => {
+            (mapping[cid] ||= []).push('mutuallyExclusive');
+          });
+          break;
+        case 'atLeastOneOf':
+          (m.characters || []).forEach((cid: string) => {
+            (mapping[cid] ||= []).push('atLeastOneOf');
+          });
+          break;
+        case 'specialRule':
+          if (m.fabled) {
+            (mapping[m.fabled] ||= []).push('specialRule');
+          }
+          break;
+        default:
+          break;
+      }
+    });
+    return mapping;
+  }, [selectedScript?.modifiers]);
 
   // Resolve a local artwork path; fall back to placeholder if missing
   const artworkSrc = useMemo(() => {
@@ -113,114 +105,6 @@ const LobbyPage: React.FC = () => {
     // Prefer .png or .jpg. We don't check existence here; the img onError will swap to placeholder.
     return `/script-art/${id}.png`;
   }, [selectedScript?.id]);
-
-  const scriptLookup = useMemo(() => {
-    const byId: Record<string, LoadedScript> = {};
-    for (const script of availableScripts) {
-      byId[script.id] = script;
-    }
-    return byId;
-  }, [availableScripts]);
-
-  const storytellerScriptObjects = useMemo(() => {
-    return storytellerSelectedScripts
-      .map((id) => scriptLookup[id])
-      .filter(Boolean) as LoadedScript[];
-  }, [storytellerSelectedScripts, scriptLookup]);
-
-  const scriptProposalsData = useMemo(() => {
-    const raw = currentGame?.scriptProposals || [];
-    return raw.map((proposal: any) => {
-      const script = scriptLookup[proposal.scriptId] || availableScripts.find((s) => s.id === proposal.scriptId);
-      const votes = proposal.votes || {};
-      const entries = Object.entries(votes) as Array<[string, boolean]>;
-      const upVotes = entries.filter(([, vote]) => vote === true).length;
-      const downVotes = entries.filter(([, vote]) => vote === false).length;
-      const myVote = seatId ? votes[seatId] : undefined;
-      const proposers: string[] = Array.isArray(proposal.proposers)
-        ? proposal.proposers
-        : proposal.proposedBy
-          ? [proposal.proposedBy]
-          : [];
-      const isProposer = seatId ? proposers.includes(seatId) : false;
-      const createdAt = proposal.createdAt ? new Date(proposal.createdAt).getTime() : 0;
-      const score = upVotes - downVotes;
-      return {
-        proposal,
-        script,
-        upVotes,
-        downVotes,
-        myVote,
-        isProposer,
-        createdAt,
-        score,
-        proposers
-      };
-    }).sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      if (b.upVotes !== a.upVotes) return b.upVotes - a.upVotes;
-      if (a.downVotes !== b.downVotes) return a.downVotes - b.downVotes;
-      return a.createdAt - b.createdAt;
-    });
-  }, [currentGame?.scriptProposals, scriptLookup, availableScripts, seatId]);
-
-  const proposalByScriptId = useMemo(() => {
-    const map = new Map<string, (typeof scriptProposalsData)[number]>();
-    for (const entry of scriptProposalsData) {
-      map.set(entry.proposal.scriptId, entry);
-    }
-    return map;
-  }, [scriptProposalsData]);
-
-  const scriptUsedName = useMemo(() => {
-    if (selectedScript?.name) return selectedScript.name;
-    if (currentGame?.scriptId) {
-      return scriptLookup[currentGame.scriptId]?.name || currentGame.scriptId;
-    }
-    return undefined;
-  }, [selectedScript?.name, currentGame?.scriptId, scriptLookup]);
-
-  const toggleStorytellerScript = async (scriptId: string) => {
-    if (!isStoryteller || !gameId || !seatId) return;
-    const nextIds = storytellerSelectedScripts.includes(scriptId)
-      ? storytellerSelectedScripts.filter((id) => id !== scriptId)
-      : Array.from(new Set([...storytellerSelectedScripts, scriptId]));
-    await updateAvailableScripts(nextIds);
-  };
-
-  const togglePlayerProposal = async (scriptId: string) => {
-    if (!gameId || !seatId) return;
-    const existing = proposalByScriptId.get(scriptId);
-    const alreadyProposer = existing ? existing.proposers.includes(seatId) : false;
-    try {
-      await fetch(`/api/games/${gameId}/scripts/propose`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ proposerSeatId: seatId, scriptId, active: !alreadyProposer })
-      });
-    } catch (error) {
-      console.error('Failed to toggle script proposal', error);
-    }
-  };
-
-  const submitProposalVote = async (proposalId: string, vote: boolean | null) => {
-    if (!gameId || !seatId) return;
-    try {
-      await fetch(`/api/games/${gameId}/scripts/vote`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ voterSeatId: seatId, proposalId, vote })
-      });
-    } catch (error) {
-      console.error('Failed to submit script vote', error);
-    }
-  };
-
-  const scrollContainerBy = (ref: React.RefObject<HTMLDivElement>, delta: number) => {
-    if (ref.current) {
-      ref.current.scrollBy({ left: delta, behavior: 'smooth' });
-    }
-  };
 
   const centerScriptButton = (scriptId: string) => {
     const btn = topScriptButtonRefs.current[scriptId];
@@ -234,11 +118,11 @@ const LobbyPage: React.FC = () => {
     const direction = event.key === 'ArrowLeft' ? -1 : 1;
     const currentIndex = (() => {
       if (selectedScriptId) {
-        const idx = availableScripts.findIndex((s) => s.id === selectedScriptId);
+        const idx = availableScripts.findIndex((s: any) => s.id === selectedScriptId);
         if (idx >= 0) return idx;
       }
       if (currentGame?.scriptId) {
-        const idx = availableScripts.findIndex((s) => s.id === currentGame.scriptId);
+        const idx = availableScripts.findIndex((s: any) => s.id === currentGame.scriptId);
         if (idx >= 0) return idx;
       }
       return 0;
@@ -255,89 +139,8 @@ const LobbyPage: React.FC = () => {
     }
   }, [selectedScript?.id]);
 
-  // Removed: first night order preview not used in this layout
-
   const minPlayersRequired = useMemo(() => selectedScript?.meta?.playerCount?.min ?? 5, [selectedScript]);
   const hasEnoughPlayers = playerCount >= minPlayersRequired;
-
-  // Aggressively preload scripts immediately when component mounts
-  useEffect(() => {
-    // Start loading scripts immediately, don't wait for any conditions
-    loadScripts();
-  }, []); // Empty dependency array - load immediately on mount
-
-  // Default the dropdown to the game's current script (if any) once available
-  useEffect(() => {
-    if (!selectedScriptId && currentGame?.scriptId) {
-      setSelectedScriptId(currentGame.scriptId);
-    }
-  }, [currentGame?.scriptId, selectedScriptId]);
-
-  // Cleanup hover timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-    };
-  }, []);
-
-
-
-  useEffect(() => {
-    if (!gameId) return;
-    // Require player name; redirect to join page if missing and gameId known
-    if (!playerId || !playerId.trim()) {
-      navigate(`/join/${gameId}`);
-      return;
-    }
-    let cancelled = false;
-    async function init() {
-      try {
-        // Fetch initial state
-        const res = await fetch(`/api/games/${gameId}`);
-        if (!res.ok) throw new Error('Game not found');
-        const game: GameState = await res.json();
-        if (cancelled) return;
-
-        const storedSeat = localStorage.getItem('botc-seat-id');
-  if (game.phase === Enums.GamePhase.LOBBY) {
-          // Try to reuse existing seat first by playerId or stored seatId
-          let mySeat = game.seats.find((s: any) => (storedSeat && s.id === storedSeat) || s.playerId === playerId);
-          if (!mySeat) {
-            // Join the game
-            const joinRes = await fetch(`/api/games/${gameId}/join`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ playerId })
-            });
-            if (!joinRes.ok) throw new Error('Failed to join game');
-            const joinData = await joinRes.json();
-            setSeat(joinData.seatId, joinData.isStoryteller);
-            connect(game.id, joinData.seatId);
-          } else {
-            setSeat(mySeat.id, mySeat.id === (game as any).storytellerSeatId);
-            connect(game.id, mySeat.id);
-          }
-        } else {
-          // Game already advanced; try to find existing seat by playerId
-          const mySeat = game.seats.find((s: any) => (storedSeat && s.id === storedSeat) || s.playerId === playerId);
-          if (!mySeat) {
-            setError('Game already started. Ask the Storyteller to add you.');
-          } else {
-            setSeat(mySeat.id, mySeat.id === (game as any).storytellerSeatId);
-            connect(game.id, mySeat.id);
-          }
-        }
-      } catch (e: any) {
-        setError(e.message || 'Failed to load lobby');
-      } finally {
-        setLoading(false);
-      }
-    }
-    init();
-    return () => { cancelled = true; };
-  }, [gameId]);
 
   // Redirect to setup page if game is in setup phase and user is storyteller
   useEffect(() => {
@@ -356,7 +159,7 @@ const LobbyPage: React.FC = () => {
     if (!gameId) return;
     const res = await fetch(`/api/games/${gameId}/start`, { method: 'POST' });
     if (!res.ok) {
-      setError('Failed to start game');
+      console.error('Failed to start game');
       return;
     }
   // Show personal role reveal screen first
@@ -405,162 +208,72 @@ const LobbyPage: React.FC = () => {
       {/* Storyteller-only: All scripts selector - with keyboard navigation */}
       {isStoryteller && (
         <div className="pt-6 pb-2">
-          <div className="card w-full p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-gray-300">All Scripts (Storyteller Only)</div>
-              {availableScripts.length > 0 && (
-                <div className="text-xs text-gray-500 uppercase tracking-wide">Use ← → to navigate</div>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                type="button"
-                className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(topScriptsContainerRef, -360)}
-                aria-label="Scroll scripts left"
-              >
-                ←
-              </button>
-              <div
-                ref={topScriptsContainerRef}
-                data-testid="all-scripts-carousel"
-                className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth px-12"
-                tabIndex={0}
-                onKeyDown={handleTopScriptsKeyDown}
-              >
-                {availableScripts.map((s) => {
-                  const isSelected = selectedScript?.id === s.id;
-                  const isShared = storytellerSelectedScripts.includes(s.id);
-                  return (
-                    <div key={s.id} className="relative shrink-0 w-52">
-                      <button
-                        ref={(el) => { topScriptButtonRefs.current[s.id] = el; }}
-                        className={`w-full text-left border rounded-lg px-3 py-3 bg-clocktower-dark transition focus:outline-none focus:ring-2 focus:ring-clocktower-accent ${isSelected ? 'border-clocktower-accent shadow-[0_0_0_2px_rgba(56,189,248,0.3)]' : 'border-gray-700 hover:border-gray-500'}`}
-                        onClick={() => setSelectedScriptId(s.id)}
-                        data-testid={`all-script-${s.id}`}
-                      >
-                        <div className="text-base font-semibold text-gray-100 truncate" title={s.name}>{s.name}</div>
-                        {s.meta?.complexity && (
-                          <div className="text-[11px] text-gray-400 uppercase tracking-wide mt-1">{s.meta.complexity}</div>
-                        )}
-                        {s.meta?.playerCount && (
-                          <div className="text-[11px] text-gray-500 mt-2">
-                            Players {s.meta.playerCount.min ?? '?'}{s.meta.playerCount.max ? `–${s.meta.playerCount.max}` : ''}
-                          </div>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        className={`absolute -top-2 -right-2 w-7 h-7 rounded-full border text-sm font-bold transition ${isShared ? 'bg-emerald-400 text-black border-emerald-200' : 'bg-gray-700 text-gray-200 border-gray-500 hover:bg-gray-600'}`}
-                        onClick={(event) => { event.stopPropagation(); toggleStorytellerScript(s.id); }}
-                        aria-pressed={isShared}
-                        aria-label={isShared ? 'Remove script from storyteller proposals' : 'Add script for players'}
-                        data-testid={`master-toggle-${s.id}`}
-                      >
-                        +
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-              <button
-                type="button"
-                className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(topScriptsContainerRef, 360)}
-                aria-label="Scroll scripts right"
-              >
-                →
-              </button>
-            </div>
-          </div>
+          <ScriptCarousel
+            scripts={availableScripts}
+            selectedScriptId={selectedScript?.id}
+            title="All Scripts (Storyteller Only)"
+            subtitle="Use ← → to navigate"
+            keyboardNavigation={true}
+            onScriptSelect={setSelectedScriptId}
+            onScriptAction={toggleStorytellerScript}
+            getActionProps={(script) => ({
+              label: storytellerSelectedScripts.includes(script.id) 
+                ? 'Remove script from storyteller proposals' 
+                : 'Add script for players',
+              isActive: storytellerSelectedScripts.includes(script.id),
+              'data-testid': `master-toggle-${script.id}`
+            })}
+            testId="all-scripts-carousel"
+            onKeyDown={handleTopScriptsKeyDown}
+          />
+        </div>
+      )}
 
-          <div className="card p-4 mt-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-300">Player Voting</div>
-              {scriptProposalsData.length > 0 && (
-                <div className="text-xs text-gray-500">Sorted by popularity (👍 minus 👎)</div>
-              )}
-            </div>
-            <div className="relative mt-3">
-              <button
-                type="button"
-                className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(proposalsScrollerRef, -320)}
-                aria-label="Scroll proposed scripts left"
-              >
-                ←
-              </button>
-              <div
-                ref={proposalsScrollerRef}
-                data-testid="proposal-carousel"
-                className="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth px-12"
-              >
-                {scriptProposalsData.length > 0 ? (
-                  scriptProposalsData.map((entry) => {
-                    const scriptName = entry.script?.name || entry.proposal.scriptId;
-                    const complexity = entry.script?.meta?.complexity;
-                    const proposerCount = entry.proposers.length;
-                    const voteUpActive = entry.myVote === true;
-                    const voteDownActive = entry.myVote === false;
-                    return (
-                      <div
-                        key={entry.proposal.id}
-                        data-testid={`proposal-card-${entry.proposal.id}`}
-                        className={`shrink-0 w-60 border rounded-lg px-3 py-3 bg-clocktower-dark border-gray-700 transition ${entry.myVote != null ? 'shadow-[0_0_0_1px_rgba(56,189,248,0.15)]' : ''}`}
-                      >
-                        <button
-                          className="text-left w-full"
-                          onClick={() => setSelectedScriptId(entry.proposal.scriptId)}
-                        >
-                          <div className="text-base font-semibold text-gray-100 truncate" title={scriptName}>{scriptName}</div>
-                          {complexity && (
-                            <div className="text-[11px] text-gray-400 uppercase tracking-wide mt-1">{complexity}</div>
-                          )}
-                        </button>
-                        <div className="mt-2 text-xs text-gray-400 flex items-center gap-2">
-                          <span>{proposerCount} proposer{proposerCount === 1 ? '' : 's'}</span>
-                          {entry.isProposer && (
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-200">You proposed</span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 mt-3">
-                          <button
-                            type="button"
-                            className={`px-3 py-1 rounded border text-sm font-semibold transition ${voteUpActive ? 'bg-emerald-400 text-black border-emerald-300' : 'border-gray-700 text-gray-100 hover:border-gray-500'}`}
-                            onClick={() => submitProposalVote(entry.proposal.id, voteUpActive ? null : true)}
-                            aria-pressed={voteUpActive}
-                            data-testid={`vote-up-${entry.proposal.id}`}
-                          >
-                            👍 {entry.upVotes}
-                          </button>
-                          <button
-                            type="button"
-                            className={`px-3 py-1 rounded border text-sm font-semibold transition ${voteDownActive ? 'bg-rose-500 text-black border-rose-300' : 'border-gray-700 text-gray-100 hover:border-gray-500'}`}
-                            onClick={() => submitProposalVote(entry.proposal.id, voteDownActive ? null : false)}
-                            aria-pressed={voteDownActive}
-                            data-testid={`vote-down-${entry.proposal.id}`}
-                          >
-                            👎 {entry.downVotes}
-                          </button>
-                        </div>
-                        <div className="mt-2 text-xs text-gray-500">Popularity score: {entry.score}</div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-gray-400 text-sm py-6 px-4 w-full text-center">No proposed scripts yet. Press + above to start a vote.</div>
-                )}
-              </div>
-              <button
-                type="button"
-                className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(proposalsScrollerRef, 320)}
-                aria-label="Scroll proposed scripts right"
-              >
-                →
-              </button>
-            </div>
-          </div>
+      {/* Player-only: Game selector spanning full width */}
+      {!isStoryteller && (
+        <div className="pt-6 pb-2">
+          <ScriptCarousel
+            scripts={storytellerScriptObjects}
+            selectedScriptId={selectedScript?.id}
+            title="Available Games"
+            subtitle="Use ← → to navigate"
+            onScriptSelect={setSelectedScriptId}
+            onScriptAction={togglePlayerProposal}
+            getActionProps={(script) => {
+              const proposalEntry = proposalByScriptId.get(script.id);
+              const iPropose = proposalEntry ? proposalEntry.isProposer : false;
+              return {
+                label: iPropose ? 'Withdraw script proposal' : 'Propose this script',
+                isActive: iPropose,
+                'data-testid': `player-proposal-toggle-${script.id}`
+              };
+            }}
+            testId="player-games-carousel"
+          />
+        </div>
+      )}
+
+      {/* Storyteller Shared Scripts - full width */}
+      {storytellerScriptObjects.length > 0 && (
+        <div className="pt-6 pb-2">
+          <ScriptCarousel
+            scripts={storytellerScriptObjects}
+            selectedScriptId={selectedScript?.id}
+            title="Storyteller Shared Scripts"
+            subtitle="Press + to propose this script to the group."
+            onScriptSelect={setSelectedScriptId}
+            onScriptAction={togglePlayerProposal}
+            getActionProps={(script) => {
+              const proposalEntry = proposalByScriptId.get(script.id);
+              const iPropose = proposalEntry ? proposalEntry.isProposer : false;
+              return {
+                label: iPropose ? 'Withdraw script proposal' : 'Propose this script',
+                isActive: iPropose,
+                'data-testid': `player-proposal-toggle-${script.id}`
+              };
+            }}
+            testId="shared-scripts-carousel"
+          />
         </div>
       )}
 
@@ -640,174 +353,43 @@ const LobbyPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Center Column: Scripts (wider for storytellers) */}
-        <div className={`${isStoryteller ? 'col-span-6' : 'col-span-5'} flex flex-col min-h-[500px]`}>
-          <div className="card p-4 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-300">Storyteller Shared Scripts</div>
-              <div className="text-xs text-gray-500">
-                {storytellerScriptObjects.length
-                  ? 'Press + to propose this script to the group.'
-                  : isStoryteller
-                    ? 'Select scripts above to share with players.'
-                    : 'Waiting for storyteller to share scripts.'}
-              </div>
-            </div>
-            <div className="relative mt-3">
-              <button
-                type="button"
-                className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(storytellerScriptsRef, -320)}
-                aria-label="Scroll storyteller scripts left"
-              >
-                ←
-              </button>
-              <div
-                ref={storytellerScriptsRef}
-                data-testid="shared-scripts-carousel"
-                className="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth px-12"
-              >
-                {storytellerScriptObjects.length > 0 ? (
-                  storytellerScriptObjects.map((script) => {
-                    const proposalEntry = proposalByScriptId.get(script.id);
-                    const iPropose = proposalEntry ? proposalEntry.isProposer : false;
-                    const proposerCount = proposalEntry?.proposers.length ?? 0;
-                    return (
-                      <div
-                        key={script.id}
-                        data-testid={`shared-script-${script.id}`}
-                        className="shrink-0 w-52 border border-gray-700 bg-clocktower-dark rounded-lg px-3 py-3 flex flex-col"
-                      >
-                        <button
-                          className={`text-left transition-colors focus:outline-none focus:ring-2 focus:ring-clocktower-accent rounded ${selectedScript?.id === script.id ? 'text-gray-100' : 'text-gray-200 hover:text-gray-100'}`}
-                          onClick={() => setSelectedScriptId(script.id)}
-                        >
-                          <div className="text-base font-semibold truncate" title={script.name}>{script.name}</div>
-                          {script.meta?.complexity && (
-                            <div className="text-[11px] text-gray-400 uppercase tracking-wide mt-1">{script.meta.complexity}</div>
-                          )}
-                          {script.meta?.playerCount && (
-                            <div className="text-[11px] text-gray-500 mt-2">
-                              Players {script.meta.playerCount.min ?? '?'}{script.meta.playerCount.max ? `–${script.meta.playerCount.max}` : ''}
-                            </div>
-                          )}
-                        </button>
-                        <div className="flex items-center justify-between mt-3 text-xs text-gray-400">
-                          <span>{proposerCount} proposer{proposerCount === 1 ? '' : 's'}</span>
-                          <button
-                            type="button"
-                            className={`w-7 h-7 rounded-full border text-sm font-semibold flex items-center justify-center transition ${iPropose ? 'bg-emerald-400 text-black border-emerald-300' : 'bg-gray-700 text-gray-200 border-gray-500 hover:bg-gray-600'}`}
-                            onClick={() => togglePlayerProposal(script.id)}
-                            aria-pressed={iPropose}
-                            aria-label={iPropose ? 'Withdraw script proposal' : 'Propose this script'}
-                            data-testid={`proposal-toggle-${script.id}`}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-gray-400 text-sm py-6 px-4 w-full text-center">No storyteller scripts are available yet.</div>
-                )}
-              </div>
-              <button
-                type="button"
-                className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(storytellerScriptsRef, 320)}
-                aria-label="Scroll storyteller scripts right"
-              >
-                →
-              </button>
-            </div>
-          </div>
-
+        {/* Center Column: Scripts (narrower to give more space to preview) */}
+        <div className={`${isStoryteller ? 'col-span-5' : 'col-span-5'} flex flex-col min-h-[500px]`}>
           {/* Characters grid for selected script */}
-          <div className="card p-4 flex-1 flex flex-col">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-300">Characters</div>
-              {selectedScript?.characters && (
-                <div className="text-xs text-gray-500">{selectedScript.characters.length} roles</div>
-              )}
-            </div>
-            <div className="relative mt-3 flex-1 min-h-[320px]">
-              <button
-                type="button"
-                className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(characterScrollerRef, -240)}
-                aria-label="Scroll characters left"
-              >
-                ←
-              </button>
-              {selectedScript?.characters?.length ? (
-                <div
-                  ref={characterScrollerRef}
-                  data-testid="character-grid"
-                  className="grid grid-flow-col auto-cols-[110px] grid-rows-3 gap-3 overflow-x-auto overflow-y-hidden no-scrollbar h-full px-12"
-                >
-                  {selectedScript.characters.map((c: any) => {
-                    const imgSrc = `/artwork/characters/${(c.id || '').toLowerCase()}.png`;
-                    const ring = teamRing[c.team] || 'ring-gray-500/50';
-                    return (
-                      <button
-                        key={c.id}
-                        onMouseEnter={() => {
-                          if (hoverTimeoutRef.current) {
-                            clearTimeout(hoverTimeoutRef.current);
-                            hoverTimeoutRef.current = null;
-                          }
-                          setHoverCharacter(c);
-                        }}
-                        onMouseLeave={() => {
-                          hoverTimeoutRef.current = setTimeout(() => {
-                            setHoverCharacter(null);
-                            hoverTimeoutRef.current = null;
-                          }, 100);
-                        }}
-                        className="flex flex-col items-center text-center p-1 rounded hover:bg-white/5 transition"
-                        title={c.name}
-                      >
-                        <div className={`w-20 h-20 rounded-full overflow-hidden ring-2 ${ring} bg-black/40 border border-gray-700`}>
-                          <img
-                            src={imgSrc}
-                            onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/script-art/placeholder.svg'; }}
-                            alt={c.name}
-                            className="w-full h-full object-cover"
-                            draggable={false}
-                          />
-                        </div>
-                        <div className="mt-1 text-[11px] font-medium leading-tight truncate w-full text-gray-100">{c.name}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-gray-400 text-sm py-6 px-4 text-center">Select a script to view its characters.</div>
-              )}
-              <button
-                type="button"
-                className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-clocktower-dark/85 hover:bg-clocktower-dark/95 border border-gray-700 rounded-full w-9 h-9 flex items-center justify-center text-lg text-gray-200 shadow"
-                onClick={() => scrollContainerBy(characterScrollerRef, 240)}
-                aria-label="Scroll characters right"
-              >
-                →
-              </button>
-            </div>
+          <CharacterGrid
+            characters={selectedScript?.characters}
+            onCharacterHover={setHoverCharacter}
+            onCharacterSelect={(c) => setSelectedCharacter(c)}
+            selectedCharacterId={selectedCharacter?.id}
+            teamRing={teamRing}
+            modifierTypesByCharacterId={modifierTypesByCharacterId}
+          />
+          {/* Player Voting now sits below the characters */}
+          <div className="mt-4 flex-1">
+            <ScriptVotingPanel
+              scriptProposalsData={scriptProposalsData}
+              onScriptSelect={setSelectedScriptId}
+              onVote={submitProposalVote}
+            />
           </div>
         </div>
 
-        {/* Right Column: Preview, Modifiers, Night Order */}
-          <div className={`${isStoryteller ? 'col-span-4' : 'col-span-5'} flex flex-col min-h-[500px]`}>
+        {/* Right Column: Preview */}
+          <div className={`${isStoryteller ? 'col-span-5' : 'col-span-5'} flex flex-col min-h-[500px]`}>
             <PreviewPanel
               hoverCharacter={hoverCharacter}
+              selectedCharacter={selectedCharacter}
               artworkSrc={artworkSrc}
               selectedScript={selectedScript}
             />
-            <ModifiersPanel modifiers={selectedScript?.modifiers || []} />
-            <NightOrderPanel nightOrder={selectedScript?.characters?.filter((c: any) => c.firstNight && c.firstNight > 0).sort((a: any, b: any) => a.firstNight - b.firstNight).map((c: any) => c.name) || []} />
+            {/* Stacked modifiers then generic night order full width */}
+            <div className="mt-3">
+              <ModifiersPanel modifiers={selectedScript?.modifiers || []} />
+              <NightOrderPanel />
+            </div>
           </div>
       </div>
+      
 
       {/* Phase Information */}
       {currentGame?.phase === Enums.GamePhase.SETUP && (
@@ -876,6 +458,50 @@ const LobbyPage: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* Visual Legend */}
+      <div className="mt-6 card p-4">
+        <div className="text-sm font-semibold text-gray-200 mb-3 text-center">Visual Guide</div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Character Team Colors (loop over constants) */}
+          <div>
+            <div className="text-xs font-medium text-gray-300 mb-2 uppercase tracking-wide">Character Teams</div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {Object.entries(teamRing).map(([team, ringClass]) => (
+                <div key={team} className="flex items-center gap-2 capitalize">
+                  <div className={`w-5 h-5 rounded-full bg-black/40 border border-gray-700 ring-2 ${ringClass}`}></div>
+                  <span className="text-gray-200">{team}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Script Modifier Rings */}
+          <div>
+            <div className="text-xs font-medium text-gray-300 mb-2 uppercase tracking-wide">Script Modifier Rings</div>
+            <div className="space-y-2 text-xs">
+              {Object.entries(MODIFIER_RING_DECORATION).map(([type, cls]) => {
+                const description: Record<string,string> = {
+                  requires: 'Requires - needs another character',
+                  adjustCounts: 'Adjust Counts - changes team numbers',
+                  mutuallyExclusive: "Exclusive - can't appear together",
+                  atLeastOneOf: 'Min One - at least one required',
+                  specialRule: 'Fabled / Special storyteller rule',
+                };
+                return (
+                  <div key={type} className="flex items-center gap-2">
+                    <div className="relative w-5 h-5">
+                      <div className={`w-5 h-5 rounded-full bg-black/40 border border-gray-700 ring-1 ring-gray-600 ${cls}`}></div>
+                    </div>
+                    <span className="text-gray-200 capitalize">{description[type] || type}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

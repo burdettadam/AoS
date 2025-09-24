@@ -73,11 +73,36 @@
     "demons": 10
   },
   "composition": {
-    "5": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "6": { "townsfolk": 3, "outsiders": 1, "minions": 1, "demons": 1 },
-    "7-9": { "townsfolk": "p-3", "outsiders": 0, "minions": 2, "demons": 1 },
-    "10-12": { "townsfolk": "p-4", "outsiders": 1, "minions": 2, "demons": 1 },
-    "13-15": { "townsfolk": "p-5", "outsiders": 2, "minions": 2, "demons": 1 }
+    "5": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "6": {
+      "townsfolk": 3,
+      "outsiders": 1,
+      "minions": 1,
+      "demons": 1
+    },
+    "7-9": {
+      "townsfolk": "p-3",
+      "outsiders": 0,
+      "minions": 2,
+      "demons": 1
+    },
+    "10-12": {
+      "townsfolk": "p-4",
+      "outsiders": 1,
+      "minions": 2,
+      "demons": 1
+    },
+    "13-15": {
+      "townsfolk": "p-5",
+      "outsiders": 2,
+      "minions": 2,
+      "demons": 1
+    }
   },
   "specialRules": [
     "Focus on cult and leadership themes",
@@ -97,8 +122,16 @@
       "type": "meta",
       "action": "showTeamToMinions",
       "description": "Wake all Minions together. Show them who the other Minions are and who the Demon is",
-      "targets": ["minions"],
-      "information": { "showPlayersByTeam": ["minions", "demons"], "showRoles": false },
+      "targets": [
+        "minions"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions",
+          "demons"
+        ],
+        "showRoles": false
+      },
       "order": 1
     },
     {
@@ -106,12 +139,71 @@
       "type": "meta",
       "action": "showTeamAndBluffsToDemon",
       "description": "Wake the Demon. Show them who their Minions are. Give them 3 character tokens as bluffs",
-      "targets": ["demons"],
-      "information": { "showPlayersByTeam": ["minions"], "showRoles": false, "giveBluffs": 3 },
+      "targets": [
+        "demons"
+      ],
+      "information": {
+        "showPlayersByTeam": [
+          "minions"
+        ],
+        "showRoles": false,
+        "giveBluffs": 3
+      },
       "order": 2
     }
   ],
   "tipsAndTricks": "Good: Guard key roles from conversion; verify loyalties often. Evil: Obscure membership and sow distrust about converts.",
   "bluffing": "Claim knowledge of cult effects to steer fear toward innocents.",
-  "legacy": null
+  "legacy": null,
+  "modifiers": [
+    {
+      "type": "adjustCounts",
+      "whenCharacter": "godfather",
+      "delta": {
+        "outsiders": 1,
+        "townsfolk": -1
+      },
+      "note": "Godfather adds 1 Outsider and removes 1 Townsfolk."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "hells-librarian",
+      "note": "Hell's Librarian provides special information access and record-keeping abilities."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "angel",
+      "note": "Angel protects new players - something bad might happen to whoever is most responsible for their death."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "revolutionary",
+      "note": "Revolutionary creates 2 neighboring players of same alignment, with false registration once per game."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "fibbin",
+      "note": "Fibbin allows 1 good player to get incorrect information once per game."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "duchess",
+      "note": "Duchess provides protection and special voting mechanics."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "sentinel",
+      "note": "Sentinel may be used for game balance or specific scenarios."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "spirit-of-ivory",
+      "note": "Spirit of Ivory provides special mechanics related to information and deduction."
+    },
+    {
+      "type": "specialRule",
+      "fabled": "djinn",
+      "note": "Djinn provides special wish-granting mechanics that can alter game state."
+    }
+  ]
 }

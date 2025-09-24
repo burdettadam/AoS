@@ -7,17 +7,31 @@ interface CentralizedCharacter {
   id: string;
   name: string;
   team?: 'townsfolk' | 'outsider' | 'minion' | 'demon' | 'traveller' | 'fabled';
-  category: 'townsfolk' | 'outsider' | 'minion' | 'demon' | 'traveller' | 'fabled';
-  edition: string[];
-  ability_summary: string;
-  ability_description: string;
-  first_night_reminder: string;
-  other_night_reminder: string;
-  setup: boolean;
-  tokens_used: string[];
-  tags: string[];
+  category?: 'townsfolk' | 'outsider' | 'minion' | 'demon' | 'traveller' | 'fabled';
+  editions?: string[];
+  ability?: string;
+  ability_summary?: string;
+  ability_description?: string;
+  firstNight?: number | null;
+  otherNights?: number | null;
+  firstNightDescription?: string;
+  otherNightReminder?: string;
+  first_night_reminder?: string;
+  other_night_reminder?: string;
+  setup?: boolean;
+  reminders?: string[];
+  tokens_used?: string[];
+  tags?: string[];
+  wikiUrl?: string;
   wiki_url?: string;
+  imageUrl?: string | null;
   image_url?: string;
+  howToRun?: string;
+  tipsAndTricks?: string;
+  bluffing?: string;
+  legacy?: any;
+  actions?: any;
+  goal?: any;
 }
 
 class CharacterDatabase {
@@ -69,23 +83,23 @@ class CharacterDatabase {
     return {
       id: char.id,
       name: char.name,
-      team: this.mapCategoryToTeam(char.team || char.category),
-      ability: char.ability_summary || char.ability_description,
-      firstNight: this.deriveFirstNightIndex(char),
-      otherNights: this.deriveOtherNightsIndex(char),
-      reminders: char.tokens_used,
+      team: this.mapCategoryToTeam((char.team || char.category) ?? 'townsfolk'),
+      ability: char.ability || char.ability_summary || char.ability_description || '',
+      firstNight: char.firstNight || this.deriveFirstNightIndex(char),
+      otherNights: char.otherNights || this.deriveOtherNightsIndex(char),
+      reminders: char.reminders || char.tokens_used || [],
       setup: char.setup || char.tags?.includes('setup') || false,
       // Legacy fields for compatibility
-      category: char.category,
-      edition: char.edition,
+      category: (char.team || char.category) ?? 'townsfolk',
+      edition: char.editions || [],
       abilitySummary: char.ability_summary,
-      firstNightAction: char.first_night_reminder,
-      otherNightsAction: char.other_night_reminder,
+      firstNightAction: char.firstNightDescription || char.first_night_reminder,
+      otherNightsAction: char.otherNightReminder || char.other_night_reminder,
       dayAction: null, // Not stored in centralized format yet
-      tags: char.tags,
-      tokensUsed: char.tokens_used,
-      wikiUrl: char.wiki_url,
-      imageUrl: char.image_url
+      tags: char.tags || [],
+      tokensUsed: char.reminders || char.tokens_used || [],
+      wikiUrl: char.wikiUrl || char.wiki_url,
+      imageUrl: char.imageUrl || char.image_url
     };
   }
 
@@ -115,23 +129,25 @@ class CharacterDatabase {
 
   private deriveFirstNightIndex(char: CentralizedCharacter): number | undefined {
     // Simple heuristic based on tags and reminders
-    if (char.tags?.includes('setup') || char.first_night_reminder) {
+    if (char.tags?.includes('setup') || char.first_night_reminder || char.firstNightDescription) {
       if (char.tags?.includes('information')) return 10;
-      if (char.category === 'townsfolk') return 20;
-      if (char.category === 'outsider') return 30;
-      if (char.category === 'minion') return 40;
-      if (char.category === 'demon') return 50;
+      const category = char.team || char.category;
+      if (category === 'townsfolk') return 20;
+      if (category === 'outsider') return 30;
+      if (category === 'minion') return 40;
+      if (category === 'demon') return 50;
     }
     return undefined;
   }
 
   private deriveOtherNightsIndex(char: CentralizedCharacter): number | undefined {
     // Simple heuristic
-    if (char.other_night_reminder) {
-      if (char.category === 'townsfolk') return 20;
-      if (char.category === 'outsider') return 30;
-      if (char.category === 'minion') return 40;
-      if (char.category === 'demon') return 50;
+    if (char.other_night_reminder || char.otherNightReminder) {
+      const category = char.team || char.category;
+      if (category === 'townsfolk') return 20;
+      if (category === 'outsider') return 30;
+      if (category === 'minion') return 40;
+      if (category === 'demon') return 50;
     }
     return undefined;
   }

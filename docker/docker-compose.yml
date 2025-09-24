@@ -58,6 +58,12 @@ services:
       - botct-network
     depends_on:
       - keycloak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   # BotCT Client (accessible directly on port 5173)
   botct-client:
@@ -79,6 +85,16 @@ services:
       - botct-network
     depends_on:
       - botct-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   keycloak_data:
