@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from "react";
 
 interface Props {
   children?: ReactNode;
@@ -13,7 +13,7 @@ interface State {
 
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
   };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -22,10 +22,10 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
-    
+    console.error("Error caught by boundary:", error, errorInfo);
+
     // Log to external service in production
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       this.logError(error, errorInfo);
     }
 
@@ -42,17 +42,17 @@ class ErrorBoundary extends Component<Props, State> {
       url: window.location.href,
       userAgent: navigator.userAgent,
       timestamp: new Date().toISOString(),
-      gameState: this.getGameContext()
+      gameState: this.getGameContext(),
     };
 
     // Send via beacon API to not block user experience
-    if ('sendBeacon' in navigator) {
-      navigator.sendBeacon('/api/errors', JSON.stringify(errorPayload));
+    if ("sendBeacon" in navigator) {
+      navigator.sendBeacon("/api/errors", JSON.stringify(errorPayload));
     } else {
-      fetch('/api/errors', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(errorPayload)
+      fetch("/api/errors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(errorPayload),
       }).catch(() => {
         // Silently fail - don't cause more errors
       });
@@ -62,7 +62,7 @@ class ErrorBoundary extends Component<Props, State> {
   private getGameContext = () => {
     try {
       // Capture relevant game state for debugging
-      const gameData = localStorage.getItem('game-state');
+      const gameData = localStorage.getItem("game-state");
       return gameData ? JSON.parse(gameData) : null;
     } catch {
       return null;
@@ -84,8 +84,18 @@ class ErrorBoundary extends Component<Props, State> {
           <div className="bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                <svg className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <svg
+                  className="h-8 w-8 text-red-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"
+                  />
                 </svg>
               </div>
               <div className="ml-3">
@@ -94,22 +104,27 @@ class ErrorBoundary extends Component<Props, State> {
                 </h3>
               </div>
             </div>
-            
+
             <div className="text-sm text-gray-300 mb-4">
-              <p>We've encountered an unexpected error. The error has been logged and we'll investigate.</p>
-              
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              <p>
+                We've encountered an unexpected error. The error has been logged
+                and we'll investigate.
+              </p>
+
+              {process.env.NODE_ENV === "development" && this.state.error && (
                 <details className="mt-4 p-3 bg-gray-900 rounded text-xs">
-                  <summary className="cursor-pointer text-red-300">Debug Info</summary>
+                  <summary className="cursor-pointer text-red-300">
+                    Debug Info
+                  </summary>
                   <pre className="mt-2 whitespace-pre-wrap text-red-200">
                     {this.state.error.message}
-                    {'\n\n'}
+                    {"\n\n"}
                     {this.state.error.stack}
                   </pre>
                 </details>
               )}
             </div>
-            
+
             <div className="flex space-x-3">
               <button
                 onClick={this.handleRetry}
@@ -124,10 +139,13 @@ class ErrorBoundary extends Component<Props, State> {
                 Reload Page
               </button>
             </div>
-            
+
             <div className="mt-4 text-xs text-gray-400 text-center">
-              If this problem persists, please{' '}
-              <a href="https://github.com/burdettadam/botct/issues" className="text-blue-400 hover:text-blue-300">
+              If this problem persists, please{" "}
+              <a
+                href="https://github.com/burdettadam/botct/issues"
+                className="text-blue-400 hover:text-blue-300"
+              >
                 report an issue
               </a>
             </div>

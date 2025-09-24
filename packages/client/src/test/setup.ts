@@ -1,6 +1,6 @@
-import { expect, afterEach } from 'vitest';
-import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
 
 // Cleanup after each test case
 afterEach(() => {
@@ -8,7 +8,7 @@ afterEach(() => {
 });
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -38,16 +38,16 @@ global.WebSocket = class WebSocket {
   constructor(public url: string) {
     setTimeout(() => {
       this.readyState = WebSocket.OPEN;
-      this.onopen?.(new Event('open'));
+      this.onopen?.(new Event("open"));
     }, 0);
   }
 
-  send(data: string | ArrayBufferLike | Blob | ArrayBufferView): void {
+  send(_data: string | ArrayBufferLike | Blob | ArrayBufferView): void {
     // Mock implementation
   }
 
   close(): void {
     this.readyState = WebSocket.CLOSED;
-    this.onclose?.(new CloseEvent('close'));
+    this.onclose?.(new CloseEvent("close"));
   }
 } as any;

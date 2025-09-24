@@ -1,8 +1,8 @@
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFCP, onINP, onLCP, onTTFB } from "web-vitals";
 
 interface PerformanceMetrics {
   cls: number | null;
-  fid: number | null;
+  inp: number | null;
   fcp: number | null;
   lcp: number | null;
   ttfb: number | null;
@@ -17,7 +17,7 @@ class PerformanceMonitor {
   private sessionId: string;
   private endpoint: string;
 
-  constructor(endpoint = '/api/analytics/vitals') {
+  constructor(endpoint = "/api/analytics/vitals") {
     this.sessionId = this.generateSessionId();
     this.endpoint = endpoint;
     this.initializeMetrics();
@@ -29,27 +29,27 @@ class PerformanceMonitor {
 
   private initializeMetrics(): void {
     // Web Vitals
-    getCLS(this.recordMetric.bind(this, 'cls'));
-    getFID(this.recordMetric.bind(this, 'fid'));
-    getFCP(this.recordMetric.bind(this, 'fcp'));
-    getLCP(this.recordMetric.bind(this, 'lcp'));
-    getTTFB(this.recordMetric.bind(this, 'ttfb'));
+    onCLS(this.recordMetric.bind(this, "cls"));
+    onINP(this.recordMetric.bind(this, "inp"));
+    onFCP(this.recordMetric.bind(this, "fcp"));
+    onLCP(this.recordMetric.bind(this, "lcp"));
+    onTTFB(this.recordMetric.bind(this, "ttfb"));
 
     // Custom game-specific metrics
     this.trackGameMetrics();
-    
+
     // Navigation metrics
     this.trackNavigationTiming();
-    
+
     // Resource metrics
     this.trackResourceTiming();
   }
 
   private recordMetric(name: keyof PerformanceMetrics, metric: any): void {
     this.metrics[name] = metric.value;
-    
+
     // Send immediately for critical metrics
-    if (name === 'cls' || name === 'lcp') {
+    if (name === "cls" || name === "lcp") {
       this.sendMetrics();
     }
   }
@@ -62,28 +62,28 @@ class PerformanceMonitor {
   }
 
   private trackWebSocketLatency(): void {
-    if (typeof window !== 'undefined' && 'WebSocket' in window) {
+    if (typeof window !== "undefined" && "WebSocket" in window) {
       const originalWebSocket = window.WebSocket;
       const self = this;
-      
-      window.WebSocket = class extends originalWebSocket {
-        constructor(url: string, protocols?: string | string[]) {
-          super(url, protocols);
-          
+
+      (window as any).WebSocket = class extends originalWebSocket {
+        constructor(url: string | URL, protocols?: string | string[]) {
+          super(url.toString(), protocols);
+
           const startTime = performance.now();
-          
-          this.addEventListener('open', () => {
+
+          this.addEventListener("open", () => {
             const latency = performance.now() - startTime;
-            self.recordCustomMetric('wsConnectionTime', latency);
+            self.recordCustomMetric("wsConnectionTime", latency);
           });
-          
-          this.addEventListener('message', (event) => {
+
+          this.addEventListener("message", (event) => {
             const messageTime = performance.now();
             try {
               const data = JSON.parse(event.data);
               if (data.timestamp) {
                 const latency = messageTime - data.timestamp;
-                self.recordCustomMetric('wsMessageLatency', latency);
+                self.recordCustomMetric("wsMessageLatency", latency);
               }
             } catch (e) {
               // Not JSON or no timestamp
@@ -98,10 +98,12 @@ class PerformanceMonitor {
     // Track how long game state updates take to render
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.target instanceof HTMLElement && 
-            mutation.target.dataset?.testid?.includes('game-')) {
+        if (
+          mutation.target instanceof HTMLElement &&
+          mutation.target.dataset?.testid?.includes("game-")
+        ) {
           const updateTime = performance.now();
-          this.recordCustomMetric('gameStateUpdate', updateTime);
+          this.recordCustomMetric("gameStateUpdate", updateTime);
         }
       });
     });
@@ -117,43 +119,55 @@ class PerformanceMonitor {
       entries.forEach((entry) => {
         if (entry.isIntersecting && entry.target instanceof HTMLImageElement) {
           const startTime = performance.now();
-          entry.target.addEventListener('load', () => {
+          entry.target.addEventListener("load", () => {
             const loadTime = performance.now() - startTime;
-            this.recordCustomMetric('characterImageLoad', loadTime);
+            this.recordCustomMetric("characterImageLoad", loadTime);
           });
         }
       });
     });
 
     // Observe character images
-    document.querySelectorAll('img[data-character]').forEach((img) => {
+    document.querySelectorAll("img[data-character]").forEach((img) => {
       imageObserver.observe(img);
     });
   }
 
   private trackNavigationTiming(): void {
-    window.addEventListener('load', () => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      
-      this.recordCustomMetric('domContentLoaded', navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart);
-      this.recordCustomMetric('loadComplete', navigation.loadEventEnd - navigation.loadEventStart);
-      this.recordCustomMetric('dnsLookup', navigation.domainLookupEnd - navigation.domainLookupStart);
+    window.addEventListener("load", () => {
+      const navigation = performance.getEntriesByType(
+        "navigation"
+      )[0] as PerformanceNavigationTiming;
+
+      this.recordCustomMetric(
+        "domContentLoaded",
+        navigation.domContentLoadedEventEnd -
+          navigation.domContentLoadedEventStart
+      );
+      this.recordCustomMetric(
+        "loadComplete",
+        navigation.loadEventEnd - navigation.loadEventStart
+      );
+      this.recordCustomMetric(
+        "dnsLookup",
+        navigation.domainLookupEnd - navigation.domainLookupStart
+      );
     });
   }
 
   private trackResourceTiming(): void {
     const resourceObserver = new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => {
-        if (entry.name.includes('/api/')) {
-          this.recordCustomMetric('apiResponseTime', entry.duration);
+        if (entry.name.includes("/api/")) {
+          this.recordCustomMetric("apiResponseTime", entry.duration);
         }
-        if (entry.name.includes('.js') || entry.name.includes('.css')) {
-          this.recordCustomMetric('assetLoadTime', entry.duration);
+        if (entry.name.includes(".js") || entry.name.includes(".css")) {
+          this.recordCustomMetric("assetLoadTime", entry.duration);
         }
       });
     });
 
-    resourceObserver.observe({ entryTypes: ['resource'] });
+    resourceObserver.observe({ entryTypes: ["resource"] });
   }
 
   private recordCustomMetric(name: string, value: number): void {
@@ -169,22 +183,22 @@ class PerformanceMonitor {
       url: window.location.href,
       userAgent: navigator.userAgent,
       cls: this.metrics.cls || null,
-      fid: this.metrics.fid || null,
+      inp: this.metrics.inp || null,
       fcp: this.metrics.fcp || null,
       lcp: this.metrics.lcp || null,
       ttfb: this.metrics.ttfb || null,
     };
 
     // Send via beacon API (doesn't block page unload)
-    if ('sendBeacon' in navigator) {
+    if ("sendBeacon" in navigator) {
       navigator.sendBeacon(this.endpoint, JSON.stringify(payload));
     } else {
       // Fallback for older browsers
       fetch(this.endpoint, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(payload),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         keepalive: true,
       }).catch(() => {
@@ -205,14 +219,14 @@ class PerformanceMonitor {
   // Initialize on page visibility change
   public initialize(): void {
     // Send metrics when page becomes hidden
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
         this.sendMetrics();
       }
     });
 
     // Send metrics on page unload
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener("beforeunload", () => {
       this.sendMetrics();
     });
 
