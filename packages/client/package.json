@@ -1,7 +1,7 @@
 {
-  "name": "@botc/client",
+  "name": "@ashes-of-salem/client",
   "version": "0.1.0",
-  "description": "BotC Digital Client - React Web App",
+  "description": "Ashes of Salem Client - React Web App",
   "type": "module",
   "scripts": {
     "predev": "cd ../shared && npm run build",
@@ -14,7 +14,7 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@botc/shared": "file:../shared",
+    "@ashes-of-salem/shared": "file:../shared",
     "@heroicons/react": "^2.0.18",
     "keen-slider": "^6.8.6",
     "keycloak-js": "^26.2.0",

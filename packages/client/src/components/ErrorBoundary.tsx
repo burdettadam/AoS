@@ -143,7 +143,7 @@ class ErrorBoundary extends Component<Props, State> {
             <div className="mt-4 text-xs text-gray-400 text-center">
               If this problem persists, please{" "}
               <a
-                href="https://github.com/burdettadam/botct/issues"
+                href="https://github.com/burdettadam/aos/issues"
                 className="text-blue-400 hover:text-blue-300"
               >
                 report an issue

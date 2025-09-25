@@ -1,7 +1,7 @@
 {
-  "name": "botc-digital",
+  "name": "ashes-of-salem",
   "version": "0.1.0",
-  "description": "A platform-agnostic, AI-assisted implementation of Blood on the Clocktower",
+  "description": "A digital social deduction game heavily inspired by Blood on the Clock Tower",
   "main": "index.js",
   "scripts": {
     "dev": "npm run build:shared && concurrently \"npm run dev:server\" \"npm run dev:client\"",
@@ -38,7 +38,7 @@
     "quality:report": "./scripts/generate-quality-report.sh"
   },
   "bin": {
-    "botct-resolve": "./scripts/utilities/resolve-lineup.js"
+    "ashes-of-salem-resolve": "./scripts/utilities/resolve-lineup.js"
   },
   "workspaces": [
     "packages/*"
@@ -67,7 +67,9 @@
     "vite-bundle-analyzer": "^0.7.0"
   },
   "keywords": [
-    "blood-on-the-clocktower",
+    "ashes-of-salem",
+    "social-deduction",
+    "blood-on-the-clocktower-inspired",
     "game",
     "websocket",
     "realtime",

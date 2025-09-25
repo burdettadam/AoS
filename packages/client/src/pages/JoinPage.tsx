@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const JoinPage: React.FC = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
-  const [playerName, setPlayerName] = useState<string>(localStorage.getItem('botc-player-name') || '');
-  const [gameName, setGameName] = useState<string>('');
+  const [playerName, setPlayerName] = useState<string>(
+    localStorage.getItem("ashes-of-salem-player-name") || "",
+  );
+  const [gameName, setGameName] = useState<string>("");
 
   useEffect(() => {
     if (!gameId) {
-      navigate('/');
+      navigate("/");
     }
     // Fetch public game info to show name if available
     const load = async () => {
@@ -19,7 +21,9 @@ const JoinPage: React.FC = () => {
           const g = await res.json();
           if ((g as any)?.gameName) setGameName((g as any).gameName);
         }
-      } catch {}
+      } catch {
+        // Ignore errors when loading game name
+      }
     };
     load();
   }, [gameId, navigate]);
@@ -27,17 +31,21 @@ const JoinPage: React.FC = () => {
   const onContinue = () => {
     const name = playerName.trim();
     if (!name) return;
-    localStorage.setItem('botc-player-name', name);
-  // Don't clear existing seat; LobbyPage will reuse if present
+    localStorage.setItem("ashes-of-salem-player-name", name);
+    // Don't clear existing seat; LobbyPage will reuse if present
     navigate(`/lobby/${gameId}`);
   };
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-3xl font-semibold mb-2">Join Game{gameName ? `: ${gameName}` : ''}</h1>
+      <h1 className="text-3xl font-semibold mb-2">
+        Join Game{gameName ? `: ${gameName}` : ""}
+      </h1>
       <div className="card p-6">
         {gameName ? (
-          <div className="text-sm text-gray-400 mb-4">Game ID: <span className="font-mono">{gameId}</span></div>
+          <div className="text-sm text-gray-400 mb-4">
+            Game ID: <span className="font-mono">{gameId}</span>
+          </div>
         ) : (
           <>
             <div className="text-sm text-gray-400 mb-2">Game</div>
@@ -45,7 +53,12 @@ const JoinPage: React.FC = () => {
           </>
         )}
 
-        <label className="block text-sm text-gray-300 mb-2" htmlFor="playerName">Your Avatar Name</label>
+        <label
+          className="block text-sm text-gray-300 mb-2"
+          htmlFor="playerName"
+        >
+          Your Avatar Name
+        </label>
         <input
           id="playerName"
           value={playerName}
@@ -57,7 +70,7 @@ const JoinPage: React.FC = () => {
         <button
           onClick={onContinue}
           disabled={!playerName.trim()}
-          className={`btn-primary mt-4 ${!playerName.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`btn-primary mt-4 ${!playerName.trim() ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           Continue to Lobby
         </button>

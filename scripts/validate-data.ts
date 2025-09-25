@@ -1,19 +1,19 @@
 #!/usr/bin/env ts-node
 
-import { promises as fs } from 'fs';
-import * as path from 'path';
-import Ajv from 'ajv';
+import Ajv from "ajv";
+import { promises as fs } from "fs";
+import * as path from "path";
 
-const CHAR_DIR = path.join(__dirname, '..', 'data', 'characters');
-const SCR_DIR = path.join(__dirname, '..', 'data', 'scripts');
+const CHAR_DIR = path.join(__dirname, "..", "data", "characters");
+const SCR_DIR = path.join(__dirname, "..", "data", "scripts");
 
 // Import JSON schemas
-const characterSchema = require('../schemas/character.schema.json');
-const scriptSchema = require('../schemas/script.schema.json');
+import characterSchema from "../schemas/character.schema.json";
+import scriptSchema from "../schemas/script.schema.json";
 
 const SCHEMAS = {
   character: characterSchema,
-  script: scriptSchema
+  script: scriptSchema,
 };
 
 const ajv = new Ajv({ allErrors: true, strict: false });
@@ -25,20 +25,24 @@ interface ValidationError {
   errs: any[];
 }
 
-async function validateFolder(dir: string, validator: any, label: string): Promise<void> {
+async function validateFolder(
+  dir: string,
+  validator: any,
+  label: string,
+): Promise<void> {
   const files = await fs.readdir(dir);
-  const jsonFiles = files.filter(f => f.endsWith('.json'));
+  const jsonFiles = files.filter((f) => f.endsWith(".json"));
   const errors: ValidationError[] = [];
-  
+
   for (const file of jsonFiles) {
     const filePath = path.join(dir, file);
-    const data = JSON.parse(await fs.readFile(filePath, 'utf8'));
+    const data = JSON.parse(await fs.readFile(filePath, "utf8"));
     const valid = validator(data);
     if (!valid) {
       errors.push({ file: filePath, errs: validator.errors });
     }
   }
-  
+
   if (errors.length) {
     console.error(`❌ ${label}: ${errors.length} files invalid`);
     for (const e of errors) {
@@ -52,8 +56,8 @@ async function validateFolder(dir: string, validator: any, label: string): Promi
 }
 
 async function main(): Promise<void> {
-  await validateFolder(CHAR_DIR, validateChar, 'Characters');
-  await validateFolder(SCR_DIR, validateScr, 'Scripts');
+  await validateFolder(CHAR_DIR, validateChar, "Characters");
+  await validateFolder(SCR_DIR, validateScr, "Scripts");
 }
 
 main().catch(console.error);

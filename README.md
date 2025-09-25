@@ -1,18 +1,18 @@
-# 🎭 Blood on the Clocktower Digital
+# 🔥 Ashes of Salem
 
 > **A sophisticated real-time social deduction game platform with AI integration**
 
-[![CI/CD Pipeline](https://github.com/burdettadam/botct/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/burdettadam/botct/actions)
-[![Quality Report](https://github.com/burdettadam/botct/actions/workflows/pr-quality-report.yml/badge.svg)](https://github.com/burdettadam/botct/actions)
-[![Code Quality](https://api.codeclimate.com/v1/badges/REPO_ID/maintainability)](https://codeclimate.com/github/burdettadam/botct/maintainability)
-[![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=burdettadam_botct&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=burdettadam_botct)
+[![CI/CD Pipeline](https://github.com/burdettadam/aos/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/burdettadam/aos/actions)
+[![Quality Report](https://github.com/burdettadam/aos/actions/workflows/pr-quality-report.yml/badge.svg)](https://github.com/burdettadam/aos/actions)
+[![Code Quality](https://api.codeclimate.com/v1/badges/REPO_ID/maintainability)](https://codeclimate.com/github/burdettadam/aos/maintainability)
+[![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=burdettadam_aos&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=burdettadam_aos)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
 
-**🎮 [Try the Live Demo](http://botct-demo.vercel.app)** | **📋 Quick Start:** `npm run docker:up` → Open `http://localhost:5173`
+**📋 Quick Start:** `npm run docker:up` → Open `http://localhost:5173`
 
-A platform-agnostic, AI-assisted implementation of **Blood on the Clocktower** (BotC) with an authoritative rules engine, nightly fairness scoring, and LLM-driven character dialogue.
+**Ashes of Salem** is a digital social deduction game heavily inspired by **Blood on the Clock Tower** by Steven Medway and The Pandemonium Institute. This platform features an authoritative rules engine, nightly fairness scoring, and LLM-driven character dialogue.
 
 ## 📚 Quick Links
 
@@ -35,7 +35,19 @@ A platform-agnostic, AI-assisted implementation of **Blood on the Clocktower** (
 - **AI Agents**: LLM-powered NPCs that can play as characters with appropriate knowledge limitations
 - **Fairness Scoring**: Built-in ICT (Information-Control-Time) metrics to help Storytellers balance games
 - **Cross-Platform**: Web-first PWA with plans for mobile and desktop apps
-- **Modular Scripts**: Support for different BotC editions and custom scripts
+- **Modular Scripts**: Support for different script editions and custom scripts
+
+## ✨ Inspiration
+
+**Ashes of Salem** is heavily inspired by **Blood on the Clock Tower**, the brilliant social deduction game created by Steven Medway and The Pandemonium Institute. We are immensely grateful for the innovative game design that has inspired this digital adaptation. This project is an unofficial implementation created for educational purposes and to explore digital adaptations of social deduction mechanics.
+
+**Key inspirations from Blood on the Clock Tower:**
+
+- Asymmetric information and hidden role mechanics
+- The Storyteller role and game facilitation concepts
+- Character abilities and interaction patterns
+- Day/night phase structure and voting mechanics
+- The emphasis on social deduction and community building
 
 ## 🏗️ Architecture
 
@@ -66,8 +78,8 @@ This project uses a monorepo structure with:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/burdettadam/botct.git
-   cd botct
+   git clone https://github.com/burdettadam/aos.git
+   cd aos
    ```
 
 2. **Install dependencies and build shared package**
@@ -109,7 +121,7 @@ This will start:
 
 ### Package Management
 
-This project uses a monorepo with shared packages. The `@botc/shared` package is built with dual output:
+This project uses a monorepo with shared packages. The `@ashes-of-salem/shared` package is built with dual output:
 
 - **CommonJS** for Node.js (server)
 - **ES Modules** for browsers (client)
@@ -310,9 +322,9 @@ npm run quality:report
 
 MIT License - see LICENSE file for details.
 
-## 🎲 About Blood on the Clocktower
+## 🎲 About the Original Game
 
-Blood on the Clocktower is a social deduction game by Steven Medway and The Pandemonium Institute. This is an unofficial digital implementation for educational and entertainment purposes.
+Blood on the Clocktower is a social deduction game by Steven Medway and The Pandemonium Institute. **Ashes of Salem** is an unofficial digital adaptation created for educational and entertainment purposes, heavily inspired by the brilliant mechanics and design of the original board game.
 
 ---
 

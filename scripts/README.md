@@ -18,17 +18,6 @@ This directory contains various scripts used for development, data processing, a
 - **`test-all.sh`** - Runs all tests
 - **`validate-data.ts`** - Validates data integrity
 
-### `/data-migration/`
-
-Contains scripts that were used for one-time data migrations. These are kept for historical reference but are typically not needed for ongoing development.
-
-- **`complete-migration.js`** - Complete data migration to new architecture
-- **`convert-characters.js`** - Character data format conversion
-- **`extract-all-characters.js`** - Extracts character data from various sources
-- **`extract-sample.js`** - Extracts sample data for testing
-- **`full-migration.js`** - Comprehensive migration script
-- **`migrate-characters.js`** - Large character data migration (13k+ lines)
-
 ### `/utilities/`
 
 Contains utility scripts that are actively used in development.
@@ -37,16 +26,6 @@ Contains utility scripts that are actively used in development.
 - **`find-missing.js`** - Finds missing files or data
 - **`resolve-lineup.js`** - Resolves game lineups (available as `botct-resolve` CLI command)
 - **`run-enhanced-tb-test.js`** - Runs enhanced Trouble Brewing tests
-
-### `/archived/`
-
-Contains backup files (.bak) from previous versions of scripts. These can be safely removed if the current versions are working correctly.
-
-- **`ensure-actions.js.bak`** - Backup of ensure-actions (now TypeScript)
-- **`lint-data.js.bak`** - Backup of lint-data (now TypeScript)
-- **`standardize-characters.js.bak`** - Backup of standardize-characters (now TypeScript)
-- **`standardize-scripts.js.bak`** - Backup of standardize-scripts (now TypeScript)
-- **`validate-data.js.bak`** - Backup of validate-data (now TypeScript)
 
 ## Usage
 

@@ -1,57 +1,58 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useGameStore } from '../store/gameStore';
-import * as Enums from '@botc/shared';
-import type { GameState } from '@botc/shared';
+import type { GameState } from "@botc/shared";
+import * as Enums from "@botc/shared";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGameStore } from "../store/gameStore";
 
 export const useGameConnection = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
   const { connect, setSeat, seatId, isStoryteller } = useGameStore();
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playerId] = useState(() => {
-    const nameKey = 'botc-player-name';
-    const name = (localStorage.getItem(nameKey) || '').trim();
+    const nameKey = "ashes-of-salem-player-name";
+    const name = (localStorage.getItem(nameKey) || "").trim();
     return name;
   });
 
   useEffect(() => {
     if (!gameId) return;
-    
+
     // Require player name; redirect to join page if missing and gameId known
     if (!playerId || !playerId.trim()) {
       navigate(`/join/${gameId}`);
       return;
     }
-    
+
     let cancelled = false;
-    
+
     async function init() {
       try {
         // Fetch initial state
         const res = await fetch(`/api/games/${gameId}`);
-        if (!res.ok) throw new Error('Game not found');
+        if (!res.ok) throw new Error("Game not found");
         const game: GameState = await res.json();
         if (cancelled) return;
 
-        const storedSeat = localStorage.getItem('botc-seat-id');
-        
+        const storedSeat = localStorage.getItem("botc-seat-id");
+
         if (game.phase === Enums.GamePhase.LOBBY) {
           // Try to reuse existing seat first by playerId or stored seatId
-          const mySeat = game.seats.find((s: any) => 
-            (storedSeat && s.id === storedSeat) || s.playerId === playerId
+          const mySeat = game.seats.find(
+            (s: any) =>
+              (storedSeat && s.id === storedSeat) || s.playerId === playerId,
           );
-          
+
           if (!mySeat) {
             // Join the game
             const joinRes = await fetch(`/api/games/${gameId}/join`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ playerId })
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ playerId }),
             });
-            if (!joinRes.ok) throw new Error('Failed to join game');
+            if (!joinRes.ok) throw new Error("Failed to join game");
             const joinData = await joinRes.json();
             setSeat(joinData.seatId, joinData.isStoryteller);
             connect(game.id, joinData.seatId);
@@ -61,26 +62,29 @@ export const useGameConnection = () => {
           }
         } else {
           // Game already advanced; try to find existing seat by playerId
-          const mySeat = game.seats.find((s: any) => 
-            (storedSeat && s.id === storedSeat) || s.playerId === playerId
+          const mySeat = game.seats.find(
+            (s: any) =>
+              (storedSeat && s.id === storedSeat) || s.playerId === playerId,
           );
-          
+
           if (!mySeat) {
-            setError('Game already started. Ask the Storyteller to add you.');
+            setError("Game already started. Ask the Storyteller to add you.");
           } else {
             setSeat(mySeat.id, mySeat.id === (game as any).storytellerSeatId);
             connect(game.id, mySeat.id);
           }
         }
       } catch (e: any) {
-        setError(e.message || 'Failed to load lobby');
+        setError(e.message || "Failed to load lobby");
       } finally {
         setLoading(false);
       }
     }
-    
+
     init();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [gameId, playerId, navigate, connect, setSeat]);
 
   return {
@@ -94,15 +98,10 @@ export const useGameConnection = () => {
 };
 
 export const useScriptSelection = () => {
-  const { 
-    availableScripts, 
-    loadScripts, 
-    currentGame, 
-    seatId,
-    isStoryteller 
-  } = useGameStore();
-  
-  const [selectedScriptId, setSelectedScriptId] = useState<string>('');
+  const { availableScripts, loadScripts, currentGame, seatId, isStoryteller } =
+    useGameStore();
+
+  const [selectedScriptId, setSelectedScriptId] = useState<string>("");
 
   // Aggressively preload scripts immediately when hook is used
   useEffect(() => {
@@ -118,15 +117,15 @@ export const useScriptSelection = () => {
 
   // Get available scripts from game state, fallback to empty array
   const storytellerSelectedScripts = currentGame?.availableScriptIds || [];
-  
+
   // For storytellers: all scripts available for selection
   // For players: only scripts the storyteller has approved
   const visibleScripts = useMemo(() => {
     if (isStoryteller) {
       return availableScripts;
     }
-    return availableScripts.filter((script: any) => 
-      storytellerSelectedScripts.includes(script.id)
+    return availableScripts.filter((script: any) =>
+      storytellerSelectedScripts.includes(script.id),
     );
   }, [availableScripts, isStoryteller, storytellerSelectedScripts]);
 
@@ -167,12 +166,12 @@ export const useScriptSelection = () => {
     if (!currentGame?.id || !seatId) return;
     try {
       await fetch(`/api/games/${currentGame.id}/scripts/available`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ storytellerSeatId: seatId, scriptIds })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ storytellerSeatId: seatId, scriptIds }),
       });
     } catch (error) {
-      console.error('Failed to update available scripts:', error);
+      console.error("Failed to update available scripts:", error);
     }
   };
 

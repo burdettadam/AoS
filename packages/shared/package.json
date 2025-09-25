@@ -1,7 +1,7 @@
 {
-  "name": "@botc/shared",
+  "name": "@ashes-of-salem/shared",
   "version": "0.1.0",
-  "description": "Shared types and utilities for BotC Digital",
+  "description": "Shared types and utilities for Ashes of Salem",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",

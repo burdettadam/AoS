@@ -1,7 +1,7 @@
 {
-  "name": "@botc/server",
+  "name": "@ashes-of-salem/server",
   "version": "0.1.0",
-  "description": "BotC Digital Server - Game Engine and API",
+  "description": "Ashes of Salem Server - Game Engine and API",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -15,7 +15,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@botc/shared": "file:../shared",
+    "@ashes-of-salem/shared": "file:../shared",
     "@fastify/cors": "^8.3.0",
     "@fastify/websocket": "^8.3.0",
     "@types/jsonwebtoken": "^9.0.10",
