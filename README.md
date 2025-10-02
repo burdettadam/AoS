@@ -181,6 +181,31 @@ The system supports AI agents that can:
 - Maintain character consistency through conversation
 - Follow game rules without accessing hidden information
 
+### NPC Profile System
+
+The AI system includes a configurable profile system that allows customization of NPC behavior:
+
+**API Endpoints:**
+
+- `GET /api/ai/npc-profiles` - List available NPC profiles for selection
+- `POST /api/games/:gameId/npc` - Add an NPC with optional `profileId` parameter
+
+**Available Profiles:**
+
+- **Starter Generic** (`starter-generic`): A balanced, customizable profile ideal for beginners
+- **Aggressive Hunter** (`aggressive-hunter`): Actively hunts for evil players with high confidence
+- **Custom Profiles**: Create your own by modifying the starter profile template
+
+**Profile Configuration:**
+Each profile includes personality traits (chattiness, suspicion, boldness), behavior settings (message frequency, decision speed), and strategic preferences for good/evil team roles.
+
+**Usage in Lobby:**
+
+1. Click "Add NPC" in the lobby
+2. Select from available profiles in the modal
+3. NPC is added with the selected behavioral configuration
+4. Profile selection is stored and can be used for AI behavior customization
+
 ## 📊 Fairness Scoring
 
 The ICT scoring system evaluates game balance each night:

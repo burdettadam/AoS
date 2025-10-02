@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { JournalSchema } from './journal';
-import { SeatIdSchema, PlayerIdSchema } from './core-types';
-import * as Enums from './enums';
+import { z } from "zod";
+import { PlayerIdSchema, SeatIdSchema } from "./core-types";
+import * as Enums from "./enums";
+import { JournalSchema } from "./journal";
 
 // Game State Types
 export const SeatSchema = z.object({
@@ -14,6 +14,8 @@ export const SeatSchema = z.object({
   statuses: z.array(z.string()).default([]),
   isAlive: z.boolean().default(true),
   votingPower: z.number().default(1),
+  // Selected NPC profile (for AI behavior customization)
+  npcProfileId: z.string().optional(),
   // Marks this seat as the storyteller in the lobby (storyteller gets full grimoire view)
   isStoryteller: z.boolean().optional(),
   journal: JournalSchema.optional(),
@@ -26,9 +28,9 @@ export const AbilitySchema = z.object({
   roleId: z.string(),
   actorSeat: SeatIdSchema,
   targets: z.array(SeatIdSchema),
-  timing: z.enum(['night', 'day', 'passive']),
+  timing: z.enum(["night", "day", "passive"]),
   remainingUses: z.number().optional(),
-  precedence: z.number() // Lower = earlier in night order
+  precedence: z.number(), // Lower = earlier in night order
 });
 export type Ability = z.infer<typeof AbilitySchema>;
 
@@ -38,14 +40,14 @@ export const NominationSchema = z.object({
   nominator: SeatIdSchema,
   nominee: SeatIdSchema,
   createdAt: z.date(),
-  closed: z.boolean().default(false)
+  closed: z.boolean().default(false),
 });
 export type Nomination = z.infer<typeof NominationSchema>;
 
 export const VoteRecordSchema = z.object({
   voter: SeatIdSchema,
   vote: z.boolean(),
-  timestamp: z.date()
+  timestamp: z.date(),
 });
 export type VoteRecord = z.infer<typeof VoteRecordSchema>;
 
@@ -53,7 +55,9 @@ export const VoteSessionSchema = z.object({
   nominationId: z.string().uuid(),
   startedAt: z.date(),
   votes: z.array(VoteRecordSchema),
-  tally: z.object({ yes: z.number(), no: z.number() }).default({ yes: 0, no: 0 }),
-  finished: z.boolean().default(false)
+  tally: z
+    .object({ yes: z.number(), no: z.number() })
+    .default({ yes: 0, no: 0 }),
+  finished: z.boolean().default(false),
 });
 export type VoteSession = z.infer<typeof VoteSessionSchema>;

@@ -1,9 +1,13 @@
-import { z } from 'zod';
-import { JournalSchema } from './journal';
-import * as Enums from './enums';
-import { SeatIdSchema, PlayerIdSchema, GameIdSchema } from './core-types';
-import { SeatSchema, AbilitySchema, NominationSchema, VoteSessionSchema } from './game-state-types';
-import { SetupStateSchema, GrimoireStateSchema } from './setup-types';
+import { z } from "zod";
+import { GameIdSchema, SeatIdSchema } from "./core-types";
+import * as Enums from "./enums";
+import {
+  AbilitySchema,
+  NominationSchema,
+  SeatSchema,
+  VoteSessionSchema,
+} from "./game-state-types";
+import { GrimoireStateSchema, SetupStateSchema } from "./setup-types";
 
 export const GameStateSchema = z.object({
   id: GameIdSchema,
@@ -25,16 +29,22 @@ export const GameStateSchema = z.object({
   // Scripts made available by storyteller for players to see/propose
   availableScriptIds: z.array(z.string()).default([]),
   // Script proposals and voting while in lobby
-  scriptProposals: z.array(z.object({
-    id: z.string().uuid(),
-    scriptId: z.string(),
-    proposers: z.array(SeatIdSchema).default([]),
-    // Legacy yes/no votes (kept for compatibility)
-    votes: z.record(z.boolean()).default({}),
-    // New difficulty votes per seat
-    difficultyVotes: z.record(z.enum(['beginner','intermediate','advanced'])).default({}),
-    createdAt: z.date()
-  })).default([]),
+  scriptProposals: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        scriptId: z.string(),
+        proposers: z.array(SeatIdSchema).default([]),
+        // Legacy yes/no votes (kept for compatibility)
+        votes: z.record(z.boolean()).default({}),
+        // New difficulty votes per seat
+        difficultyVotes: z
+          .record(z.enum(["beginner", "intermediate", "advanced"]))
+          .default({}),
+        createdAt: z.date(),
+      }),
+    )
+    .default([]),
   // Optional list of role IDs selected by the storyteller for this game
   selectedRoles: z.array(z.string()).optional(),
   // Optional map of seatId -> roleId claimed/picked before start
@@ -44,6 +54,6 @@ export const GameStateSchema = z.object({
   // Grimoire state for storyteller
   grimoireState: GrimoireStateSchema.optional(),
   createdAt: z.date(),
-  updatedAt: z.date()
+  updatedAt: z.date(),
 });
 export type GameState = z.infer<typeof GameStateSchema>;

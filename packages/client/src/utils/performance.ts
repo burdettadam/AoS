@@ -69,22 +69,15 @@ class PerformanceMonitor {
         constructor(url: string | URL, protocols?: string | string[]) {
           super(url.toString(), protocols);
 
-          const startTime = performance.now();
-
           this.addEventListener("open", () => {
-            const latency = performance.now() - startTime;
-            // Note: this should reference the performance tracker instance
-            // but due to class scoping, we'll skip this for now
+            // const latency = performance.now() - startTime; (reserved for future tracking)
           });
 
           this.addEventListener("message", (event) => {
-            const messageTime = performance.now();
             try {
               const data = JSON.parse(event.data);
               if (data.timestamp) {
-                const latency = messageTime - data.timestamp;
-                // Note: this should reference the performance tracker instance
-                // but due to class scoping, we'll skip this for now
+                // const latency = messageTime - data.timestamp; (reserved for future tracking)
               }
             } catch (e) {
               // Not JSON or no timestamp

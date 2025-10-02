@@ -35,7 +35,16 @@
     "data:lint": "ts-node scripts/lint-data.ts",
     "analyze:complexity": "./scripts/analyze-code-simple.sh",
     "quality:full": "./scripts/analyze-code-simple.sh",
-    "quality:report": "./scripts/generate-quality-report.sh"
+    "quality:report": "./scripts/generate-quality-report.sh",
+    "ai:test": "cd packages/server && npx ts-node src/ai/test-ai-integration.ts",
+    "ai:start": "./docker/start-with-ai.sh",
+    "ai:docker": "cd docker && docker compose -f docker-compose.yml up -d ollama",
+    "ai:logs": "cd docker && docker compose logs -f ollama",
+    "ai:models": "docker exec -it botct-ollama ollama list",
+    "ai:pull:deepseek": "docker exec -it botct-ollama ollama pull deepseek-r1:7b",
+    "ai:pull:llama": "docker exec -it botct-ollama ollama pull llama3.2:3b",
+    "ai:pull:phi": "docker exec -it botct-ollama ollama pull phi4-mini",
+    "ai:shell": "docker exec -it botct-ollama /bin/bash"
   },
   "bin": {
     "ashes-of-salem-resolve": "./scripts/utilities/resolve-lineup.js"

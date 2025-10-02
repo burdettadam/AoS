@@ -1,43 +1,63 @@
-import { GameId, GameState, SeatId } from '@botc/shared';
-import { GameEngine } from '../game/engine';
-import { logger } from '../utils/logger';
+import { GameId, GameState, SeatId } from "@botc/shared";
+import { GameEngine } from "../game/engine";
+import { logger } from "../utils/logger";
 
 export class MatchmakingService {
   private gameEngine: GameEngine;
   // Optional callback to notify when a game's public state changes
-  private onUpdate?: (args: { gameId: GameId; game: GameState; eventType: string; payload?: Record<string, any> }) => void;
+  private onUpdate?: (args: {
+    gameId: GameId;
+    game: GameState;
+    eventType: string;
+    payload?: Record<string, any>;
+  }) => void;
 
   constructor(gameEngine: GameEngine) {
     this.gameEngine = gameEngine;
   }
 
-  setOnUpdate(cb: (args: { gameId: GameId; game: GameState; eventType: string; payload?: Record<string, any> }) => void) {
+  setOnUpdate(
+    cb: (args: {
+      gameId: GameId;
+      game: GameState;
+      eventType: string;
+      payload?: Record<string, any>;
+    }) => void,
+  ) {
     this.onUpdate = cb;
   }
 
-  async createGame(scriptId?: string, options?: { isPublic?: boolean }): Promise<GameId> {
+  async createGame(
+    scriptId?: string,
+    options?: { isPublic?: boolean },
+  ): Promise<GameId> {
     try {
       const gameId = await this.gameEngine.createGame(scriptId, options);
       logger.info(`Matchmaking created game: ${gameId}`);
       const game = this.gameEngine.getGame(gameId);
       if (game && this.onUpdate) {
-        this.onUpdate({ gameId, game, eventType: 'game_created' });
+        this.onUpdate({ gameId, game, eventType: "game_created" });
       }
       return gameId;
     } catch (error) {
-      logger.error('Failed to create game:', error);
+      logger.error("Failed to create game:", error);
       throw error;
     }
   }
 
   async joinGame(gameId: GameId, playerId: string): Promise<SeatId | null> {
     try {
-    const seatId = await this.gameEngine.addPlayer(gameId, playerId);
-    if (seatId) {
+      const seatId = await this.gameEngine.addPlayer(gameId, playerId);
+      if (seatId) {
         logger.info(`Player ${playerId} joined game ${gameId}`);
         const game = this.gameEngine.getGame(gameId);
         if (game && this.onUpdate) {
-      this.onUpdate({ gameId, game, eventType: 'player_joined', payload: { playerId, seatId } });
+          this.onUpdate({
+            gameId,
+            game,
+            eventType: "player_joined",
+            payload: { playerId, seatId },
+          });
         }
       } else {
         logger.warn(`Failed to add player ${playerId} to game ${gameId}`);
@@ -56,7 +76,12 @@ export class MatchmakingService {
         logger.info(`Game ${gameId} started successfully`);
         const game = this.gameEngine.getGame(gameId);
         if (game && this.onUpdate) {
-          this.onUpdate({ gameId, game, eventType: 'phase_changed', payload: { phase: game.phase } });
+          this.onUpdate({
+            gameId,
+            game,
+            eventType: "phase_changed",
+            payload: { phase: game.phase },
+          });
         }
       } else {
         logger.warn(`Failed to start game ${gameId}`);
@@ -68,13 +93,27 @@ export class MatchmakingService {
     }
   }
 
-  async addNPC(gameId: GameId): Promise<boolean> {
+  async addNPC(gameId: GameId, profileId?: string): Promise<boolean> {
     try {
-      const seatId = await this.gameEngine.addPlayer(gameId, `npc-${Math.random().toString(36).slice(2,8)}`, true);
+      const seatId = await this.gameEngine.addPlayer(
+        gameId,
+        `npc-${Math.random().toString(36).slice(2, 8)}`,
+        true,
+      );
       if (seatId) {
         const game = this.gameEngine.getGame(gameId);
         if (game && this.onUpdate) {
-          this.onUpdate({ gameId, game, eventType: 'player_joined', payload: { isNPC: true, seatId } });
+          if (profileId) {
+            // Attach selected NPC profile id to the seat for later AI agent creation
+            const seat = game.seats.find((s) => s.id === seatId);
+            if (seat) (seat as any).npcProfileId = profileId;
+          }
+          this.onUpdate({
+            gameId,
+            game,
+            eventType: "player_joined",
+            payload: { isNPC: true, seatId },
+          });
         }
       }
       return !!seatId;
@@ -84,12 +123,32 @@ export class MatchmakingService {
     }
   }
 
-  proposeScript(gameId: GameId, proposer: string, scriptId: string, active: boolean = true): boolean {
-    return !!this.gameEngine.proposeScript(gameId, proposer as any, scriptId, active);
+  proposeScript(
+    gameId: GameId,
+    proposer: string,
+    scriptId: string,
+    active: boolean = true,
+  ): boolean {
+    return !!this.gameEngine.proposeScript(
+      gameId,
+      proposer as any,
+      scriptId,
+      active,
+    );
   }
 
-  voteOnScript(gameId: GameId, voterSeat: string, proposalId: string, vote: boolean | null | undefined): boolean {
-    return this.gameEngine.voteOnScript(gameId, voterSeat as any, proposalId, vote);
+  voteOnScript(
+    gameId: GameId,
+    voterSeat: string,
+    proposalId: string,
+    vote: boolean | null | undefined,
+  ): boolean {
+    return this.gameEngine.voteOnScript(
+      gameId,
+      voterSeat as any,
+      proposalId,
+      vote,
+    );
   }
 
   getActiveGames(): GameState[] {
@@ -111,7 +170,7 @@ export class MatchmakingService {
     if (!this.playerQueue.includes(playerId)) {
       this.playerQueue.push(playerId);
       logger.info(`Player ${playerId} added to matchmaking queue`);
-      
+
       // Try to match players
       this.tryMatchPlayers();
     }
@@ -128,21 +187,23 @@ export class MatchmakingService {
   private async tryMatchPlayers(): Promise<void> {
     // Simple matchmaking: create game when we have enough players
     const minPlayers = 5;
-    
+
     if (this.playerQueue.length >= minPlayers) {
       try {
         const gameId = await this.createGame();
-        
+
         // Add first N players to the game
         const playersToMatch = this.playerQueue.splice(0, minPlayers);
-        
+
         for (const playerId of playersToMatch) {
           await this.joinGame(gameId, playerId);
         }
 
-        logger.info(`Matched ${playersToMatch.length} players to game ${gameId}`);
+        logger.info(
+          `Matched ${playersToMatch.length} players to game ${gameId}`,
+        );
       } catch (error) {
-        logger.error('Failed to match players:', error);
+        logger.error("Failed to match players:", error);
         // Re-add players to queue on failure
         // this.playerQueue.unshift(...playersToMatch);
       }

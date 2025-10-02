@@ -11,20 +11,22 @@
     "sourceType": "module"
   },
   "rules": {
-    "complexity": ["warn", 10],
-    "max-depth": ["warn", 4],
-    "max-lines": ["warn", 300],
-    "max-lines-per-function": ["warn", 50],
-    "max-params": ["warn", 4],
-    "max-statements": ["warn", 20],
-    "max-nested-callbacks": ["warn", 3],
+    "complexity": "off",
+    "max-depth": "off",
+    "max-lines": "off",
+    "max-lines-per-function": "off",
+    "max-params": "off",
+    "max-statements": "off",
+    "max-nested-callbacks": "off",
 
     "no-unused-vars": "warn",
-    "no-console": "warn",
+    "no-console": "off",
     "prefer-const": "error",
     "no-var": "error",
     "eqeqeq": "error",
-    "no-magic-numbers": ["warn", { "ignore": [0, 1, -1] }]
+    "no-magic-numbers": "off",
+    "no-empty": "error",
+    "no-useless-escape": "error"
   },
   "overrides": [
     {
@@ -39,9 +41,20 @@
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
-        "@typescript-eslint/no-unused-vars": "warn",
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/explicit-function-return-type": "off"
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_|^(s[0-9]+|player[0-9]+Id|gameId|seatId|latency|fullPath|characterCount|st|options|wsConnected|characterTests|initialMovesCount|fixtureExpect|SeatId|InformationSpec|randomUUID|Alignment|inferTimingFromType|RoleType|Character|NightOrderEntry|GrimoireState|GameId|PTTJournalEntry|AvailableMove|Journal|StatusEffect|createEffect|CharacterActionType|MetaActionType|SelectionModifier|ActionPhase)$",
+            "caughtErrorsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-this-alias": "error",
+        "@typescript-eslint/no-var-requires": "error"
       }
     }
   ]

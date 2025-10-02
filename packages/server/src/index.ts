@@ -387,12 +387,53 @@ async function start() {
     // Add an NPC player
     fastify.post("/api/games/:gameId/npc", async (request, reply) => {
       const { gameId } = request.params as { gameId: string };
-      const ok = await matchmaking.addNPC(gameId as any);
+      const { profileId } = (request.body as any) || {};
+      // Validate profileId if provided by checking shared exports
+      if (profileId && typeof profileId !== "string") {
+        reply.code(400);
+        return { error: "Invalid profileId" };
+      }
+      if (profileId) {
+        const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
+          "@botc/shared"
+        );
+        const exists = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES].some(
+          (p) => p.id === profileId,
+        );
+        if (!exists) {
+          reply.code(400);
+          return { error: "profileId not found" };
+        }
+      }
+      const ok = await matchmaking.addNPC(gameId as any, profileId);
       if (!ok) {
         reply.code(400);
         return { error: "Failed to add NPC" };
       }
       return { ok: true };
+    });
+
+    // List available NPC AI profiles
+    fastify.get("/api/ai/npc-profiles", async (_request, _reply) => {
+      try {
+        const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
+          "@botc/shared"
+        );
+        const profiles = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES];
+        const previews = profiles.map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          avatar: p.avatar,
+          difficulty: p.difficulty,
+          tags: p.tags,
+        }));
+        return { ok: true, profiles: previews };
+      } catch (err) {
+        _request.log.error({ err }, "Failed to load NPC profiles");
+        _reply.code(500);
+        return { ok: false, error: "Failed to load profiles" };
+      }
     });
 
     // Leave a game (lobby only)

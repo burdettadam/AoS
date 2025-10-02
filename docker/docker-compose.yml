@@ -25,7 +25,15 @@ services:
       KC_HTTP_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    command: ["start-dev", "--import-realm", "--spi-theme-static-max-age=-1", "--spi-theme-cache-themes=false", "--spi-theme-cache-templates=false", "--import-realm-strategy=OVERWRITE_EXISTING"]
+    command:
+      [
+        "start-dev",
+        "--import-realm",
+        "--spi-theme-static-max-age=-1",
+        "--spi-theme-cache-themes=false",
+        "--spi-theme-cache-templates=false",
+        "--import-realm-strategy=OVERWRITE_EXISTING",
+      ]
     ports:
       - "8080:8080"
     depends_on:
@@ -46,6 +54,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3001
+      OLLAMA_BASE_URL: http://ollama:11434
     volumes:
       - ../packages/server:/app/packages/server
       - ../packages/shared:/app/packages/shared
@@ -58,6 +67,7 @@ services:
       - botct-network
     depends_on:
       - keycloak
+      - ollama
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 10s
@@ -90,14 +100,30 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # Ollama LLM Server for AI NPCs
+  ollama:
+    image: ollama/ollama:latest
+    container_name: botct-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - botct-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Start Ollama server (models can be pulled manually)
 
 volumes:
   keycloak_data:
+  ollama_data:
 
 networks:
   botct-network:
