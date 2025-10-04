@@ -1,5 +1,5 @@
-import type { NPCProfile } from "@botc/shared";
-import { Character, GameId, GameState, SeatId } from "@botc/shared";
+import type { NPCProfile } from "@ashes-of-salem/shared";
+import { Character, GameId, GameState, SeatId } from "@ashes-of-salem/shared";
 import { GameEngine } from "../game/engine";
 import { logger } from "../utils/logger";
 import { AIDecision, NPCAIAgent } from "./agents/NPCAIAgent";

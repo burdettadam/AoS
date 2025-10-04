@@ -3,7 +3,7 @@
  * This shows how to modify the GameEngine to support AI NPCs
  */
 
-import { GameId, GameState, SeatId } from "@botc/shared";
+import { GameId, GameState, SeatId } from "@ashes-of-salem/shared";
 import { GameEngine } from "../game/engine";
 import { logger } from "../utils/logger";
 import { AIAgentManager } from "./AIAgentManager";

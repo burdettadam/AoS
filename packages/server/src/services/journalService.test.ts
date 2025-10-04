@@ -1,4 +1,4 @@
-import { Character, GamePhase, GameState, Seat } from "@botc/shared";
+import { Character, GamePhase, GameState, Seat } from "@ashes-of-salem/shared";
 import { JournalService } from "../services/journalService";
 
 describe("JournalService", () => {

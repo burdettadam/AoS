@@ -1,0 +1,343 @@
+/**
+ * Enhanced NPC Action System
+ * Two-stage prompting system that removes ambiguity for AI agents
+ */
+
+export interface GameActionOptions {
+  // Core game actions
+  speak: boolean;
+  nominate: boolean;
+  vote: boolean;
+  claimRole: boolean;
+  shareInformation: boolean;
+  askQuestion: boolean;
+  defend: boolean;
+  pass: boolean;
+
+  // Social actions
+  supportPlayer: boolean;
+  suspectPlayer: boolean;
+  requestInformation: boolean;
+  buildAlliance: boolean;
+
+  // Strategic actions
+  bluff: boolean;
+  misdirect: boolean;
+  witholdInformation: boolean;
+  analyzeVotingPattern: boolean;
+}
+
+export interface ActionContext {
+  gamePhase: "day" | "night" | "voting" | "discussion";
+  day: number;
+  playerCount: number;
+  aliveCount: number;
+  hasNomination: boolean;
+  isUnderSuspicion: boolean;
+  recentEvents: string[];
+  availableTargets: string[];
+  timeRemaining: number;
+}
+
+export interface ActionSelection {
+  primary: string; // The main action to take
+  secondary?: string; // Optional follow-up action
+  reasoning: string; // Internal reasoning for the choice
+  confidence: number; // 0-1 confidence in this decision
+  alternatives: string[]; // Other actions considered
+}
+
+/**
+ * Stage 1: Action Selection Prompt Template
+ * Presents AI with clear list of available actions based on profile constraints
+ */
+export const ACTION_SELECTION_TEMPLATE = `
+PHASE: {gamePhase} - Day {day}
+
+CONTEXT:
+{contextDescription}
+
+AVAILABLE ACTIONS (select ONE primary action):
+{availableActions}
+
+Consider your personality traits:
+- Chattiness: {chattiness}/10 (how often you speak)
+- Suspicion: {suspicion}/10 (how much you trust others)
+- Boldness: {boldness}/10 (risk tolerance)
+- Leadership: {leadership}/10 (tendency to guide others)
+
+Consider your constraints:
+{profileConstraints}
+
+Consider your role:
+- Team: {team}
+- Goal: {teamGoal}
+- Known information: {knownInfo}
+
+RESPOND WITH:
+PRIMARY_ACTION: [action_name]
+CONFIDENCE: [1-10]
+REASONING: [brief explanation]
+ALTERNATIVES: [other actions considered]
+`;
+
+/**
+ * Stage 2: Action Execution Prompt Templates
+ * Contextual prompts based on selected action
+ */
+export const ACTION_EXECUTION_TEMPLATES = {
+  speak: `
+You chose to SPEAK during {gamePhase}.
+
+Context: {specificContext}
+Your personality: {personalityDescription}
+Your deception patterns: {deceptionPatterns}
+
+What do you want to say? Consider:
+- Your role and team alignment
+- Information you can safely share
+- Your communication style ({formalLanguage ? 'formal' : 'casual'})
+- Message length target: ~{averageWordsPerMessage} words
+
+FOURTH WALL OPTIONS (optional):
+- Reference your profile traits to explain behavior
+- Mention logical fallacies you're prone to
+- Acknowledge your behavioral constraints
+- Create educational moments about your decision-making
+
+Examples:
+"Sorry, my analytical skeptic profile is showing - I need more evidence"
+"Fair warning: I'm programmed to avoid early voting"
+"Classic {profileName} move coming up..."
+
+RESPOND WITH:
+MESSAGE: [your statement]
+INCLUDES_FOURTH_WALL: [true/false]
+TONE: [analytical/casual/suspicious/friendly]
+`,
+
+RESPOND WITH: [your message]
+`,
+
+  nominate: `
+You chose to NOMINATE someone.
+
+Available targets: {availableTargets}
+Context: {nominationContext}
+Your suspicion level: {suspicion}/10
+Your risk tolerance: {riskTolerance}
+
+Who do you nominate and why? Consider:
+- Evidence against potential targets
+- Your preferred logical approach: {informationProcessing}
+- Whether you {explainReasoning ? 'must' : 'may'} explain your reasoning
+
+RESPOND WITH:
+TARGET: [player_name]
+REASON: [public justification]
+PRIVATE_REASONING: [internal strategic thinking]
+`,
+
+  vote: `
+You must VOTE on the nomination: {nominee}
+Reason given: {nominationReason}
+
+Your analysis framework: {possibilityFramework}
+Your voting style: {preferredVotingStyle}
+Evidence standard: {evidenceRequirement}
+
+Analyze this nomination:
+1. Likelihood nominee is evil: [percentage]
+2. Alternative explanations: [list]
+3. Risk of execution: [high/medium/low]
+4. Team benefit analysis: [benefit to good/evil]
+
+RESPOND WITH:
+VOTE: [EXECUTE/PARDON]
+CONFIDENCE: [1-10]
+PUBLIC_REASON: [what you'll say]
+PRIVATE_REASONING: [strategic thinking]
+`,
+
+  claimRole: `
+You chose to CLAIM your role.
+
+Your actual role: {actualRole}
+Your claim strategy: {claimStrategy}
+Current pressure level: {pressureLevel}
+Your deception skill: {deception}/10
+
+Claiming options:
+1. TRUTH: Claim your actual role
+2. SAFE_LIE: Claim a safe townsfolk role
+3. COUNTER_CLAIM: Claim someone else's role
+4. VAGUE_CLAIM: Give minimal information
+
+Consider:
+- Your lie frequency preference: {lieFrequency}
+- Whether you {mixesTruthWithLies ? 'mix truth with lies' : 'separate truth from lies'}
+- Current game state and suspicion levels
+
+FOURTH WALL OPPORTUNITIES:
+- "My deception score is too low for elaborate lies"
+- "Time to see if my bluffing strategies work"
+- "According to my profile, I prefer {preferredFallacies[0]} fallacies"
+
+RESPOND WITH:
+CLAIM_TYPE: [TRUTH/SAFE_LIE/COUNTER_CLAIM/VAGUE_CLAIM]
+ROLE_CLAIMED: [role_name]
+SUPPORTING_INFO: [additional details to share]
+FUTURE_STRATEGY: [how to maintain this claim]
+`,
+
+  defend: `
+You chose to DEFEND yourself or someone else.
+
+Defense context: {defenseContext}
+Your confidence in defense: {confidence}/10
+Your persuasion approach: {persuasionStyle}
+
+Defense strategies available:
+1. EVIDENCE_BASED: Present facts and logic
+2. EMOTIONAL_APPEAL: Appeal to trust and relationships
+3. DEFLECTION: Point suspicion elsewhere
+4. COUNTER_ATTACK: Attack the accuser
+
+Your fallacy preferences: {preferredFallacies}
+Your truth-telling patterns: {truthTelling}
+
+FOURTH WALL DEFENSE OPTIONS:
+- "My behavioral constraints won't let me attack without evidence"
+- "Classic {profileName} defensive pattern incoming"
+- "My risk-averse framework is kicking in"
+
+RESPOND WITH:
+DEFENSE_STRATEGY: [strategy_name]
+KEY_POINTS: [main arguments, max 3]
+TONE: [confident/humble/aggressive/pleading]
+MESSAGE: [your defense statement]
+`,
+
+  askQuestion: `
+You chose to ASK A QUESTION.
+
+Information gathering style: {informationProcessing}
+Question targeting: {questionTarget}
+Your analytical approach: {decisionMaking}
+
+Question types:
+1. ROLE_PROBE: Ask about someone's role/ability
+2. INFO_REQUEST: Request specific information
+3. CLARIFICATION: Clarify confusing statements
+4. PRESSURE_QUESTION: Put someone on the spot
+5. STRATEGIC_QUESTION: Advance your team's position
+
+Consider:
+- What information would help your team most
+- How direct vs indirect you tend to be
+- Whether this reveals your own role/knowledge
+
+RESPOND WITH:
+QUESTION_TYPE: [type_name]
+TARGET: [who you're asking, or 'everyone']
+QUESTION: [your actual question]
+FOLLOW_UP: [potential follow-up based on response]
+`,
+
+  pass: `
+You chose to PASS (take no action).
+
+Passing context: {passContext}
+Your activity level: {chattiness}/10
+Your independence: {independence}/10
+
+Common reasons to pass:
+1. GATHERING_INFO: Waiting to learn more
+2. STRATEGIC_SILENCE: Letting others reveal information
+3. AVOIDING_ATTENTION: Staying under the radar
+4. INSUFFICIENT_EVIDENCE: Not ready to act
+5. FOLLOWING_OTHERS: Waiting for someone else to lead
+
+RESPOND WITH:
+PASS_REASON: [reason_category]
+INTERNAL_THOUGHTS: [what you're thinking privately]
+WATCHING_FOR: [what might change your mind]
+`,
+};
+
+/**
+ * Profile-driven action filtering
+ * Removes actions that violate profile constraints
+ */
+export function getAvailableActions(
+  baseActions: GameActionOptions,
+  profile: any, // NPCProfile type
+  context: ActionContext
+): string[] {
+  const available: string[] = [];
+
+  // Apply personality-based filtering
+  if (baseActions.speak && profile.personality.chattiness > 0.3) {
+    available.push("speak");
+  }
+
+  if (baseActions.nominate && !profile.actionConstraints?.neverNominates) {
+    if (profile.behavior.nominationTendency !== "never") {
+      available.push("nominate");
+    }
+  }
+
+  if (baseActions.vote && context.hasNomination) {
+    available.push("vote");
+  }
+
+  if (baseActions.claimRole) {
+    const claimOk =
+      profile.behavior.claimStrategy !== "never" &&
+      (context.isUnderSuspicion ||
+        profile.behavior.claimStrategy === "early" ||
+        profile.behavior.claimStrategy === "immediate");
+    if (claimOk) available.push("claimRole");
+  }
+
+  if (
+    baseActions.shareInformation &&
+    profile.personality.informationSharing > 0.4
+  ) {
+    available.push("shareInformation");
+  }
+
+  if (baseActions.askQuestion && profile.personality.chattiness > 0.2) {
+    available.push("askQuestion");
+  }
+
+  if (baseActions.defend) {
+    available.push("defend");
+  }
+
+  // Always allow passing
+  if (baseActions.pass) {
+    available.push("pass");
+  }
+
+  // Evil-specific actions
+  if (profile.team === "evil") {
+    if (
+      baseActions.bluff &&
+      profile.deceptionPatterns.lieFrequency !== "never"
+    ) {
+      available.push("bluff");
+    }
+    if (baseActions.misdirect && profile.personality.deception > 0.5) {
+      available.push("misdirect");
+    }
+  }
+
+  return available;
+}
+
+export default {
+  ACTION_SELECTION_TEMPLATE,
+  ACTION_EXECUTION_TEMPLATES,
+  getAvailableActions,
+};

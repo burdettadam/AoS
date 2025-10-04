@@ -1,4 +1,4 @@
-import { GamePhase } from "@botc/shared";
+import { GamePhase } from "@ashes-of-salem/shared";
 import { GameEngine } from "../src/game/engine";
 
 const uuid = () =>

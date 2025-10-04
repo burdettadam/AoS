@@ -1,4 +1,4 @@
-import { GamePhase, GameState, Seat } from "@botc/shared";
+import { GamePhase, GameState, Seat } from "@ashes-of-salem/shared";
 import { AvailableMovesService } from "../services/available-moves.service";
 import { JournalService } from "../services/journal.service";
 

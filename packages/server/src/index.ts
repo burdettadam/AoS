@@ -4,7 +4,7 @@ import {
   maskGameStateForSeat,
   maskGameStatePublic,
   SeatId,
-} from "@botc/shared";
+} from "@ashes-of-salem/shared";
 import cors from "@fastify/cors";
 import websocket from "@fastify/websocket";
 import { randomUUID } from "crypto";
@@ -15,6 +15,7 @@ import path from "path";
 import { GameEngine } from "./game/engine";
 import { createMonitoringMiddleware } from "./middleware/monitoring";
 import healthRoutes from "./routes/health";
+import { registerNPCTestRoutes } from "./routes/npcTestRoutes";
 import setupRoutes from "./routes/setupRoutes";
 import { MatchmakingService } from "./services/matchmaking";
 import { scriptCache } from "./services/scriptCache";
@@ -395,7 +396,7 @@ async function start() {
       }
       if (profileId) {
         const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
-          "@botc/shared"
+          "@ashes-of-salem/shared"
         );
         const exists = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES].some(
           (p) => p.id === profileId,
@@ -417,7 +418,7 @@ async function start() {
     fastify.get("/api/ai/npc-profiles", async (_request, _reply) => {
       try {
         const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
-          "@botc/shared"
+          "@ashes-of-salem/shared"
         );
         const profiles = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES];
         const previews = profiles.map((p) => ({
@@ -435,6 +436,9 @@ async function start() {
         return { ok: false, error: "Failed to load profiles" };
       }
     });
+
+    // Register NPC test routes
+    await registerNPCTestRoutes(fastify);
 
     // Leave a game (lobby only)
     fastify.post("/api/games/:gameId/leave", async (request, reply) => {

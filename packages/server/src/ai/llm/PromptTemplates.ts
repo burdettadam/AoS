@@ -1,4 +1,4 @@
-import { Character, GamePhase } from "@botc/shared";
+import { Character, GamePhase } from "@ashes-of-salem/shared";
 import { OllamaMessage } from "./OllamaClient";
 
 export interface GameContext {

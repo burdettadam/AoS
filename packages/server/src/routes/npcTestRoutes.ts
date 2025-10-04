@@ -1,0 +1,477 @@
+/**
+ * NPC Test Routes
+ * API endpoints for testing NPC agents with enhanced behavioral systems in gasync function loadNPCProfile(profileId: string): Promise<NPCProfile | null> {
+  try {
+    const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
+      "@ashes-of-salem/shared"
+    );
+    const allProfiles = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES];
+    const profile = allProfiles.find((p) => p.id === profileId);
+    return profile || null;
+  } catch (err) {
+    logger.error(`Failed to load NPC profile ${profileId}: ${err}`);
+    return null;
+  }
+}*/
+
+import type { Character, NPCProfile } from "@ashes-of-salem/shared";
+import { GamePhase } from "@ashes-of-salem/shared";
+import { randomUUID } from "crypto";
+import { FastifyInstance } from "fastify";
+import { getInitializationPrompt } from "../ai/initialization/NPCInitializationSystem";
+import { GameContext } from "../ai/llm/PromptTemplates";
+import { logger } from "../utils/logger";
+
+// Mock character data for testing
+const MOCK_CHARACTERS: Character[] = [
+  {
+    id: "investigator",
+    name: "Investigator",
+    team: "townsfolk",
+    ability: "You start knowing that 1 of 2 players is a particular Minion.",
+    firstNight: 1,
+    reminders: ["Minion", "Wrong"],
+    setup: false,
+    edition: ["trouble-brewing"],
+    tags: ["information", "setup"],
+  },
+  {
+    id: "washerwoman",
+    name: "Washerwoman",
+    team: "townsfolk",
+    ability: "You start knowing that 1 of 2 players is a particular Townsfolk.",
+    firstNight: 1,
+    reminders: ["Townsfolk", "Wrong"],
+    setup: false,
+    edition: ["trouble-brewing"],
+    tags: ["information", "setup"],
+  },
+  {
+    id: "empath",
+    name: "Empath",
+    team: "townsfolk",
+    ability:
+      "Each night, you learn how many of your 2 alive neighbors are evil.",
+    firstNight: 1,
+    otherNights: 2,
+    reminders: ["1", "2"],
+    setup: false,
+    edition: ["trouble-brewing"],
+    tags: ["information", "active"],
+  },
+  {
+    id: "imp",
+    name: "Imp",
+    team: "demon",
+    ability:
+      "Each night*, choose a player: they die. If you kill yourself this way, a Minion becomes the Imp.",
+    otherNights: 3,
+    reminders: ["Dead"],
+    setup: false,
+    edition: ["trouble-brewing"],
+    tags: ["elimination", "active"],
+  },
+];
+
+interface NPCTestSession {
+  sessionId: string;
+  profileId: string;
+  profile: NPCProfile;
+  character: Character;
+  gameContext: GameContext;
+  seatName: string;
+  messageHistory: Array<{
+    id: string;
+    sender: "user" | "npc";
+    content: string;
+    timestamp: Date;
+  }>;
+  createdAt: Date;
+  lastActivity: Date;
+}
+
+// In-memory storage for test sessions (use Redis/DB in production)
+const testSessions = new Map<string, NPCTestSession>();
+
+// Clean up old sessions every 10 minutes
+setInterval(
+  () => {
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+    for (const [sessionId, session] of testSessions.entries()) {
+      if (session.lastActivity < oneHourAgo) {
+        testSessions.delete(sessionId);
+        logger.info(`Cleaned up expired NPC test session: ${sessionId}`);
+      }
+    }
+  },
+  10 * 60 * 1000,
+);
+
+async function loadNPCProfile(profileId: string): Promise<NPCProfile | null> {
+  try {
+    const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
+      "@ashes-of-salem/shared"
+    );
+    const allProfiles = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES];
+    const profile = allProfiles.find((p) => p.id === profileId);
+    return profile || null;
+  } catch (err) {
+    logger.error(`Failed to load NPC profile ${profileId}: ${err}`);
+    return null;
+  }
+}
+
+/**
+ * Create a simulated game context for testing NPCs as if they're in a real game
+ */
+function createSimulatedGameContext(): {
+  character: Character;
+  gameContext: GameContext;
+  seatName: string;
+} {
+  // Get random character for testing
+  const randomCharacter =
+    MOCK_CHARACTERS[Math.floor(Math.random() * MOCK_CHARACTERS.length)];
+
+  // Create simulated game state
+  const gameContext: GameContext = {
+    phase: GamePhase.DAY,
+    day: 2, // Day 2 for more interesting context
+    playerCount: 7,
+    aliveCount: 6,
+    deadPlayers: ["Bob"], // One player died night 1
+    recentEvents: [
+      "Night 1: Bob was found dead",
+      "Day 1: No execution",
+      "Alice claimed to be the Investigator",
+    ],
+    publicClaims: {
+      Alice: "Investigator",
+      Charlie: "Butler to Dave",
+      Eve: "Empath (0 evil neighbors)",
+    },
+    votingHistory: [
+      {
+        day: 1,
+        nominee: "Frank",
+        votes: 2,
+        executed: false,
+      },
+    ],
+  };
+
+  // Generate player name
+  const playerNames = ["Alice", "Charlie", "Dave", "Eve", "Frank", "Grace"];
+  const seatName = playerNames[Math.floor(Math.random() * playerNames.length)];
+
+  return {
+    character: randomCharacter,
+    gameContext,
+    seatName,
+  };
+}
+
+function generateNPCResponse(
+  userMessage: string,
+  session: NPCTestSession,
+): string {
+  const inputLower = userMessage.toLowerCase();
+  const { profile, character, gameContext, seatName } = session;
+  const profileName = profile.name.toLowerCase();
+
+  // Game-specific responses with actual character context
+  if (
+    inputLower.includes("wake") ||
+    inputLower.includes("woke") ||
+    inputLower.includes("last night")
+  ) {
+    // Check if character has night ability
+    const hasNightAbility = character.firstNight || character.otherNights;
+    if (hasNightAbility) {
+      return `As the ${character.name}, yes I woke up last night to use my ability: ${character.ability}. I won't reveal exactly what I learned yet, but I'm processing the information strategically.`;
+    } else {
+      return `No, I didn't wake up last night. The ${character.name} doesn't have a night ability, so I slept peacefully while others were busy. But I'm watching voting patterns to see who might have been active.`;
+    }
+  }
+
+  if (
+    inputLower.includes("claim") ||
+    inputLower.includes("role") ||
+    inputLower.includes("character")
+  ) {
+    return `I'm the ${character.name}. My ability is: ${character.ability}. Given that we're on Day ${gameContext.day} with ${gameContext.aliveCount} players alive, I need to be strategic about how much more I reveal.`;
+  }
+
+  if (
+    inputLower.includes("information") ||
+    inputLower.includes("learn") ||
+    inputLower.includes("know")
+  ) {
+    const hasInfo =
+      character.team === "townsfolk" &&
+      (character.firstNight || character.otherNights);
+    if (hasInfo) {
+      return `As the ${character.name}, I have some information from my ability. But with ${gameContext.deadPlayers.join(", ")} already dead and these claims on the table: ${Object.entries(
+        gameContext.publicClaims,
+      )
+        .map(([p, c]) => `${p} (${c})`)
+        .join(", ")}, I need to be careful about timing my reveals.`;
+    } else {
+      return `I don't have direct information as the ${character.name}, but I'm analyzing all the public claims and voting patterns. The fact that ${gameContext.deadPlayers.join(", ")} died tells us something about evil's strategy.`;
+    }
+  }
+
+  if (
+    inputLower.includes("vote") ||
+    inputLower.includes("execute") ||
+    inputLower.includes("nominate")
+  ) {
+    const lastVote =
+      gameContext.votingHistory[gameContext.votingHistory.length - 1];
+    return `Voting is crucial! ${lastVote ? `Yesterday we voted on ${lastVote.nominee} but they ${lastVote.executed ? "were executed" : "survived"}.` : ""} With ${gameContext.aliveCount} alive, we need ${Math.floor(gameContext.aliveCount / 2) + 1} votes to execute. I'm watching who pushes for votes and who hesitates.`;
+  }
+
+  if (
+    inputLower.includes("evil") ||
+    inputLower.includes("demon") ||
+    inputLower.includes("minion")
+  ) {
+    const suspiciousPatterns = Object.keys(gameContext.publicClaims).filter(
+      (p) => !gameContext.deadPlayers.includes(p) && p !== seatName,
+    );
+    return `As the ${character.name} on the ${character.team} team, I'm looking for evil players. ${suspiciousPatterns.length > 0 ? `The claims from ${suspiciousPatterns.slice(0, 2).join(" and ")} seem worth scrutinizing.` : "Someone is lying about their role."} Who do you think is acting suspiciously?`;
+  }
+
+  if (
+    inputLower.includes("dead") ||
+    inputLower.includes("died") ||
+    gameContext.deadPlayers.some((name) =>
+      inputLower.includes(name.toLowerCase()),
+    )
+  ) {
+    return `Yes, ${gameContext.deadPlayers.join(", ")} died. As the ${character.name}, I'm analyzing why evil chose ${gameContext.deadPlayers[gameContext.deadPlayers.length - 1]} specifically. It might tell us something about what roles evil is afraid of.`;
+  }
+
+  // Profile-specific responses enhanced with game context
+  if (profileName.includes("analytical") || profileName.includes("skeptic")) {
+    return `I need to analyze this systematically. As an analytical skeptic playing ${character.name}, I can't accept claims without evidence. We have ${Object.keys(gameContext.publicClaims).length} public claims and ${gameContext.deadPlayers.length} deaths to cross-reference.`;
+  }
+
+  if (
+    profileName.includes("charismatic") ||
+    profileName.includes("manipulator")
+  ) {
+    return `*flashes a charming smile* Interesting perspective! You know, as the ${character.name} with high charisma, I find that the most effective arguments blend truth with strategic timing. Shall we discuss who we should focus on today?`;
+  }
+
+  if (profileName.includes("paranoid") || profileName.includes("survivor")) {
+    return `My paranoid instincts are screaming about this situation. Playing ${character.name} with ${gameContext.aliveCount} alive makes me extremely cautious. Someone benefits from that statement, and I need to figure out who.`;
+  }
+
+  if (profileName.includes("chaos") || profileName.includes("agent")) {
+    return `CHAOS TIME! *unpredictable energy* As ${character.name}, let me throw some wild theories into the mix! What if ${Object.keys(gameContext.publicClaims)[0]} is actually the demon? My chaos profile demands maximum confusion!`;
+  }
+
+  // Context-aware responses based on conversation history
+  const recentMessages = session.messageHistory.slice(-3);
+  if (recentMessages.length > 1) {
+    const lastNPCMessage = recentMessages.find((m) => m.sender === "npc");
+    if (lastNPCMessage && lastNPCMessage.content.includes("fourth wall")) {
+      return `I see you noticed my fourth wall breaking! Yes, I'm an NPC playing ${character.name} with programmed ${profile.name} behaviors. It's actually quite liberating to be transparent about the simulation!`;
+    }
+  }
+
+  // Generic responses with game context
+  const genericResponses = [
+    `That's intriguing! As ${character.name} with my ${profile.name} personality, I'm considering how this affects our strategy with ${gameContext.aliveCount} players left.`,
+    `*${character.name} thinking noises* Given the current game state and my ${profile.name} profile, I'm analyzing multiple angles here. What's your take on today's voting?`,
+    `Fascinating! Playing ${character.name} on Day ${gameContext.day}, I find myself drawn to analyze that through my particular behavioral lens.`,
+    `*adjusts ${profile.name} personality settings* That definitely triggers some interesting responses from my ${character.name} perspective. The game dynamics are getting complex!`,
+  ];
+
+  return (
+    genericResponses[Math.floor(Math.random() * genericResponses.length)] ||
+    `That's an interesting perspective! As ${character.name} (${profile.name}), I'm always looking for new angles in this game state.`
+  );
+}
+
+export async function registerNPCTestRoutes(fastify: FastifyInstance) {
+  // Start new NPC test session
+  fastify.post("/api/ai/npc-test/session", async (request, reply) => {
+    try {
+      const { profileId } = request.body as { profileId: string };
+
+      if (!profileId) {
+        reply.code(400);
+        return { error: "Profile ID is required" };
+      }
+
+      const profile = await loadNPCProfile(profileId);
+      if (!profile) {
+        reply.code(404);
+        return { error: "Profile not found" };
+      }
+
+      // Create simulated game context
+      const { character, gameContext, seatName } = createSimulatedGameContext();
+
+      const sessionId = randomUUID();
+      const session: NPCTestSession = {
+        sessionId,
+        profileId,
+        profile,
+        character,
+        gameContext,
+        seatName,
+        messageHistory: [],
+        createdAt: new Date(),
+        lastActivity: new Date(),
+      };
+
+      testSessions.set(sessionId, session);
+
+      logger.info(
+        `Started NPC test session: ${sessionId} with profile: ${profile.name} as ${character.name}`,
+      );
+
+      return {
+        sessionId,
+        profileId,
+        profileName: profile.name,
+        character: character.name,
+        characterTeam: character.team,
+        seatName,
+        gameDay: gameContext.day,
+        aliveCount: gameContext.aliveCount,
+        initializationPrompt: getInitializationPrompt(profile),
+      };
+    } catch (error) {
+      logger.error("Failed to start NPC test session", { error });
+      reply.code(500);
+      return { error: "Failed to start session" };
+    }
+  });
+
+  // Send message to NPC
+  fastify.post("/api/ai/npc-test/message", async (request, reply) => {
+    try {
+      const { sessionId, message } = request.body as {
+        sessionId: string;
+        message: string;
+      };
+
+      if (!sessionId || !message) {
+        reply.code(400);
+        return { error: "Session ID and message are required" };
+      }
+
+      const session = testSessions.get(sessionId);
+      if (!session) {
+        reply.code(404);
+        return { error: "Session not found" };
+      }
+
+      // Add user message to history
+      const userMessage = {
+        id: randomUUID(),
+        sender: "user" as const,
+        content: message,
+        timestamp: new Date(),
+      };
+      session.messageHistory.push(userMessage);
+
+      // Generate NPC response with game context
+      const response = generateNPCResponse(message, session);
+
+      // Add NPC response to history
+      const npcMessage = {
+        id: randomUUID(),
+        sender: "npc" as const,
+        content: response,
+        timestamp: new Date(),
+      };
+      session.messageHistory.push(npcMessage);
+
+      // Update session activity
+      session.lastActivity = new Date();
+
+      logger.info(
+        `NPC test session ${sessionId}: User: "${message}" -> NPC: "${response}"`,
+      );
+
+      return {
+        response,
+        reasoning: `Generated response based on ${session.profile.name} personality profile playing ${session.character.name}`,
+        confidence: 0.85,
+        fourthWallBreaking:
+          response.includes("profile") ||
+          response.includes("NPC") ||
+          response.includes("programmed"),
+        metadata: {
+          profileName: session.profile.name,
+          characterName: session.character.name,
+          gameDay: session.gameContext.day,
+          processingTime: Math.round(50 + Math.random() * 200),
+          actionType: "speak",
+        },
+      };
+    } catch (error) {
+      logger.error("Failed to process NPC message", { error });
+      reply.code(500);
+      return { error: "Failed to process message" };
+    }
+  });
+
+  // Get session history
+  fastify.get("/api/ai/npc-test/session/:sessionId", async (request, reply) => {
+    try {
+      const { sessionId } = request.params as { sessionId: string };
+
+      const session = testSessions.get(sessionId);
+      if (!session) {
+        reply.code(404);
+        return { error: "Session not found" };
+      }
+
+      return {
+        sessionId: session.sessionId,
+        profileId: session.profileId,
+        character: session.character.name,
+        seatName: session.seatName,
+        gameContext: session.gameContext,
+        messageHistory: session.messageHistory,
+      };
+    } catch (error) {
+      logger.error("Failed to get session history", { error });
+      reply.code(500);
+      return { error: "Failed to get session history" };
+    }
+  });
+
+  // End session
+  fastify.delete(
+    "/api/ai/npc-test/session/:sessionId",
+    async (request, reply) => {
+      try {
+        const { sessionId } = request.params as { sessionId: string };
+
+        const deleted = testSessions.delete(sessionId);
+        if (!deleted) {
+          reply.code(404);
+          return { error: "Session not found" };
+        }
+
+        logger.info(`Ended NPC test session: ${sessionId}`);
+        return { ok: true };
+      } catch (error) {
+        logger.error("Failed to end session", { error });
+        reply.code(500);
+        return { error: "Failed to end session" };
+      }
+    },
+  );
+
+  logger.info("NPC test routes registered with enhanced game context");
+}

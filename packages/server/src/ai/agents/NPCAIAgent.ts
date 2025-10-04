@@ -2,8 +2,14 @@ import type {
   NPCBehaviorSettings,
   NPCPersonalityTrait,
   NPCProfile,
-} from "@botc/shared";
-import { Character, GameId, GamePhase, GameState, SeatId } from "@botc/shared";
+} from "@ashes-of-salem/shared";
+import {
+  Character,
+  GameId,
+  GamePhase,
+  GameState,
+  SeatId,
+} from "@ashes-of-salem/shared";
 import { GameEngine } from "../../game/engine";
 import { logger } from "../../utils/logger";
 import { OllamaClient, OllamaMessage } from "../llm/OllamaClient";

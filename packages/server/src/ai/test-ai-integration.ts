@@ -5,7 +5,7 @@
  * Run with: npx ts-node packages/server/src/ai/test-ai-integration.ts
  */
 
-import { GamePhase } from "@botc/shared";
+import { GamePhase } from "@ashes-of-salem/shared";
 import { OllamaClient } from "./llm/OllamaClient";
 import { PromptTemplates } from "./llm/PromptTemplates";
 

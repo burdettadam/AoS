@@ -1,4 +1,4 @@
-import { expect, test } from "./fixtures";
+import { expect, test } from "./fixtures/index";
 
 test.describe("Setup Page Script Selection", () => {
   test("Selecting a script populates characters and updates distribution", async ({

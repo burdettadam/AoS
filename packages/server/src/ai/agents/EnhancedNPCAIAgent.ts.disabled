@@ -1,0 +1,557 @@
+/**
+ * Enhanced NPC AI Agent with profile-driven behavior
+ * Integrates the new action selection system with existing AI agent framework
+ */
+
+import type {
+  NPCBehaviorSettings,
+  NPCPersonalityTrait,
+  NPCProfile,
+} from "@ashes-of-salem/shared";
+import {
+  Character,
+  GameId,
+  GamePhase,
+  GameState,
+  SeatId,
+} from "@ashes-of-salem/shared";
+import { GameEngine } from "../../game/engine";
+import { logger } from "../../utils/logger";
+import { getInitializationPrompt } from "../initialization/NPCInitializationSystem";
+import { OllamaClient, OllamaMessage } from "../llm/OllamaClient";
+import { GameContext, PromptTemplates } from "../llm/PromptTemplates";
+import { EnhancedNPCPromptGenerator } from "../templates/EnhancedNPCPromptGenerator";
+
+export interface AIDecision {
+  action: string;
+  target?: string;
+  message?: string;
+  reasoning: string;
+  confidence?: number;
+  alternatives?: string[];
+}
+
+export interface ActionSelectionResponse {
+  primaryAction: string;
+  confidence: number;
+  reasoning: string;
+  alternatives: string[];
+}
+
+export class EnhancedNPCAIAgent {
+  private gameId: GameId;
+  private seatId: SeatId;
+  private character: Character;
+  private seatName: string;
+  private gameEngine: GameEngine;
+  private ollamaClient: OllamaClient;
+  private conversationHistory: OllamaMessage[] = [];
+  private lastDecisionTime: Date = new Date();
+
+  // Enhanced NPC system components
+  private npcProfile: NPCProfile;
+  private promptGenerator: EnhancedNPCPromptGenerator;
+  private personality: NPCPersonalityTrait;
+  private behavior: NPCBehaviorSettings;
+
+  constructor(
+    gameId: GameId,
+    seatId: SeatId,
+    character: Character,
+    seatName: string,
+    gameEngine: GameEngine,
+    npcProfile: NPCProfile,
+    ollamaClient?: OllamaClient
+  ) {
+    this.gameId = gameId;
+    this.seatId = seatId;
+    this.character = character;
+    this.seatName = seatName;
+    this.gameEngine = gameEngine;
+    this.npcProfile = npcProfile;
+    this.promptGenerator = new EnhancedNPCPromptGenerator();
+
+    // Extract profile components for quick access
+    this.personality = npcProfile.personality;
+    this.behavior = npcProfile.behavior;
+
+    // Initialize Ollama client
+    this.ollamaClient = ollamaClient || new OllamaClient();
+
+    // Initialize conversation with enhanced system prompt
+    this.conversationHistory = [
+      this.createEnhancedSystemPrompt(character, seatName, npcProfile),
+    ];
+
+    logger.info(
+      `🤖 Enhanced AI agent created for ${seatName} (${character.name}) with profile: ${npcProfile.name}`
+    );
+  }
+
+  /**
+   * Main decision-making method using two-stage enhanced prompting
+   */
+  async onGameEvent(
+    gameState: GameState,
+    eventType: string
+  ): Promise<AIDecision | null> {
+    try {
+      // Check if we should respond based on profile and event type
+      if (!this.shouldRespondToEvent(eventType, gameState)) {
+        return null;
+      }
+
+      // Stage 1: Action Selection with profile filtering
+      const actionSelection = await this.selectAction(gameState);
+      if (!actionSelection) {
+        return { action: "pass", reasoning: "No appropriate action available" };
+      }
+
+      // Stage 2: Action Execution with contextual prompting
+      const actionDecision = await this.executeAction(
+        actionSelection,
+        gameState
+      );
+
+      this.lastDecisionTime = new Date();
+      return actionDecision;
+    } catch (error) {
+      logger.error(`Error in enhanced AI agent decision making:`, error);
+      return { action: "pass", reasoning: "Error in decision making process" };
+    }
+  }
+
+  /**
+   * Stage 1: Select action using profile-filtered options
+   */
+  private async selectAction(
+    gameState: GameState
+  ): Promise<ActionSelectionResponse | null> {
+    const gameContext = this.buildGameContext(gameState);
+
+    // Define base actions available in current phase
+    const baseActions = this.getBaseActionsForPhase(gameState.phase);
+
+    // Generate action selection prompt with profile filtering
+    const selectionPrompt = this.promptGenerator.generateActionSelectionPrompt(
+      this.npcProfile,
+      gameContext,
+      baseActions
+    );
+
+    const response = await this.getLLMResponse([
+      {
+        role: "user",
+        content: selectionPrompt,
+      },
+    ]);
+
+    if (!response) return null;
+
+    // Parse action selection response
+    return this.parseActionSelection(response);
+  }
+
+  /**
+   * Stage 2: Execute selected action with contextual prompt
+   */
+  private async executeAction(
+    actionSelection: ActionSelectionResponse,
+    gameState: GameState
+  ): Promise<AIDecision> {
+    const gameContext = this.buildGameContext(gameState);
+    const additionalContext = this.buildAdditionalContext(
+      actionSelection.primaryAction,
+      gameState
+    );
+
+    // Generate action-specific execution prompt
+    const executionPrompt = this.promptGenerator.generateActionExecutionPrompt(
+      actionSelection.primaryAction,
+      this.npcProfile,
+      gameContext,
+      additionalContext
+    );
+
+    const response = await this.getLLMResponse([
+      {
+        role: "user",
+        content: executionPrompt,
+      },
+    ]);
+
+    // Parse execution response into AI decision
+    return this.parseActionExecution(actionSelection, response || "");
+  }
+
+  /**
+   * Determine if the agent should respond to a game event based on profile
+   */
+  private shouldRespondToEvent(
+    eventType: string,
+    gameState: GameState
+  ): boolean {
+    // Check basic activity constraints
+    if (this.behavior.messagesPerPhase === 0) return false;
+
+    // Check if enough time has passed based on decision speed
+    const timeSinceLastDecision = Date.now() - this.lastDecisionTime.getTime();
+    const minInterval = this.getMinResponseInterval();
+    if (timeSinceLastDecision < minInterval) return false;
+
+    // Profile-specific response patterns
+    switch (eventType) {
+      case "day_discussion":
+        return Math.random() < this.personality.chattiness;
+
+      case "nomination_phase":
+        return (
+          this.behavior.nominationTendency !== "never" &&
+          Math.random() < this.personality.boldness
+        );
+
+      case "voting_phase":
+        return true; // Always consider voting
+
+      case "accusation":
+        return Math.random() < this.personality.boldness * 0.8;
+
+      case "information_shared":
+        return Math.random() < this.personality.informationSharing;
+
+      default:
+        return Math.random() < 0.3; // Low chance for unknown events
+    }
+  }
+
+  /**
+   * Get base actions available for current game phase
+   */
+  private getBaseActionsForPhase(phase: GamePhase): any {
+    const baseActions = {
+      speak: false,
+      nominate: false,
+      vote: false,
+      claimRole: false,
+      shareInformation: false,
+      askQuestion: false,
+      defend: false,
+      pass: true,
+      supportPlayer: false,
+      suspectPlayer: false,
+      requestInformation: false,
+      buildAlliance: false,
+      bluff: false,
+      misdirect: false,
+      witholdInformation: false,
+      analyzeVotingPattern: false,
+    };
+
+    switch (phase) {
+      case GamePhase.DAY:
+        baseActions.speak = true;
+        baseActions.nominate = true;
+        baseActions.claimRole = true;
+        baseActions.shareInformation = true;
+        baseActions.askQuestion = true;
+        baseActions.defend = true;
+        baseActions.supportPlayer = true;
+        baseActions.suspectPlayer = true;
+        baseActions.requestInformation = true;
+        baseActions.buildAlliance = true;
+        if (this.character.team === "evil") {
+          baseActions.bluff = true;
+          baseActions.misdirect = true;
+          baseActions.witholdInformation = true;
+        }
+        break;
+
+      case GamePhase.VOTING:
+        baseActions.vote = true;
+        baseActions.speak = true;
+        baseActions.defend = true;
+        break;
+
+      case GamePhase.NIGHT:
+        // Night actions would be character-specific
+        break;
+    }
+
+    return baseActions;
+  }
+
+  /**
+   * Parse action selection response from LLM
+   */
+  private parseActionSelection(
+    response: string
+  ): ActionSelectionResponse | null {
+    try {
+      const primaryMatch = response.match(/PRIMARY_ACTION:\s*([^\n]+)/i);
+      const confidenceMatch = response.match(/CONFIDENCE:\s*(\d+)/i);
+      const reasoningMatch = response.match(/REASONING:\s*([^\n]+)/i);
+      const alternativesMatch = response.match(/ALTERNATIVES:\s*([^\n]+)/i);
+
+      if (!primaryMatch) return null;
+
+      return {
+        primaryAction: primaryMatch[1].trim().toLowerCase(),
+        confidence: confidenceMatch ? parseInt(confidenceMatch[1]) : 5,
+        reasoning: reasoningMatch
+          ? reasoningMatch[1].trim()
+          : "No reasoning provided",
+        alternatives: alternativesMatch
+          ? alternativesMatch[1].split(",").map((a) => a.trim())
+          : [],
+      };
+    } catch (error) {
+      logger.error("Failed to parse action selection response:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Parse action execution response into final AI decision
+   */
+  private parseActionExecution(
+    actionSelection: ActionSelectionResponse,
+    response: string
+  ): AIDecision {
+    const decision: AIDecision = {
+      action: actionSelection.primaryAction,
+      reasoning: actionSelection.reasoning,
+      confidence: actionSelection.confidence / 10, // Normalize to 0-1
+      alternatives: actionSelection.alternatives,
+    };
+
+    // Extract action-specific details based on action type
+    switch (actionSelection.primaryAction) {
+      case "speak":
+      case "defend":
+        decision.message = response.trim();
+        break;
+
+      case "nominate":
+        const targetMatch = response.match(/TARGET:\s*([^\n]+)/i);
+        const reasonMatch = response.match(/REASON:\s*([^\n]+)/i);
+        if (targetMatch) decision.target = targetMatch[1].trim();
+        if (reasonMatch) decision.message = reasonMatch[1].trim();
+        break;
+
+      case "vote":
+        const voteMatch = response.match(/VOTE:\s*(EXECUTE|PARDON)/i);
+        const publicReasonMatch = response.match(/PUBLIC_REASON:\s*([^\n]+)/i);
+        decision.action = voteMatch ? voteMatch[1].toLowerCase() : "pardon";
+        if (publicReasonMatch) decision.message = publicReasonMatch[1].trim();
+        break;
+
+      case "claimrole":
+        const claimMatch = response.match(/ROLE_CLAIMED:\s*([^\n]+)/i);
+        if (claimMatch) {
+          decision.message = `I am the ${claimMatch[1].trim()}`;
+        }
+        break;
+
+      case "askquestion":
+        const questionMatch = response.match(/QUESTION:\s*([^\n]+)/i);
+        if (questionMatch) decision.message = questionMatch[1].trim();
+        break;
+    }
+
+    return decision;
+  }
+
+  /**
+   * Build additional context for action execution
+   */
+  private buildAdditionalContext(
+    action: string,
+    gameState: GameState
+  ): Record<string, any> {
+    const context: Record<string, any> = {};
+
+    context.availableTargets = this.getAlivePlayersExceptSelf(gameState);
+    context.actualRole = this.character.name;
+    context.pressureLevel = this.assessPressureLevel(gameState);
+
+    // Add action-specific context
+    switch (action) {
+      case "nominate":
+        context.nominationContext = "Deciding who to nominate for execution";
+        break;
+      case "vote":
+        context.nominee = this.getCurrentNominee(gameState);
+        context.nominationReason = this.getCurrentNominationReason(gameState);
+        break;
+      case "defend":
+        context.defenseContext = this.getDefenseContext(gameState);
+        break;
+    }
+
+    return context;
+  }
+
+  /**
+   * Create enhanced system prompt incorporating profile information
+   */
+  private createEnhancedSystemPrompt(
+    character: Character,
+    seatName: string,
+    profile: NPCProfile
+  ): OllamaMessage {
+    // Use the comprehensive initialization system
+    const initializationContent = getInitializationPrompt(profile);
+
+    const basePrompt = PromptTemplates.getSystemPrompt(character, seatName);
+
+    const roleSpecificAddition = `
+
+CURRENT ROLE ASSIGNMENT:
+- **Character**: ${character.name}
+- **Seat Name**: ${seatName}
+- **Team**: ${character.team}
+- **Ability**: ${character.ability}
+
+Remember to play this specific role while embodying your personality profile. Use your knowledge of logical fallacies, bluffing strategies, and fourth wall breaking capabilities to create engaging gameplay.
+
+---
+
+BEGIN GAME ROLEPLAY AS ${profile.name}`;
+
+    return {
+      role: "system",
+      content:
+        initializationContent +
+        "\n" +
+        basePrompt.content +
+        roleSpecificAddition,
+    };
+  }
+
+  /**
+   * Get minimum response interval based on decision speed
+   */
+  private getMinResponseInterval(): number {
+    switch (this.behavior.decisionSpeed) {
+      case "instant":
+        return 1000; // 1 second
+      case "quick":
+        return 5000; // 5 seconds
+      case "deliberate":
+        return 15000; // 15 seconds
+      case "slow":
+        return 30000; // 30 seconds
+      default:
+        return 10000; // 10 seconds
+    }
+  }
+
+  /**
+   * Assess current pressure level on this player
+   */
+  private assessPressureLevel(gameState: GameState): string {
+    // Simple heuristic - would be more sophisticated in real implementation
+    const recentMentions =
+      gameState.events?.filter(
+        (e) =>
+          e.includes(this.seatName) &&
+          (e.includes("suspect") ||
+            e.includes("vote") ||
+            e.includes("nominate"))
+      ).length || 0;
+
+    if (recentMentions >= 3) return "high";
+    if (recentMentions >= 1) return "medium";
+    return "low";
+  }
+
+  /**
+   * Get current nominee from game state
+   */
+  private getCurrentNominee(gameState: GameState): string {
+    // In real implementation, extract from current nomination
+    return (gameState as any).currentNomination?.nominee || "unknown";
+  }
+
+  /**
+   * Get current nomination reason
+   */
+  private getCurrentNominationReason(gameState: GameState): string {
+    // In real implementation, extract from current nomination
+    return (gameState as any).currentNomination?.reason || "no reason given";
+  }
+
+  /**
+   * Get defense context
+   */
+  private getDefenseContext(gameState: GameState): string {
+    // Check if this player is under attack
+    const recentEvents = gameState.events?.slice(-5) || [];
+    const underAttack = recentEvents.some(
+      (e) =>
+        e.includes(this.seatName) &&
+        (e.includes("suspect") || e.includes("accuse"))
+    );
+
+    return underAttack ? "defending against accusations" : "general defense";
+  }
+
+  // Helper methods from original NPCAIAgent
+  private async getLLMResponse(
+    newMessages: OllamaMessage[]
+  ): Promise<string | null> {
+    if (!this.ollamaClient.isConnected()) {
+      logger.warn("Ollama client not connected, skipping AI response");
+      return null;
+    }
+
+    try {
+      this.conversationHistory.push(...newMessages);
+
+      // Trim conversation history if too long
+      if (this.conversationHistory.length > 20) {
+        this.conversationHistory = [
+          this.conversationHistory[0], // Keep system prompt
+          ...this.conversationHistory.slice(-19),
+        ];
+      }
+
+      const response = await this.ollamaClient.chat(this.conversationHistory);
+
+      if (response) {
+        this.conversationHistory.push({
+          role: "assistant",
+          content: response,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      logger.error("Error getting LLM response:", error);
+      return null;
+    }
+  }
+
+  private buildGameContext(gameState: GameState): GameContext {
+    return {
+      phase: gameState.phase,
+      day: gameState.day,
+      playerCount: gameState.seats.length,
+      aliveCount: gameState.seats.filter((s) => !s.isDead).length,
+      deadPlayers: gameState.seats
+        .filter((s) => s.isDead)
+        .map((s) => s.playerId || `Seat-${s.position}`),
+      recentEvents: gameState.events?.slice(-5) || [],
+      publicClaims: {}, // Would be extracted from game events
+      votingHistory: [], // Would be extracted from game events
+    };
+  }
+
+  private getAlivePlayersExceptSelf(gameState: GameState): string[] {
+    return gameState.seats
+      .filter((seat) => !seat.isDead && seat.id !== this.seatId)
+      .map((seat) => seat.playerId || `Seat-${seat.position}`);
+  }
+}
+
+export default EnhancedNPCAIAgent;

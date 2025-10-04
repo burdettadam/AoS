@@ -1,22 +1,28 @@
-import { GameState, Script, Alignment, RoleType } from '@botc/shared';
-import { logger } from '../utils/logger';
+import { Alignment, GameState, RoleType, Script } from "@ashes-of-salem/shared";
+import { logger } from "../utils/logger";
 
 export class RulesEngine {
-  
-  async assignRolesFromSetup(game: GameState, script: Script): Promise<boolean> {
+  async assignRolesFromSetup(
+    game: GameState,
+    script: Script,
+  ): Promise<boolean> {
     try {
       if (!game.setupState || !game.setupState.characterPool) {
-        logger.error('No character pool available from setup');
+        logger.error("No character pool available from setup");
         return false;
       }
 
       // Count players excluding storyteller
-      const playerSeats = game.seats.filter(seat => seat.id !== (game as any).storytellerSeatId);
+      const playerSeats = game.seats.filter(
+        (seat) => seat.id !== (game as any).storytellerSeatId,
+      );
       const playerCount = playerSeats.length;
       const characterPool = [...game.setupState.characterPool];
-      
+
       if (characterPool.length !== playerCount) {
-        logger.error(`Character pool size ${characterPool.length} does not match player count ${playerCount}`);
+        logger.error(
+          `Character pool size ${characterPool.length} does not match player count ${playerCount}`,
+        );
         return false;
       }
 
@@ -24,14 +30,14 @@ export class RulesEngine {
       this.shuffleArray(characterPool);
 
       // Create role map for lookups
-      const roleMap = new Map(script.roles.map(r => [r.id, r] as const));
+      const roleMap = new Map(script.roles.map((r) => [r.id, r] as const));
 
       // Assign roles to player seats only (exclude storyteller)
       for (let i = 0; i < playerSeats.length; i++) {
         const seat = playerSeats[i];
         const roleId = characterPool[i];
         const role = roleMap.get(roleId);
-        
+
         if (!role) {
           logger.error(`Role ${roleId} not found in script`);
           return false;
@@ -51,10 +57,15 @@ export class RulesEngine {
         }
       }
 
-      logger.info(`Assigned roles from setup for game ${game.id}: ${characterPool.join(', ')}`);
+      logger.info(
+        `Assigned roles from setup for game ${game.id}: ${characterPool.join(", ")}`,
+      );
       return true;
     } catch (error) {
-      logger.error(`Failed to assign roles from setup for game ${game.id}:`, error);
+      logger.error(
+        `Failed to assign roles from setup for game ${game.id}:`,
+        error,
+      );
       return false;
     }
   }
@@ -62,59 +73,94 @@ export class RulesEngine {
   async assignRoles(game: GameState, script: Script): Promise<boolean> {
     try {
       // Count players excluding storyteller
-      const playerSeats = game.seats.filter(seat => seat.id !== (game as any).storytellerSeatId);
+      const playerSeats = game.seats.filter(
+        (seat) => seat.id !== (game as any).storytellerSeatId,
+      );
       const playerCount = playerSeats.length;
-      
+
       // Validate player count
-      if (playerCount < script.setup.playerCount.min || playerCount > script.setup.playerCount.max) {
-        logger.error(`Invalid player count ${playerCount} for script ${script.id}`);
+      if (
+        playerCount < script.setup.playerCount.min ||
+        playerCount > script.setup.playerCount.max
+      ) {
+        logger.error(
+          `Invalid player count ${playerCount} for script ${script.id}`,
+        );
         return false;
       }
 
       // Calculate role distribution based on player count
       const distribution = this.calculateDistribution(playerCount, script);
-      
+
       // Get available roles by type (respect storyteller selection if provided)
-  const rolesByType = this.groupRolesByType(script, (game as any).selectedRoles);
-      const roleMap = new Map(script.roles.map(r => [r.id, r] as const));
-      
+      const rolesByType = this.groupRolesByType(
+        script,
+        (game as any).selectedRoles,
+      );
+      const roleMap = new Map(script.roles.map((r) => [r.id, r] as const));
+
       // Pre-assign claimed roles if any (only for player seats)
-  const preAssignments: Array<{ roleId: string; alignment: typeof Alignment[keyof typeof Alignment] } | undefined> = new Array(game.seats.length).fill(undefined);
+      const preAssignments: Array<
+        | {
+            roleId: string;
+            alignment: (typeof Alignment)[keyof typeof Alignment];
+          }
+        | undefined
+      > = new Array(game.seats.length).fill(undefined);
       if ((game as any).roleClaims) {
-        for (const [seatId, roleId] of Object.entries((game as any).roleClaims as Record<string, string>)) {
-          const seatIndex = game.seats.findIndex(s => s.id === (seatId as any));
+        for (const [seatId, roleId] of Object.entries(
+          (game as any).roleClaims as Record<string, string>,
+        )) {
+          const seatIndex = game.seats.findIndex(
+            (s) => s.id === (seatId as any),
+          );
           const role = roleMap.get(roleId as string);
-          if (seatIndex >= 0 && role && seatId !== (game as any).storytellerSeatId) {
+          if (
+            seatIndex >= 0 &&
+            role &&
+            seatId !== (game as any).storytellerSeatId
+          ) {
             // Remove from pools and adjust distribution
             const type = role.type;
             const list = rolesByType[type];
             const i = list.indexOf(roleId as string);
             if (i >= 0) list.splice(i, 1);
             if (distribution[type] > 0) distribution[type] -= 1;
-            preAssignments[seatIndex] = { roleId: roleId as string, alignment: role.alignment };
+            preAssignments[seatIndex] = {
+              roleId: roleId as string,
+              alignment: role.alignment,
+            };
           }
         }
       }
-      
+
       // Assign remaining roles to player seats only
-      const assignments = this.assignRolesRandomly(playerSeats, rolesByType, distribution, preAssignments.filter((_, idx) => {
-        const seat = game.seats[idx];
-        return seat && seat.id !== (game as any).storytellerSeatId;
-      }), roleMap);
-      
+      const assignments = this.assignRolesRandomly(
+        playerSeats,
+        rolesByType,
+        distribution,
+        preAssignments.filter((_, idx) => {
+          const seat = game.seats[idx];
+          return seat && seat.id !== (game as any).storytellerSeatId;
+        }),
+        roleMap,
+      );
+
       // Apply assignments to game state (only to player seats)
       let assignmentIndex = 0;
       for (let i = 0; i < game.seats.length; i++) {
         const seat = game.seats[i];
         if (seat.id === (game as any).storytellerSeatId) continue; // Skip storyteller
-        
+
         const assignment = assignments[assignmentIndex];
         seat.role = assignment.roleId;
         seat.alignment = assignment.alignment;
         assignmentIndex++;
       }
 
-      logger.info(`Assigned roles for game ${game.id}: ${JSON.stringify(assignments)}`);
+      logger.info(
+        `Assigned roles for game ${game.id}: ${JSON.stringify(assignments)}`,
+      );
       return true;
     } catch (error) {
       logger.error(`Failed to assign roles for game ${game.id}:`, error);
@@ -122,15 +168,21 @@ export class RulesEngine {
     }
   }
 
-  private calculateDistribution(playerCount: number, script: Script): Record<typeof RoleType[keyof typeof RoleType], number> {
+  private calculateDistribution(
+    playerCount: number,
+    script: Script,
+  ): Record<(typeof RoleType)[keyof typeof RoleType], number> {
     // Standard Trouble Brewing distribution based on official rules
-  const distribution: Record<typeof RoleType[keyof typeof RoleType], number> = {
+    const distribution: Record<
+      (typeof RoleType)[keyof typeof RoleType],
+      number
+    > = {
       [RoleType.TOWNSFOLK]: 0,
       [RoleType.OUTSIDER]: 0,
       [RoleType.MINION]: 0,
       [RoleType.DEMON]: 1,
       [RoleType.TRAVELLER]: 0,
-      [RoleType.FABLED]: 0
+      [RoleType.FABLED]: 0,
     };
 
     // Calculate based on player count (official BotC distribution)
@@ -153,25 +205,39 @@ export class RulesEngine {
     } else {
       // Fallback for edge cases
       distribution[RoleType.TOWNSFOLK] = Math.max(2, playerCount - 3);
-      distribution[RoleType.OUTSIDER] = Math.max(0, Math.min(2, playerCount - 6));
-      distribution[RoleType.MINION] = Math.min(2, Math.max(1, Math.floor(playerCount / 4)));
+      distribution[RoleType.OUTSIDER] = Math.max(
+        0,
+        Math.min(2, playerCount - 6),
+      );
+      distribution[RoleType.MINION] = Math.min(
+        2,
+        Math.max(1, Math.floor(playerCount / 4)),
+      );
     }
 
     return distribution;
   }
 
-  private groupRolesByType(script: Script, selectedRoles?: string[]): Record<typeof RoleType[keyof typeof RoleType], string[]> {
-  const groups: Record<typeof RoleType[keyof typeof RoleType], string[]> = {
+  private groupRolesByType(
+    script: Script,
+    selectedRoles?: string[],
+  ): Record<(typeof RoleType)[keyof typeof RoleType], string[]> {
+    const groups: Record<(typeof RoleType)[keyof typeof RoleType], string[]> = {
       [RoleType.TOWNSFOLK]: [],
       [RoleType.OUTSIDER]: [],
       [RoleType.MINION]: [],
       [RoleType.DEMON]: [],
       [RoleType.TRAVELLER]: [],
-      [RoleType.FABLED]: []
+      [RoleType.FABLED]: [],
     };
 
     for (const role of script.roles) {
-      if (selectedRoles && selectedRoles.length > 0 && !selectedRoles.includes(role.id)) continue;
+      if (
+        selectedRoles &&
+        selectedRoles.length > 0 &&
+        !selectedRoles.includes(role.id)
+      )
+        continue;
       groups[role.type].push(role.id);
     }
 
@@ -179,15 +245,33 @@ export class RulesEngine {
   }
 
   private assignRolesRandomly(
-    playerSeats: any[], 
-  rolesByType: Record<typeof RoleType[keyof typeof RoleType], string[]>,
-  distribution: Record<typeof RoleType[keyof typeof RoleType], number>,
-  preAssignments: Array<{ roleId: string; alignment: typeof Alignment[keyof typeof Alignment] } | undefined>,
-  roleMap: Map<string, { alignment: typeof Alignment[keyof typeof Alignment]; type: typeof RoleType[keyof typeof RoleType] }>
-  ): Array<{ roleId: string; alignment: typeof Alignment[keyof typeof Alignment] }> {
-  const assignments: Array<{ roleId: string; alignment: typeof Alignment[keyof typeof Alignment] }> = [];
+    playerSeats: any[],
+    rolesByType: Record<(typeof RoleType)[keyof typeof RoleType], string[]>,
+    distribution: Record<(typeof RoleType)[keyof typeof RoleType], number>,
+    preAssignments: Array<
+      | {
+          roleId: string;
+          alignment: (typeof Alignment)[keyof typeof Alignment];
+        }
+      | undefined
+    >,
+    roleMap: Map<
+      string,
+      {
+        alignment: (typeof Alignment)[keyof typeof Alignment];
+        type: (typeof RoleType)[keyof typeof RoleType];
+      }
+    >,
+  ): Array<{
+    roleId: string;
+    alignment: (typeof Alignment)[keyof typeof Alignment];
+  }> {
+    const assignments: Array<{
+      roleId: string;
+      alignment: (typeof Alignment)[keyof typeof Alignment];
+    }> = [];
     const availableSeats = [...Array(playerSeats.length).keys()];
-    
+
     // Shuffle seats for random assignment
     this.shuffleArray(availableSeats);
 
@@ -208,7 +292,7 @@ export class RulesEngine {
       const roleId = this.getRandomRole(rolesByType[RoleType.DEMON]);
       assignments[availableSeats[seatIndex]] = {
         roleId,
-        alignment: Alignment.EVIL
+        alignment: Alignment.EVIL,
       };
       seatIndex++;
     }
@@ -218,7 +302,7 @@ export class RulesEngine {
       const roleId = this.getRandomRole(rolesByType[RoleType.MINION]);
       assignments[availableSeats[seatIndex]] = {
         roleId,
-        alignment: Alignment.EVIL
+        alignment: Alignment.EVIL,
       };
       seatIndex++;
     }
@@ -228,7 +312,7 @@ export class RulesEngine {
       const roleId = this.getRandomRole(rolesByType[RoleType.OUTSIDER]);
       assignments[availableSeats[seatIndex]] = {
         roleId,
-        alignment: Alignment.GOOD
+        alignment: Alignment.GOOD,
       };
       seatIndex++;
     }
@@ -238,7 +322,7 @@ export class RulesEngine {
       const roleId = this.getRandomRole(rolesByType[RoleType.TOWNSFOLK]);
       assignments[availableSeats[seatIndex]] = {
         roleId,
-        alignment: Alignment.GOOD
+        alignment: Alignment.GOOD,
       };
       seatIndex++;
     }

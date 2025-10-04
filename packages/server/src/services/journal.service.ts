@@ -1,13 +1,13 @@
-import { GameState, Journal, JournalEntry, AvailableMove } from '@botc/shared';
-import { AvailableMovesService } from './available-moves.service';
+import { GameState, Journal, JournalEntry } from "@ashes-of-salem/shared";
+import { AvailableMovesService } from "./available-moves.service";
 
 export class JournalService {
   /**
    * Add a note to a player's journal
    */
   static addNote(gameState: GameState, seatId: string, text: string): void {
-    const seat = gameState.seats.find(s => s.id === seatId);
-    if (!seat) throw new Error('Seat not found');
+    const seat = gameState.seats.find((s) => s.id === seatId);
+    if (!seat) throw new Error("Seat not found");
 
     if (!seat.journal) {
       seat.journal = { notes: [], moves: [] };
@@ -15,7 +15,7 @@ export class JournalService {
 
     const note: JournalEntry = {
       text,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     seat.journal.notes.push(note);
@@ -25,8 +25,8 @@ export class JournalService {
    * Update available moves for a player's journal based on current game state
    */
   static updateAvailableMoves(gameState: GameState, seatId: string): void {
-    const seat = gameState.seats.find(s => s.id === seatId);
-    if (!seat) throw new Error('Seat not found');
+    const seat = gameState.seats.find((s) => s.id === seatId);
+    if (!seat) throw new Error("Seat not found");
 
     if (!seat.journal) {
       seat.journal = { notes: [], moves: [] };
@@ -36,7 +36,7 @@ export class JournalService {
     const availableMoves = AvailableMovesService.generateAvailableMoves(
       gameState,
       seatId,
-      gameState.phase
+      gameState.phase,
     );
 
     seat.journal.moves = availableMoves;
@@ -46,7 +46,7 @@ export class JournalService {
    * Get a player's journal (for the player themselves or storyteller audit)
    */
   static getJournal(gameState: GameState, seatId: string): Journal | null {
-    const seat = gameState.seats.find(s => s.id === seatId);
+    const seat = gameState.seats.find((s) => s.id === seatId);
     return seat?.journal || null;
   }
 
@@ -55,7 +55,7 @@ export class JournalService {
    */
   static getAllJournals(gameState: GameState): Record<string, Journal> {
     const journals: Record<string, Journal> = {};
-    
+
     for (const seat of gameState.seats) {
       if (seat.journal) {
         journals[seat.id] = seat.journal;
@@ -69,8 +69,8 @@ export class JournalService {
    * Initialize journal for a player
    */
   static initializeJournal(gameState: GameState, seatId: string): void {
-    const seat = gameState.seats.find(s => s.id === seatId);
-    if (!seat) throw new Error('Seat not found');
+    const seat = gameState.seats.find((s) => s.id === seatId);
+    if (!seat) throw new Error("Seat not found");
 
     seat.journal = { notes: [], moves: [] };
     this.updateAvailableMoves(gameState, seatId);

@@ -1,16 +1,15 @@
-import { promises as fs } from 'fs';
-import path from 'path';
 import {
-  Script,
   RoleDefinition,
-  Alignment,
   RoleType,
   ScrapedCharactersFileSchema,
   ScrapedTownsFileSchema,
+  Script,
   toAlignment,
-  toRoleType
-} from '@botc/shared';
-import { logger } from '../utils/logger';
+  toRoleType,
+} from "@ashes-of-salem/shared";
+import { promises as fs } from "fs";
+import path from "path";
+import { logger } from "../utils/logger";
 
 // Minimal effect mapping: we don't encode full DSL from ability text yet.
 // We derive timing and precedence where available; fallback to passive/no-op effect.
@@ -18,7 +17,13 @@ import { logger } from '../utils/logger';
 function buildRoleDefinition(input: {
   id: string;
   name: string;
-  category: 'Townsfolk' | 'Outsider' | 'Minion' | 'Demon' | 'Traveller' | 'Fabled';
+  category:
+    | "Townsfolk"
+    | "Outsider"
+    | "Minion"
+    | "Demon"
+    | "Traveller"
+    | "Fabled";
   abilitySummary: string;
   firstNightAction?: string | null;
   otherNightsAction?: string | null;
@@ -30,11 +35,11 @@ function buildRoleDefinition(input: {
   const alignment = toAlignment(input.category);
 
   // Infer timing from available actions
-  let timing: 'night' | 'day' | 'passive' = 'passive';
+  let timing: "night" | "day" | "passive" = "passive";
   if (input.firstNightAction || input.otherNightsAction) {
-    timing = 'night';
+    timing = "night";
   } else if (input.dayAction) {
-    timing = 'day';
+    timing = "day";
   }
 
   // precedence: default by role type (can be refined later)
@@ -48,27 +53,29 @@ function buildRoleDefinition(input: {
     ability: {
       id: `${input.id}-ability`,
       when: timing,
-      target: 'any',
+      target: "any",
       effect: [
         {
-          type: 'rules_text',
-          text: input.abilitySummary
-        }
-      ]
+          type: "rules_text",
+          text: input.abilitySummary,
+        },
+      ],
     },
     visibility: {
       reveals: {
-        public: 'none',
-        privateTo: []
-      }
+        public: "none",
+        privateTo: [],
+      },
     },
-    precedence
+    precedence,
   };
 
   return rd;
 }
 
-function defaultPrecedence(type: typeof RoleType[keyof typeof RoleType]): number {
+function defaultPrecedence(
+  type: (typeof RoleType)[keyof typeof RoleType],
+): number {
   switch (type) {
     case RoleType.TOWNSFOLK:
       return 100;
@@ -87,34 +94,36 @@ function defaultPrecedence(type: typeof RoleType[keyof typeof RoleType]): number
   }
 }
 
-function inferTimingFromType(type: typeof RoleType[keyof typeof RoleType]): 'night' | 'day' | 'passive' {
+function inferTimingFromType(
+  type: (typeof RoleType)[keyof typeof RoleType],
+): "night" | "day" | "passive" {
   // weak heuristic: many townsfolk act at night; outsiders mostly passive; minions/demons at night
   switch (type) {
     case RoleType.TOWNSFOLK:
-      return 'night';
+      return "night";
     case RoleType.OUTSIDER:
-      return 'passive';
+      return "passive";
     case RoleType.MINION:
-      return 'night';
+      return "night";
     case RoleType.DEMON:
-      return 'night';
+      return "night";
     case RoleType.TRAVELLER:
-      return 'day';
+      return "day";
     case RoleType.FABLED:
-      return 'passive';
+      return "passive";
     default:
-      return 'passive';
+      return "passive";
   }
 }
 
 export async function importWikiData(
   charactersJsonPath: string,
   townsJsonPath: string,
-  outDir: string
+  outDir: string,
 ): Promise<void> {
   const [charsRaw, townsRaw] = await Promise.all([
-    fs.readFile(charactersJsonPath, 'utf8'),
-    fs.readFile(townsJsonPath, 'utf8')
+    fs.readFile(charactersJsonPath, "utf8"),
+    fs.readFile(townsJsonPath, "utf8"),
   ]);
 
   const charsParsed = JSON.parse(charsRaw);
@@ -128,7 +137,7 @@ export async function importWikiData(
   for (const ch of characters) {
     const rd = buildRoleDefinition(ch);
     if (!rd) continue; // skip unsupported types
-    
+
     // Character can appear in multiple editions
     for (const editionId of ch.edition) {
       if (!byEdition.has(editionId)) byEdition.set(editionId, []);
@@ -140,7 +149,8 @@ export async function importWikiData(
 
   // For each town/edition, produce a Script JSON file
   for (const town of towns) {
-    const roles: RoleDefinition[] = (byEdition.get(town.id) ?? []) as RoleDefinition[];
+    const roles: RoleDefinition[] = (byEdition.get(town.id) ??
+      []) as RoleDefinition[];
 
     // Basic setup range; adjust if distribution provided
     const setup = {
@@ -149,20 +159,20 @@ export async function importWikiData(
         [RoleType.TOWNSFOLK]: 0,
         [RoleType.OUTSIDER]: 0,
         [RoleType.MINION]: 0,
-        [RoleType.DEMON]: 1
-  } as Record<typeof RoleType[keyof typeof RoleType], number>
+        [RoleType.DEMON]: 1,
+      } as Record<(typeof RoleType)[keyof typeof RoleType], number>,
     };
 
     const script: Script = {
       id: town.id,
       name: town.name,
-      version: 'from-wiki-1',
+      version: "from-wiki-1",
       roles,
-      setup
+      setup,
     };
 
     const file = path.join(outDir, `${town.id}.script.json`);
-    await fs.writeFile(file, JSON.stringify(script, null, 2), 'utf8');
+    await fs.writeFile(file, JSON.stringify(script, null, 2), "utf8");
   }
 
   logger.info(`Imported ${byEdition.size} scripts to ${outDir}`);
@@ -173,11 +183,13 @@ if (require.main === module) {
   const [charactersJsonPath, townsJsonPath, outDir] = process.argv.slice(2);
   if (!charactersJsonPath || !townsJsonPath || !outDir) {
     // eslint-disable-next-line no-console
-    console.error('Usage: ts-node src/game/importer.ts <characters.json> <towns.json> <outDir>');
+    console.error(
+      "Usage: ts-node src/game/importer.ts <characters.json> <towns.json> <outDir>",
+    );
     process.exit(1);
   }
   importWikiData(charactersJsonPath, townsJsonPath, outDir).catch((e) => {
-    logger.error('Import failed', e);
+    logger.error("Import failed", e);
     process.exit(1);
   });
 }

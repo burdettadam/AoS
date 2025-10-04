@@ -88,23 +88,30 @@ async function performLogin(
   if (await page.locator('button:has-text("Create Game")').isVisible()) {
     return {
       username,
-      displayName: username.charAt(0).toUpperCase() + username.slice(1),
+      displayName: username.replace(/testuser(\d+)/, "Test User $1"),
       email: `${username}@example.com`,
     };
   }
 
-  // Wait for redirect to Keycloak or find login button
+  // Wait for redirect to Keycloak (should happen automatically with ProtectedRoute)
   try {
-    await page.waitForURL("**/realms/aos/protocol/openid-connect/auth**", {
-      timeout: 10000,
+    await page.waitForURL("**/realms/botct/protocol/openid-connect/auth**", {
+      timeout: 15000, // Increased timeout for automatic redirect
     });
   } catch {
-    // If not redirected to Keycloak, look for login button
-    await page.waitForSelector('button:has-text("Login")', { timeout: 15000 });
-    await page.click('button:has-text("Login")');
-    await page.waitForURL("**/realms/aos/protocol/openid-connect/auth**", {
-      timeout: 30000,
-    });
+    // If not redirected to Keycloak automatically, look for login button
+    // This is a fallback in case ProtectedRoute doesn't redirect automatically
+    const loginButton = page.locator('button:has-text("Login")');
+    if (await loginButton.isVisible({ timeout: 5000 })) {
+      await loginButton.click();
+      await page.waitForURL("**/realms/botct/protocol/openid-connect/auth**", {
+        timeout: 30000,
+      });
+    } else {
+      throw new Error(
+        `Neither automatic redirect nor login button found for user ${username}`,
+      );
+    }
   }
 
   console.log(`Attempting login for user: ${username}`);
@@ -178,7 +185,7 @@ async function performLogin(
 
   return {
     username,
-    displayName: username.charAt(0).toUpperCase() + username.slice(1),
+    displayName: username.replace(/testuser(\d+)/, "Test User $1"),
     email: `${username}@example.com`,
   };
 }

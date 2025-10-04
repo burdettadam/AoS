@@ -1,4 +1,4 @@
-import { GameState } from "@botc/shared";
+import { GameState } from "@ashes-of-salem/shared";
 import { Request, Response } from "express";
 import { JournalService } from "../services/journalService";
 

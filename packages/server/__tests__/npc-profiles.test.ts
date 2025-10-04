@@ -39,7 +39,7 @@ describe("NPC Profiles API", () => {
       }
       if (profileId) {
         const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
-          "@botc/shared"
+          "@ashes-of-salem/shared"
         );
         const exists = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES].some(
           (p) => p.id === profileId,
@@ -60,7 +60,7 @@ describe("NPC Profiles API", () => {
     fastify.get("/api/ai/npc-profiles", async (_request, _reply) => {
       try {
         const { PREDEFINED_NPC_PROFILES, STARTER_NPC_PROFILE } = await import(
-          "@botc/shared"
+          "@ashes-of-salem/shared"
         );
         const profiles = [STARTER_NPC_PROFILE, ...PREDEFINED_NPC_PROFILES];
         const previews = profiles.map((p) => ({

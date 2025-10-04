@@ -1,11 +1,16 @@
-import { FastifyRequest } from 'fastify';
-import { SocketStream } from '@fastify/websocket';
-import { WSMessage, GameId, SeatId } from '@botc/shared';
-import { maskGameStateForSeat, maskGameStatePublic } from '@botc/shared';
-import { randomUUID } from 'crypto';
-import { GameEngine } from '../game/engine';
-import { MatchmakingService } from '../services/matchmaking';
-import { logger } from '../utils/logger';
+import {
+  GameId,
+  maskGameStateForSeat,
+  maskGameStatePublic,
+  SeatId,
+  WSMessage,
+} from "@ashes-of-salem/shared";
+import { SocketStream } from "@fastify/websocket";
+import { randomUUID } from "crypto";
+import { FastifyRequest } from "fastify";
+import { GameEngine } from "../game/engine";
+import { MatchmakingService } from "../services/matchmaking";
+import { logger } from "../utils/logger";
 
 export class WebSocketHandler {
   private connections: Map<string, SocketStream> = new Map();
@@ -14,7 +19,7 @@ export class WebSocketHandler {
 
   constructor(
     private gameEngine: GameEngine,
-    private matchmaking: MatchmakingService
+    private matchmaking: MatchmakingService,
   ) {}
 
   handleConnection(connection: SocketStream, request: FastifyRequest): void {
@@ -23,21 +28,24 @@ export class WebSocketHandler {
 
     logger.info(`WebSocket connection established: ${connectionId}`);
 
-    connection.socket.on('message', (data: Buffer) => {
+    connection.socket.on("message", (data: Buffer) => {
       try {
         const message: WSMessage = JSON.parse(data.toString());
         this.handleMessage(connectionId, message);
       } catch (error) {
-        logger.error(`Failed to parse WebSocket message from ${connectionId}:`, error);
-        this.sendError(connectionId, 'Invalid message format');
+        logger.error(
+          `Failed to parse WebSocket message from ${connectionId}:`,
+          error,
+        );
+        this.sendError(connectionId, "Invalid message format");
       }
     });
 
-    connection.socket.on('close', () => {
+    connection.socket.on("close", () => {
       this.handleDisconnection(connectionId);
     });
 
-  connection.socket.on('error', (error: Error) => {
+    connection.socket.on("error", (error: Error) => {
       logger.error(`WebSocket error for ${connectionId}:`, error);
       this.handleDisconnection(connectionId);
     });
@@ -45,10 +53,14 @@ export class WebSocketHandler {
 
   private handleMessage(connectionId: string, message: WSMessage): void {
     switch (message.type) {
-      case 'subscribe':
-        this.handleSubscribe(connectionId, message.gameId, message.viewerSeatId as SeatId | undefined);
+      case "subscribe":
+        this.handleSubscribe(
+          connectionId,
+          message.gameId,
+          message.viewerSeatId as SeatId | undefined,
+        );
         break;
-      case 'cmd':
+      case "cmd":
         this.handleCommand(connectionId, message.cmd);
         break;
       default:
@@ -56,7 +68,11 @@ export class WebSocketHandler {
     }
   }
 
-  private handleSubscribe(connectionId: string, gameId: GameId, viewerSeatId?: SeatId): void {
+  private handleSubscribe(
+    connectionId: string,
+    gameId: GameId,
+    viewerSeatId?: SeatId,
+  ): void {
     // Unsubscribe from previous game if any
     this.unsubscribeFromAll(connectionId);
 
@@ -65,24 +81,26 @@ export class WebSocketHandler {
       this.gameSubscriptions.set(gameId, new Set());
     }
     this.gameSubscriptions.get(gameId)!.add(connectionId);
-  this.connectionViewerSeat.set(connectionId, viewerSeatId);
+    this.connectionViewerSeat.set(connectionId, viewerSeatId);
 
     // Send current game state
     const game = this.gameEngine.getGame(gameId);
     if (game) {
       // If viewerSeatId provided and not storyteller, mask; storyteller sees full
       const snapshot = viewerSeatId
-        ? (game.storytellerSeatId === viewerSeatId ? game : maskGameStateForSeat(game, viewerSeatId))
+        ? game.storytellerSeatId === viewerSeatId
+          ? game
+          : maskGameStateForSeat(game, viewerSeatId)
         : maskGameStatePublic(game);
       this.sendToConnection(connectionId, {
-        type: 'event',
+        type: "event",
         event: {
           id: randomUUID(),
           gameId,
-          type: 'game_created',
+          type: "game_created",
           timestamp: new Date(),
-          payload: { gameState: snapshot as any }
-        }
+          payload: { gameState: snapshot as any },
+        },
       });
     } else {
       this.sendError(connectionId, `Game ${gameId} not found`);
@@ -94,16 +112,16 @@ export class WebSocketHandler {
   private handleCommand(connectionId: string, cmd: any): void {
     // Handle game commands
     switch (cmd.kind) {
-      case 'nominate':
+      case "nominate":
         // Handle nomination
         break;
-      case 'vote':
+      case "vote":
         // Handle voting
         break;
-      case 'chat':
+      case "chat":
         // Handle chat message
         break;
-      case 'ability':
+      case "ability":
         // Handle ability usage
         break;
       default:
@@ -124,12 +142,13 @@ export class WebSocketHandler {
         this.gameSubscriptions.delete(gameId);
       }
     }
-  this.connectionViewerSeat.delete(connectionId);
+    this.connectionViewerSeat.delete(connectionId);
   }
 
   private sendToConnection(connectionId: string, message: WSMessage): void {
     const connection = this.connections.get(connectionId);
-    if (connection && connection.socket.readyState === 1) { // WebSocket.OPEN
+    if (connection && connection.socket.readyState === 1) {
+      // WebSocket.OPEN
       try {
         connection.socket.send(JSON.stringify(message));
       } catch (error) {
@@ -140,14 +159,14 @@ export class WebSocketHandler {
 
   private sendError(connectionId: string, error: string): void {
     this.sendToConnection(connectionId, {
-      type: 'event',
+      type: "event",
       event: {
         id: randomUUID(),
-        gameId: '' as GameId,
-        type: 'game_created',
+        gameId: "" as GameId,
+        type: "game_created",
         timestamp: new Date(),
-        payload: { error }
-      }
+        payload: { error },
+      },
     });
   }
 
@@ -161,11 +180,16 @@ export class WebSocketHandler {
     if (subscribers) {
       for (const connectionId of subscribers) {
         // If message contains a snapshot, mask it per viewer
-        if (message.type === 'event' && (message as any).event?.payload?.gameState) {
+        if (
+          message.type === "event" &&
+          (message as any).event?.payload?.gameState
+        ) {
           const game = (message as any).event.payload.gameState;
           const viewerSeatId = this.connectionViewerSeat.get(connectionId);
           const masked = viewerSeatId
-            ? (game.storytellerSeatId === viewerSeatId ? game : maskGameStateForSeat(game, viewerSeatId))
+            ? game.storytellerSeatId === viewerSeatId
+              ? game
+              : maskGameStateForSeat(game, viewerSeatId)
             : maskGameStatePublic(game);
           const cloned = JSON.parse(JSON.stringify(message));
           (cloned as any).event.payload.gameState = masked;

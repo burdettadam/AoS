@@ -1,4 +1,8 @@
-import { Character, LoadedScript, ScriptMetadata } from "@botc/shared";
+import {
+  Character,
+  LoadedScript,
+  ScriptMetadata,
+} from "@ashes-of-salem/shared";
 import { promises as fs } from "fs";
 import path from "path";
 import { logger } from "../utils/logger";

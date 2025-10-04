@@ -1,0 +1,262 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Enhanced NPC Profile Schema",
+  "description": "Comprehensive NPC profile schema with behavioral patterns for AI agents in Blood on the Clock Tower",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "description",
+    "personality",
+    "behavior",
+    "playStyle",
+    "cognitiveFramework",
+    "deceptionPatterns",
+    "difficulty"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the profile"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name for the profile"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the NPC's personality and playstyle"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "Emoji or icon representing the profile"
+    },
+    "personality": {
+      "type": "object",
+      "description": "Core personality traits (0-1 scale)",
+      "required": [
+        "chattiness",
+        "suspicion",
+        "boldness",
+        "helpfulness",
+        "deception",
+        "leadership",
+        "followership",
+        "independence",
+        "claimTiming",
+        "voteConfidence",
+        "informationSharing"
+      ],
+      "properties": {
+        "chattiness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "suspicion": { "type": "number", "minimum": 0, "maximum": 1 },
+        "boldness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "helpfulness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "deception": { "type": "number", "minimum": 0, "maximum": 1 },
+        "leadership": { "type": "number", "minimum": 0, "maximum": 1 },
+        "followership": { "type": "number", "minimum": 0, "maximum": 1 },
+        "independence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "claimTiming": { "type": "number", "minimum": 0, "maximum": 1 },
+        "voteConfidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "informationSharing": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "behavior": {
+      "type": "object",
+      "description": "Behavioral patterns and communication style",
+      "required": [
+        "averageWordsPerMessage",
+        "messagesPerPhase",
+        "decisionSpeed",
+        "changesMind",
+        "explainReasoning",
+        "preferredVotingStyle",
+        "nominationTendency",
+        "claimStrategy"
+      ],
+      "properties": {
+        "averageWordsPerMessage": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 200
+        },
+        "messagesPerPhase": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "useEmojis": { "type": "boolean" },
+        "formalLanguage": { "type": "boolean" },
+        "decisionSpeed": { "enum": ["instant", "quick", "deliberate", "slow"] },
+        "changesMind": { "type": "boolean" },
+        "explainReasoning": { "type": "boolean" },
+        "preferredVotingStyle": {
+          "enum": ["aggressive", "cautious", "analytical", "reactive"]
+        },
+        "nominationTendency": {
+          "enum": ["never", "rare", "normal", "frequent"]
+        },
+        "claimStrategy": {
+          "enum": ["immediate", "early", "pressured", "late", "never"]
+        }
+      }
+    },
+    "playStyle": {
+      "type": "object",
+      "description": "Strategic preferences and team alignment behaviors",
+      "required": [
+        "name",
+        "description",
+        "goodTeamStrategy",
+        "evilTeamStrategy"
+      ],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "goodTeamStrategy": {
+          "enum": [
+            "information_gatherer",
+            "social_leader",
+            "quiet_observer",
+            "protective_helper",
+            "aggressive_hunter",
+            "supportive_follower"
+          ]
+        },
+        "evilTeamStrategy": {
+          "enum": [
+            "charismatic_deceiver",
+            "quiet_saboteur",
+            "false_leader",
+            "paranoia_sower",
+            "information_hoarder",
+            "aggressive_bluffer"
+          ]
+        }
+      }
+    },
+    "cognitiveFramework": {
+      "type": "object",
+      "description": "How the NPC processes information and makes decisions",
+      "required": [
+        "riskTolerance",
+        "informationProcessing",
+        "decisionMaking",
+        "possibilityFramework"
+      ],
+      "properties": {
+        "riskTolerance": {
+          "enum": ["risk_averse", "balanced", "risk_seeking"],
+          "description": "How willing they are to take chances"
+        },
+        "informationProcessing": {
+          "enum": ["analytical", "intuitive", "skeptical", "trusting"],
+          "description": "How they evaluate information"
+        },
+        "decisionMaking": {
+          "enum": [
+            "evidence_based",
+            "emotion_based",
+            "consensus_seeking",
+            "independent"
+          ],
+          "description": "Their decision-making style"
+        },
+        "possibilityFramework": {
+          "type": "object",
+          "description": "How they evaluate scenario likelihood",
+          "required": [
+            "evaluatesMultipleScenarios",
+            "pessimisticBias",
+            "overconfidenceLevel"
+          ],
+          "properties": {
+            "evaluatesMultipleScenarios": { "type": "boolean" },
+            "pessimisticBias": { "type": "number", "minimum": 0, "maximum": 1 },
+            "overconfidenceLevel": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "anchorsToFirstImpression": { "type": "boolean" },
+            "considersLowProbabilityEvents": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "deceptionPatterns": {
+      "type": "object",
+      "description": "Patterns for lies and logical fallacies when playing evil roles",
+      "required": ["lieFrequency", "preferredFallacies", "truthTelling"],
+      "properties": {
+        "lieFrequency": {
+          "enum": [
+            "never",
+            "rarely",
+            "when_pressured",
+            "frequently",
+            "constantly"
+          ],
+          "description": "How often they lie as evil"
+        },
+        "preferredFallacies": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "straw_man",
+              "ad_hominem",
+              "false_dilemma",
+              "appeal_to_authority",
+              "red_herring",
+              "bandwagon",
+              "slippery_slope",
+              "confirmation_bias",
+              "hasty_generalization",
+              "appeal_to_emotion"
+            ]
+          },
+          "description": "Logical fallacies they tend to use"
+        },
+        "truthTelling": {
+          "type": "object",
+          "description": "When and how they tell the truth",
+          "properties": {
+            "mixesTruthWithLies": { "type": "boolean" },
+            "tellsTruthUnderPressure": { "type": "boolean" },
+            "avoidsDirectLies": { "type": "boolean" },
+            "usesOmission": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "actionConstraints": {
+      "type": "object",
+      "description": "Behavioral constraints that limit available actions",
+      "properties": {
+        "neverNominates": { "type": "boolean" },
+        "onlyVotesWithEvidence": { "type": "boolean" },
+        "avoidsEarlyVoting": { "type": "boolean" },
+        "requiresConsensus": { "type": "boolean" },
+        "neverChangesVote": { "type": "boolean" },
+        "onlySpeaksWhenSpokenTo": { "type": "boolean" },
+        "avoidsConflict": { "type": "boolean" },
+        "mustExplainActions": { "type": "boolean" }
+      }
+    },
+    "difficulty": {
+      "enum": ["beginner", "intermediate", "advanced", "expert"],
+      "description": "Difficulty level for playing against this NPC"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tags for categorizing and filtering profiles"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "isCustom": { "type": "boolean", "default": false },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "timesUsed": { "type": "integer", "minimum": 0 },
+        "winRate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

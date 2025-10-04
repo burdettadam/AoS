@@ -1,0 +1,408 @@
+/**
+ * Enhanced NPC Prompt Generator
+ * Generates contextual prompts based on NPC profile traits, game state, and selected actions
+ */
+
+import { NPCProfile } from "@ashes-of-salem/shared";
+import { GameContext } from "../llm/PromptTemplates";
+// import {
+//   ACTION_SELECTION_TEMPLATE,
+//   ACTION_EXECUTION_TEMPLATES,
+//   getAvailableActions,
+// } from "./ActionSelectionSystem";
+
+export interface ProfileContextualizer {
+  generateActionSelectionPrompt(
+    profile: NPCProfile,
+    gameContext: GameContext,
+    availableBaseActions: any
+  ): string;
+
+  generateActionExecutionPrompt(
+    action: string,
+    profile: NPCProfile,
+    gameContext: GameContext,
+    additionalContext?: Record<string, any>
+  ): string;
+}
+
+export class EnhancedNPCPromptGenerator implements ProfileContextualizer {
+  /**
+   * Generate action selection prompt with profile-specific filtering and context
+   */
+  generateActionSelectionPrompt(
+    gameContext: GameContext,
+    character: Character,
+    persona: NPCPersona,
+    context?: ActionSelectionContext
+  ): string {
+    // TODO: Restore once ActionSelectionSystem is fixed
+    // const availableActions = getAvailableActions(
+    //   gameContext.phase,
+    //   character,
+    //   gameContext,
+    // );
+
+    return `You are ${character.name} in Blood on the Clock Tower. Choose your action for ${gameContext.phase}.`;
+    // return ACTION_SELECTION_TEMPLATE.replace(
+    //   /\{(\w+)\}/g,
+    //   (_, key) => {
+    //     const replacements: Record<string, string> = {
+    //       character: character.name,
+    //       phase: gameContext.phase,
+    //       actions: availableActions.map((a) => `- ${a.name}: ${a.description}`).join('\n'),
+    //       context: context?.situationDescription || 'General game state',
+    //     };
+    //     return replacements[key] || `{${key}}`;
+    //   },
+    // );
+  }
+
+  /**
+   * Generate action execution prompt with profile-driven behavioral modifiers
+   */
+  generateActionExecutionPrompt(
+    gameContext: GameContext,
+    character: Character,
+    persona: NPCPersona,
+    action: SelectedAction,
+    context?: ActionExecutionContext
+  ): string {
+    // TODO: Restore once ActionSelectionSystem is fixed
+    return `You are ${character.name}. Execute the action: ${action.type}`;
+    // return (
+    //   ACTION_EXECUTION_TEMPLATES[
+    //     action as keyof typeof ACTION_EXECUTION_TEMPLATES
+    //   ] || `Execute action: ${action}`
+    // );
+  }
+
+  /**
+   * Apply profile-specific behavioral patterns to prompt templates
+   */
+  private applyProfileToTemplate(
+    template: string,
+    profile: NPCProfile,
+    gameContext: GameContext,
+    additionalContext: Record<string, any>
+  ): string {
+    return template
+      .replace("{gamePhase}", gameContext.phase.toString())
+      .replace(
+        "{specificContext}",
+        additionalContext.specificContext ||
+          this.buildContextDescription(gameContext)
+      )
+      .replace(
+        "{personalityDescription}",
+        this.formatPersonalityDescription(profile)
+      )
+      .replace("{deceptionPatterns}", this.formatDeceptionPatterns(profile))
+      .replace("{formalLanguage}", profile.behavior.formalLanguage.toString())
+      .replace(
+        "{averageWordsPerMessage}",
+        profile.behavior.averageWordsPerMessage.toString()
+      )
+      .replace(
+        "{availableTargets}",
+        additionalContext.availableTargets ||
+          this.getAvailableTargets(gameContext).join(", ")
+      )
+      .replace(
+        "{nominationContext}",
+        additionalContext.nominationContext || "No current nomination context"
+      )
+      .replace("{suspicion}", (profile.personality.suspicion * 10).toFixed(0))
+      .replace("{riskTolerance}", profile.cognitiveFramework.riskTolerance)
+      .replace(
+        "{explainReasoning}",
+        profile.behavior.explainReasoning.toString()
+      )
+      .replace(
+        "{informationProcessing}",
+        profile.cognitiveFramework.informationProcessing
+      )
+      .replace("{nominee}", additionalContext.nominee || "unknown")
+      .replace(
+        "{nominationReason}",
+        additionalContext.nominationReason || "no reason given"
+      )
+      .replace(
+        "{possibilityFramework}",
+        this.formatPossibilityFramework(profile)
+      )
+      .replace("{preferredVotingStyle}", profile.behavior.preferredVotingStyle)
+      .replace("{evidenceRequirement}", this.getEvidenceRequirement(profile))
+      .replace("{actualRole}", additionalContext.actualRole || "unknown")
+      .replace("{claimStrategy}", profile.behavior.claimStrategy)
+      .replace("{pressureLevel}", additionalContext.pressureLevel || "medium")
+      .replace("{deception}", (profile.personality.deception * 10).toFixed(0))
+      .replace("{lieFrequency}", profile.deceptionPatterns.lieFrequency)
+      .replace(
+        "{mixesTruthWithLies}",
+        profile.deceptionPatterns.truthTelling.mixesTruthWithLies.toString()
+      )
+      .replace(
+        "{defenseContext}",
+        additionalContext.defenseContext || "general defense"
+      )
+      .replace(
+        "{confidence}",
+        (profile.personality.voteConfidence * 10).toFixed(0)
+      )
+      .replace("{persuasionStyle}", this.getPersuasionStyle(profile))
+      .replace(
+        "{preferredFallacies}",
+        profile.deceptionPatterns.preferredFallacies.join(", ")
+      )
+      .replace("{truthTelling}", this.formatTruthTellingPatterns(profile))
+      .replace(
+        "{questionTarget}",
+        additionalContext.questionTarget || "general"
+      )
+      .replace("{decisionMaking}", profile.cognitiveFramework.decisionMaking)
+      .replace(
+        "{passContext}",
+        additionalContext.passContext || "general situation"
+      )
+      .replace("{chattiness}", (profile.personality.chattiness * 10).toFixed(0))
+      .replace(
+        "{independence}",
+        (profile.personality.independence * 10).toFixed(0)
+      );
+  }
+
+  /**
+   * Check if the NPC is currently under suspicion based on recent events
+   */
+  private isUnderSuspicion(
+    profile: NPCProfile,
+    gameContext: GameContext
+  ): boolean {
+    // Simple heuristic - look for the NPC's name in recent events
+    // In a real implementation, this would be more sophisticated
+    return gameContext.recentEvents.some(
+      (event) =>
+        event.toLowerCase().includes("suspect") ||
+        event.toLowerCase().includes("suspicious")
+    );
+  }
+
+  /**
+   * Get available targets for actions (other alive players)
+   */
+  private getAvailableTargets(gameContext: GameContext): string[] {
+    // In real implementation, this would come from the game state
+    // For now, return placeholder targets
+    const totalPlayers = Array.from(
+      { length: gameContext.aliveCount },
+      (_, i) => `Player${i + 1}`
+    );
+    return totalPlayers.filter((p) => p !== "self"); // Exclude self
+  }
+
+  /**
+   * Format profile constraints as human-readable text
+   */
+  private formatProfileConstraints(profile: NPCProfile): string {
+    const constraints: string[] = [];
+
+    if (profile.actionConstraints?.neverNominates) {
+      constraints.push("- You never nominate other players");
+    }
+    if (profile.actionConstraints?.onlyVotesWithEvidence) {
+      constraints.push("- You only vote when you have sufficient evidence");
+    }
+    if (profile.actionConstraints?.avoidsEarlyVoting) {
+      constraints.push("- You prefer to wait before voting");
+    }
+    if (profile.actionConstraints?.requiresConsensus) {
+      constraints.push("- You prefer group consensus before acting");
+    }
+    if (profile.actionConstraints?.avoidsConflict) {
+      constraints.push("- You try to avoid confrontational situations");
+    }
+    if (profile.actionConstraints?.mustExplainActions) {
+      constraints.push("- You always explain your reasoning");
+    }
+
+    return constraints.length > 0
+      ? constraints.join("\n")
+      : "- No specific constraints";
+  }
+
+  /**
+   * Format personality as descriptive text
+   */
+  private formatPersonalityDescription(profile: NPCProfile): string {
+    const traits: string[] = [];
+
+    if (profile.personality.chattiness > 0.7) traits.push("very talkative");
+    else if (profile.personality.chattiness < 0.3) traits.push("quiet");
+
+    if (profile.personality.suspicion > 0.7) traits.push("highly suspicious");
+    else if (profile.personality.suspicion < 0.3) traits.push("trusting");
+
+    if (profile.personality.boldness > 0.7) traits.push("bold and risk-taking");
+    else if (profile.personality.boldness < 0.3)
+      traits.push("cautious and careful");
+
+    if (profile.personality.helpfulness > 0.7)
+      traits.push("helpful and cooperative");
+    else if (profile.personality.helpfulness < 0.3)
+      traits.push("self-interested");
+
+    if (profile.personality.leadership > 0.7) traits.push("natural leader");
+    else if (profile.personality.followership > 0.7)
+      traits.push("good follower");
+
+    return traits.join(", ");
+  }
+
+  /**
+   * Format deception patterns for prompt context
+   */
+  private formatDeceptionPatterns(profile: NPCProfile): string {
+    const patterns: string[] = [];
+
+    patterns.push(`Lie frequency: ${profile.deceptionPatterns.lieFrequency}`);
+    patterns.push(
+      `Preferred fallacies: ${profile.deceptionPatterns.preferredFallacies.join(", ")}`
+    );
+
+    if (profile.deceptionPatterns.truthTelling.mixesTruthWithLies) {
+      patterns.push("Often mixes truth with lies");
+    }
+    if (profile.deceptionPatterns.truthTelling.avoidsDirectLies) {
+      patterns.push("Prefers misdirection over direct lies");
+    }
+    if (profile.deceptionPatterns.truthTelling.usesOmission) {
+      patterns.push("Uses omission as a deception tool");
+    }
+
+    return patterns.join(", ");
+  }
+
+  /**
+   * Format possibility framework for decision making
+   */
+  private formatPossibilityFramework(profile: NPCProfile): string {
+    const framework = profile.cognitiveFramework.possibilityFramework;
+    const traits: string[] = [];
+
+    if (framework.evaluatesMultipleScenarios) {
+      traits.push("considers multiple possibilities");
+    }
+    if (framework.pessimisticBias > 0.6) {
+      traits.push("tends toward pessimistic interpretations");
+    }
+    if (framework.overconfidenceLevel > 0.6) {
+      traits.push("tends to be overconfident in judgments");
+    }
+    if (framework.anchorsToFirstImpression) {
+      traits.push("strongly influenced by first impressions");
+    }
+    if (framework.considersLowProbabilityEvents) {
+      traits.push("considers unlikely scenarios");
+    }
+
+    return traits.join(", ");
+  }
+
+  /**
+   * Get evidence requirement level based on profile
+   */
+  private getEvidenceRequirement(profile: NPCProfile): string {
+    if (profile.actionConstraints?.onlyVotesWithEvidence) return "high";
+    if (profile.personality.suspicion > 0.7) return "medium-high";
+    if (profile.personality.suspicion < 0.3) return "low";
+    return "medium";
+  }
+
+  /**
+   * Determine persuasion style from personality traits
+   */
+  private getPersuasionStyle(profile: NPCProfile): string {
+    if (profile.personality.deception > 0.7) return "manipulative";
+    if (profile.personality.helpfulness > 0.7) return "collaborative";
+    if (profile.personality.boldness > 0.7) return "assertive";
+    if (profile.cognitiveFramework.informationProcessing === "analytical")
+      return "logical";
+    return "conversational";
+  }
+
+  /**
+   * Format truth-telling patterns
+   */
+  private formatTruthTellingPatterns(profile: NPCProfile): string {
+    const patterns = profile.deceptionPatterns.truthTelling;
+    const traits: string[] = [];
+
+    if (patterns.mixesTruthWithLies) traits.push("mixes truth with lies");
+    if (patterns.tellsTruthUnderPressure)
+      traits.push("tells truth when pressured");
+    if (patterns.avoidsDirectLies) traits.push("avoids direct lies");
+    if (patterns.usesOmission) traits.push("uses strategic omission");
+
+    return traits.join(", ");
+  }
+
+  /**
+   * Build context description for the current game situation
+   */
+  private buildContextDescription(gameContext: GameContext): string {
+    const parts: string[] = [];
+
+    parts.push(`${gameContext.phase} phase of Day ${gameContext.day}`);
+    parts.push(
+      `${gameContext.aliveCount} players alive out of ${gameContext.playerCount} total`
+    );
+
+    if (gameContext.recentEvents.length > 0) {
+      parts.push(
+        `Recent events: ${gameContext.recentEvents.slice(-3).join("; ")}`
+      );
+    }
+
+    if (gameContext.deadPlayers.length > 0) {
+      parts.push(`Dead players: ${gameContext.deadPlayers.join(", ")}`);
+    }
+
+    return parts.join("\n");
+  }
+
+  /**
+   * Format available actions as a numbered list
+   */
+  private formatActionList(actions: string[]): string {
+    return actions
+      .map((action, index) => `${index + 1}. ${action.toUpperCase()}`)
+      .join("\n");
+  }
+
+  /**
+   * Infer team alignment from context (placeholder)
+   */
+  private inferTeamFromContext(gameContext: GameContext): string {
+    // In real implementation, this would come from the actual character assignment
+    return "unknown";
+  }
+
+  /**
+   * Get team goal description
+   */
+  private getTeamGoal(gameContext: GameContext): string {
+    // Placeholder - would be determined by actual team assignment
+    return "Work with your team to achieve victory";
+  }
+
+  /**
+   * Get known information from character abilities and game events
+   */
+  private getKnownInformation(gameContext: GameContext): string {
+    // Placeholder - would include character-specific information
+    return "Information available based on your role and observations";
+  }
+}
+
+export default EnhancedNPCPromptGenerator;

@@ -1,0 +1,87 @@
+{
+  "id": "analytical-skeptic",
+  "name": "The Analytical Skeptic",
+  "description": "Methodical player who questions everything and demands evidence before making decisions. Uses logical reasoning but can fall into analysis paralysis.",
+  "avatar": "🔬",
+  "personality": {
+    "chattiness": 0.7,
+    "suspicion": 0.9,
+    "boldness": 0.3,
+    "helpfulness": 0.8,
+    "deception": 0.2,
+    "leadership": 0.6,
+    "followership": 0.4,
+    "independence": 0.8,
+    "claimTiming": 0.7,
+    "voteConfidence": 0.6,
+    "informationSharing": 0.9
+  },
+  "behavior": {
+    "averageWordsPerMessage": 45,
+    "messagesPerPhase": 4,
+    "useEmojis": false,
+    "formalLanguage": true,
+    "decisionSpeed": "slow",
+    "changesMind": true,
+    "explainReasoning": true,
+    "preferredVotingStyle": "analytical",
+    "nominationTendency": "rare",
+    "claimStrategy": "pressured"
+  },
+  "playStyle": {
+    "name": "Evidence-Based Analyst",
+    "description": "Collects and analyzes information before making careful decisions",
+    "goodTeamStrategy": "information_gatherer",
+    "evilTeamStrategy": "information_hoarder"
+  },
+  "cognitiveFramework": {
+    "riskTolerance": "risk_averse",
+    "informationProcessing": "analytical",
+    "decisionMaking": "evidence_based",
+    "possibilityFramework": {
+      "evaluatesMultipleScenarios": true,
+      "pessimisticBias": 0.7,
+      "overconfidenceLevel": 0.2,
+      "anchorsToFirstImpression": false,
+      "considersLowProbabilityEvents": true
+    }
+  },
+  "deceptionPatterns": {
+    "lieFrequency": "when_pressured",
+    "preferredFallacies": [
+      "false_dilemma",
+      "appeal_to_authority",
+      "hasty_generalization"
+    ],
+    "truthTelling": {
+      "mixesTruthWithLies": true,
+      "tellsTruthUnderPressure": false,
+      "avoidsDirectLies": true,
+      "usesOmission": true
+    }
+  },
+  "actionConstraints": {
+    "neverNominates": false,
+    "onlyVotesWithEvidence": true,
+    "avoidsEarlyVoting": true,
+    "requiresConsensus": false,
+    "neverChangesVote": false,
+    "onlySpeaksWhenSpokenTo": false,
+    "avoidsConflict": false,
+    "mustExplainActions": true
+  },
+  "difficulty": "advanced",
+  "tags": [
+    "analytical",
+    "skeptical",
+    "methodical",
+    "evidence-based",
+    "careful"
+  ],
+  "metadata": {
+    "isCustom": false,
+    "createdAt": "2025-10-02T00:00:00Z",
+    "timesUsed": 0,
+    "winRate": 0
+  }
+}

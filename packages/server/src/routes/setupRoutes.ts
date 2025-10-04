@@ -1,4 +1,4 @@
-import { RoleType } from "@botc/shared";
+import { RoleType } from "@ashes-of-salem/shared";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { GameEngine } from "../game/engine";
 import { logger } from "../utils/logger";

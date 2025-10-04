@@ -26,6 +26,6 @@
   },
   "setupFilesAfterEnv": ["<rootDir>/jest.setup.ts"],
   "moduleNameMapping": {
-    "^@botc/shared$": "<rootDir>/../shared/src"
+    "^@ashes-of-salem/shared$": "<rootDir>/../shared/src"
   }
 }

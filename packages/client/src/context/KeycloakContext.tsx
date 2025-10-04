@@ -68,8 +68,8 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
       try {
         const kcConfig = {
           url: import.meta.env.VITE_KEYCLOAK_URL || "http://localhost:8080",
-          realm: "aos",
-          clientId: "aos-client",
+          realm: "botct",
+          clientId: "botct-client",
         };
         console.log("Initializing Keycloak with config", kcConfig);
         const kc = new Keycloak(kcConfig);
