@@ -1,0 +1,19 @@
+// Add these scripts to your root package.json
+
+{
+  "scripts": {
+    // Existing AI scripts...
+    "ai:start": "cd docker && ./start-with-ai.sh",
+    "ai:test": "cd packages/server && npx ts-node src/ai/test-ai-integration.ts",
+
+    // New MCP scripts
+    "mcp:start": "cd docker && docker-compose -f docker-compose.yml -f docker-compose.mcp.yml up -d",
+    "mcp:stop": "cd docker && docker-compose -f docker-compose.mcp.yml down",
+    "mcp:logs": "docker logs botct-mcp-server -f",
+    "mcp:build": "cd packages/mcp-server && npm run build",
+    "test:mcp": "./scripts/test-mcp-integration.sh",
+
+    // Combined AI + MCP
+    "ai:start:mcp": "npm run mcp:start && npm run ai:pull:deepseek && npm run test:mcp"
+  }
+}

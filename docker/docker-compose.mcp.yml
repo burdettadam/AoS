@@ -1,0 +1,63 @@
+# MCP-First Docker Compose Configuration
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.mcp.yml up
+
+services:
+  # MCP Server - Required service
+  mcp-server:
+    build:
+      context: ../packages/mcp-server
+      dockerfile: Dockerfile
+    container_name: botct-mcp-server
+    environment:
+      - NODE_ENV=production
+      - MCP_LOG_LEVEL=info
+      - GAME_DATA_PATH=/app/data
+    volumes:
+      - ../data:/app/data:ro # Read-only access to game data
+    networks:
+      - botct-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          'echo ''{"jsonrpc": "2.0", "id": 1, "method": "initialize"}'' | node /app/dist/index.js',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Update server to require MCP integration
+  botct-server:
+    environment:
+      - MCP_REQUIRED=true
+      - MCP_SERVER_CONTAINER=botct-mcp-server
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      mcp-server:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+
+  # Ollama service for LLM calls
+  ollama:
+    image: ollama/ollama:latest
+    container_name: botct-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - botct-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+
+volumes:
+  ollama_data:
+
+networks:
+  botct-network:
+    driver: bridge

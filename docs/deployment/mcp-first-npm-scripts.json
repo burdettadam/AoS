@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "ai:start": "npm run mcp:start && npm run ai:pull:deepseek",
+    "ai:test": "npm run test:mcp",
+    "ai:logs": "npm run mcp:logs",
+    "ai:status": "npm run test:mcp",
+
+    "mcp:start": "cd docker && docker-compose -f docker-compose.yml -f docker-compose.mcp.yml up -d",
+    "mcp:stop": "cd docker && docker-compose -f docker-compose.mcp.yml down",
+    "mcp:logs": "docker logs botct-mcp-server -f",
+    "mcp:build": "cd packages/mcp-server && npm run build",
+    "mcp:restart": "npm run mcp:stop && npm run mcp:start",
+
+    "test:mcp": "./scripts/test-mcp-integration.sh",
+    "test:mcp:required": "./scripts/test-mcp-integration.sh",
+
+    "ai:pull:deepseek": "docker exec -it botct-ollama ollama pull deepseek-r1:7b",
+    "ai:pull:llama": "docker exec -it botct-ollama ollama pull llama3.2:3b",
+    "ai:models": "docker exec -it botct-ollama ollama list"
+  }
+}
